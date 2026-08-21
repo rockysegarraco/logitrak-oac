@@ -527,5 +527,6 @@ function TrackerPage() {
         </div>
       </div>
     </main>
+    </TooltipProvider>
   );
 }
