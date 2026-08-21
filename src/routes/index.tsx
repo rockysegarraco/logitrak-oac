@@ -115,6 +115,9 @@ function TrackerPage() {
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [sort, setSort] = useState<{ key: FieldKey; dir: "asc" | "desc" } | null>(null);
+  const [headerMode, setHeaderMode] = useState<"short" | "full">("short");
+  const [openTip, setOpenTip] = useState<FieldKey | null>(null);
+
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -223,7 +226,15 @@ function TrackerPage() {
                 aria-label="Search exhibitors"
               />
             </div>
+            <TwButton
+              variant="secondary"
+              aria-pressed={headerMode === "full"}
+              onClick={() => setHeaderMode((m) => (m === "short" ? "full" : "short"))}
+            >
+              {headerMode === "short" ? "Show full names" : "Show acronyms"}
+            </TwButton>
             <Sheet>
+
               <SheetTrigger asChild>
                 <TwButton variant="secondary">
                   <SlidersHorizontal className="-ml-0.5 h-4 w-4" />
@@ -317,46 +328,75 @@ function TrackerPage() {
                               index === 0 && "pl-4 sm:pl-6",
                             )}
                           >
-                            <button
-                              type="button"
-                              onClick={() => toggleSort(field.key)}
-                              className="group inline-flex items-center gap-1.5"
-                              title={field.label}
-                            >
-                              <span className="uppercase tracking-wide">{field.short}</span>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <span
-                                    role="img"
-                                    aria-label={field.label}
-                                    onClick={(event) => event.stopPropagation()}
-                                    className="text-muted-foreground hover:text-foreground"
-                                  >
-                                    <Info className="h-3.5 w-3.5" />
-                                  </span>
-                                </TooltipTrigger>
-                                <TooltipContent>{field.label}</TooltipContent>
-                              </Tooltip>
-                              <span
-                                className={cn(
-                                  "rounded text-muted-foreground",
-                                  !active && "invisible group-hover:visible",
-                                )}
+                            <div className="inline-flex items-center gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => toggleSort(field.key)}
+                                className="group inline-flex items-center gap-1.5 rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                                aria-label={`Sort by ${field.label}`}
                               >
-                                {active ? (
-                                  sort!.dir === "asc" ? (
-                                    <ChevronUp className="h-4 w-4" />
+                                <span
+                                  className={cn(
+                                    headerMode === "short" && "uppercase tracking-wide",
+                                    headerMode === "full" && "md:whitespace-normal",
+                                  )}
+                                >
+                                  {headerMode === "short" ? field.short : field.label}
+                                </span>
+                                <span
+                                  className={cn(
+                                    "rounded text-muted-foreground",
+                                    !active && "invisible group-hover:visible group-focus-visible:visible",
+                                  )}
+                                >
+                                  {active ? (
+                                    sort!.dir === "asc" ? (
+                                      <ChevronUp className="h-4 w-4" />
+                                    ) : (
+                                      <ChevronDown className="h-4 w-4" />
+                                    )
                                   ) : (
-                                    <ChevronDown className="h-4 w-4" />
-                                  )
-                                ) : (
-                                  <ArrowUpDown className="h-4 w-4" />
-                                )}
-                              </span>
-                            </button>
+                                    <ArrowUpDown className="h-4 w-4" />
+                                  )}
+                                </span>
+                              </button>
+                              {headerMode === "short" ? (
+                                <Tooltip
+                                  open={openTip === field.key}
+                                  onOpenChange={(open) =>
+                                    setOpenTip(open ? field.key : null)
+                                  }
+                                >
+                                  <TooltipTrigger asChild>
+                                    <button
+                                      type="button"
+                                      aria-label={`What is ${field.short}? ${field.label}`}
+                                      onClick={(event) => {
+                                        event.stopPropagation();
+                                        setOpenTip((prev) =>
+                                          prev === field.key ? null : field.key,
+                                        );
+                                      }}
+                                      className="inline-flex min-h-6 min-w-6 items-center justify-center rounded text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                                    >
+                                      <Info className="h-3.5 w-3.5" aria-hidden="true" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent
+                                    side="bottom"
+                                    align="start"
+                                    collisionPadding={12}
+                                    className="max-w-[min(16rem,calc(100vw-2rem))] whitespace-normal break-words text-wrap"
+                                  >
+                                    {field.label}
+                                  </TooltipContent>
+                                </Tooltip>
+                              ) : null}
+                            </div>
                           </th>
                         );
                       })}
+
                       <th
                         scope="col"
                         className="sticky top-0 z-10 bg-muted px-3 py-3.5 pr-4 text-right text-sm font-semibold whitespace-nowrap text-foreground sm:pr-6"
