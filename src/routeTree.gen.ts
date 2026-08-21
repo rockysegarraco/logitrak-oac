@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as NewRouteImport } from './routes/new'
+import { Route as ExhibitorIdRouteImport } from './routes/exhibitor.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NewRoute = NewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExhibitorIdRoute = ExhibitorIdRouteImport.update({
+  id: '/exhibitor/$id',
+  path: '/exhibitor/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/new': typeof NewRoute
+  '/exhibitor/$id': typeof ExhibitorIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/new': typeof NewRoute
+  '/exhibitor/$id': typeof ExhibitorIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/new': typeof NewRoute
+  '/exhibitor/$id': typeof ExhibitorIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/new' | '/exhibitor/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/new' | '/exhibitor/$id'
+  id: '__root__' | '/' | '/new' | '/exhibitor/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  NewRoute: typeof NewRoute
+  ExhibitorIdRoute: typeof ExhibitorIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/new': {
+      id: '/new'
+      path: '/new'
+      fullPath: '/new'
+      preLoaderRoute: typeof NewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/exhibitor/$id': {
+      id: '/exhibitor/$id'
+      path: '/exhibitor/$id'
+      fullPath: '/exhibitor/$id'
+      preLoaderRoute: typeof ExhibitorIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  NewRoute: NewRoute,
+  ExhibitorIdRoute: ExhibitorIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
