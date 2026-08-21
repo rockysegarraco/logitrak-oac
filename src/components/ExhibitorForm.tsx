@@ -122,7 +122,7 @@ export function ExhibitorForm({
         </p>
       ) : null}
 
-      <div className="mt-8 flex items-center gap-x-4 border-t border-border pt-6">
+      <div className="sticky bottom-0 z-10 -mx-4 mt-8 flex items-center gap-x-4 border-t border-border bg-background px-4 py-4 sm:-mx-6 sm:px-6">
         <TwButton type="submit" variant="primary" disabled={pending}>
           {pending ? "Saving..." : submitLabel}
         </TwButton>
