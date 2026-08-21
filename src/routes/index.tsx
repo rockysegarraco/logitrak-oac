@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import {
   queryOptions,
   useMutation,
@@ -79,12 +79,6 @@ const exhibitorsQuery = queryOptions({
 type FieldKey = (typeof EXHIBITOR_FIELDS)[number]["key"];
 
 export const Route = createFileRoute("/")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    new:
-      search['new'] === true || search['new'] === "1" || search['new'] === "true"
-        ? true
-        : undefined,
-  }),
 
   head: () => ({
     meta: [
@@ -134,8 +128,7 @@ function toInput(row: Exhibitor): ExhibitorInput {
 function TrackerPage() {
   const { data: exhibitors } = useSuspenseQuery(exhibitorsQuery);
   const router = useRouter();
-  const navigate = useNavigate();
-  const { new: createOpen } = Route.useSearch();
+  const [createOpen, setCreateOpen] = useState(false);
   const queryClient = useQueryClient();
   const update = useServerFn(updateExhibitor);
   const remove = useServerFn(deleteExhibitor);
@@ -614,7 +607,7 @@ function TrackerPage() {
                                 Add your first exhibitor to start tracking PAFs, quotes, and
                                 receiver numbers.
                               </p>
-                              <Link to="/new" className={cn(twButtonClass("primary"), "mt-5")}>
+                              <button type="button" onClick={() => setCreateOpen(true)} className={cn(twButtonClass("primary"), "mt-5")}>
                                 <Plus className="-ml-0.5 h-4 w-4" />
                                 Add exhibitor
                               </Link>
@@ -737,12 +730,7 @@ function TrackerPage() {
         </AlertDialogContent>
       </AlertDialog>
     </main>
-    <ExhibitorCreateSheet
-      open={createOpen === true}
-      onOpenChange={(open) =>
-        navigate({ to: "/", search: open ? { new: true } : {}, replace: true })
-      }
-    />
+    <ExhibitorCreateSheet open={createOpen} onOpenChange={setCreateOpen} />
     </TooltipProvider>
 
   );
