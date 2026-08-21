@@ -5,7 +5,12 @@ export function Num({ children }: { children: React.ReactNode }) {
   if (typeof children !== "string" && typeof children !== "number") {
     return <>{children}</>;
   }
-  const text = String(children);
+  const raw = String(children);
+  // Display-only: soften SHOUTED values (no lowercase letters) to sentence case.
+  const text =
+    /[A-Z]/.test(raw) && !/[a-z]/.test(raw)
+      ? raw.charAt(0) + raw.slice(1).toLowerCase()
+      : raw;
   const parts = text.split(/(\d+(?:[.,]\d+)*)/g);
   return (
     <>
