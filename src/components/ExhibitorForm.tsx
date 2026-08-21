@@ -2,6 +2,7 @@ import { useState } from "react";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import type { ExhibitorInput } from "@/lib/exhibitors.functions";
+import { toSentenceCase } from "@/lib/text-case";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -23,7 +24,11 @@ export function ExhibitorForm({
   onDelete,
   deletePending,
 }: Props) {
-  const [values, setValues] = useState<ExhibitorInput>(initialValues);
+  const [values, setValues] = useState<ExhibitorInput>(() =>
+    Object.fromEntries(
+      Object.entries(initialValues).map(([k, v]) => [k, toSentenceCase(v ?? "")]),
+    ) as ExhibitorInput,
+  );
   const [error, setError] = useState<string | null>(null);
 
   const set = (key: keyof ExhibitorInput, value: string) =>
