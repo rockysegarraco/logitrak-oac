@@ -287,8 +287,8 @@ function TrackerPage() {
         <div className="mt-8 flow-root">
           <div className="block min-w-full align-middle">
             <div className="rounded-lg bg-card shadow-sm ring-1 ring-border">
-              <div className="max-h-[70vh] overflow-auto rounded-t-lg">
-                <table className="w-full min-w-full divide-y divide-border">
+              <div className="max-h-[70vh] overflow-x-auto overflow-y-auto rounded-t-lg md:overflow-x-hidden">
+                <table className="w-full min-w-[1100px] divide-y divide-border md:min-w-0 md:table-fixed">
                   <thead>
                     <tr>
                       {EXHIBITOR_FIELDS.map((field, index) => {
@@ -305,7 +305,7 @@ function TrackerPage() {
                                 : "none"
                             }
                             className={cn(
-                              "sticky top-0 z-10 bg-muted px-3 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-foreground backdrop-blur",
+                              "sticky top-0 z-10 bg-muted px-3 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-foreground backdrop-blur md:whitespace-normal",
                               index === 0 && "pl-4 sm:pl-6",
                             )}
                           >
@@ -352,7 +352,7 @@ function TrackerPage() {
                             <td
                               key={field.key}
                               className={cn(
-                                "px-3 py-2 text-sm text-muted-foreground",
+                                "px-3 py-2 text-sm break-words text-muted-foreground",
                                 index === 0 && "pl-4 font-medium text-foreground sm:pl-6",
                               )}
                             >
@@ -368,7 +368,7 @@ function TrackerPage() {
                                     if (event.key === "Enter") saveEdit();
                                     if (event.key === "Escape") cancelEdit();
                                   }}
-                                  className="min-w-32 py-1"
+                                  className="min-w-32 py-1 md:min-w-0"
                                 />
                               ) : (
                                 row[field.key] || (
