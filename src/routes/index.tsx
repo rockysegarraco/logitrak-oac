@@ -45,6 +45,7 @@ import {
   type ExhibitorInput,
 } from "@/lib/exhibitors.functions";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
+import { Num } from "@/components/Num";
 import { cn } from "@/lib/utils";
 
 const FILTER_FIELDS = EXHIBITOR_FIELDS.filter(
@@ -528,11 +529,11 @@ function TrackerPage() {
                       "No results"
                     ) : (
                       <>
-                        Showing <span className="font-medium text-foreground">{start + 1}</span> to{" "}
-                        <span className="font-medium text-foreground">
+                        Showing <span className="num font-medium text-foreground">{start + 1}</span> to{" "}
+                        <span className="num font-medium text-foreground">
                           {Math.min(start + pageSize, rows.length)}
                         </span>{" "}
-                        of <span className="font-medium text-foreground">{rows.length}</span>
+                        of <span className="num font-medium text-foreground">{rows.length}</span>
                       </>
                     )}
                   </p>
@@ -545,7 +546,7 @@ function TrackerPage() {
                       Previous
                     </TwButton>
                     <span className="text-sm text-muted-foreground">
-                      Page {page} of {pageCount}
+                      Page <span className="num">{page}</span> of <span className="num">{pageCount}</span>
                     </span>
                     <TwButton
                       variant="secondary"
