@@ -237,21 +237,7 @@ function TrackerPage() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
 
-            <TwButton
-              variant="secondary"
-              aria-pressed={headerMode === "full"}
-              onClick={() => setHeaderMode((m) => (m === "short" ? "full" : "short"))}
-            >
-              {headerMode === "short" ? "Show full names" : "Show acronyms"}
-            </TwButton>
-            <TwButton
-              variant="secondary"
-              aria-pressed={valueCase === "upper"}
-              onClick={() => changeValueCase(valueCase === "upper" ? "sentence" : "upper")}
-              title="Toggle how table values are capitalized"
-            >
-              {valueCase === "upper" ? "Sentence case values" : "UPPERCASE values"}
-            </TwButton>
+
             <Sheet>
 
               <SheetTrigger asChild>
