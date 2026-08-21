@@ -205,27 +205,19 @@ function TrackerPage() {
     <TooltipProvider delayDuration={150}>
     <main className="min-h-screen bg-background">
       <div className="w-full px-4 py-10 sm:px-6 lg:px-8">
-        <div className="sm:flex sm:items-center">
-          <div className="sm:flex-auto">
-            <h1 className="text-base font-semibold text-foreground">
-              Exhibitor Shipping Tracker
-            </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Showing {rows.length} of {exhibitors.length} exhibitor
-              {exhibitors.length === 1 ? "" : "s"}. Click a header to sort, or edit a row inline.
-            </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="relative min-w-0 flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <TwInput
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search all columns"
+              className="w-full pl-9"
+              aria-label="Search exhibitors"
+            />
           </div>
-          <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-0 sm:ml-16 sm:flex-none">
-            <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <TwInput
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search all columns"
-                className="w-64 pl-9"
-                aria-label="Search exhibitors"
-              />
-            </div>
+          <div className="flex flex-wrap items-center gap-3">
+
             <TwButton
               variant="secondary"
               aria-pressed={headerMode === "full"}
