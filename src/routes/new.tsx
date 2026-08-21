@@ -44,16 +44,16 @@ function NewExhibitorPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto max-w-3xl px-4 py-10 sm:px-8">
+      <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
         <Link to="/" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" />
           Back to tracker
         </Link>
-        <h1 className="mt-4 text-2xl font-bold tracking-tight">Add Exhibitor</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <h1 className="mt-4 text-base font-semibold text-foreground">Add Exhibitor</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
           Type entries exactly as you would in the spreadsheet, e.g. "YES (SENT 1/28)".
         </p>
-        <div className="mt-8 rounded-lg border bg-card p-6 shadow-sm">
+        <div className="mt-6 rounded-lg bg-card px-4 py-6 shadow-sm ring-1 ring-border sm:p-8">
           <ExhibitorForm
             initialValues={EMPTY_EXHIBITOR}
             submitLabel="Add Exhibitor"
