@@ -454,7 +454,9 @@ function TrackerPage() {
                                   className="min-w-32 py-1 md:min-w-0"
                                 />
                               ) : row[field.key] ? (
-                                <Num caseMode={valueCase}>{row[field.key]}</Num>
+                                <Num caseMode={valueCase} highlight={search}>
+                                  {row[field.key]}
+                                </Num>
                               ) : (
                                 <span className="text-muted-foreground/50">—</span>
                               )}
