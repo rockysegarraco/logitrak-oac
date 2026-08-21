@@ -352,7 +352,7 @@ function TrackerPage() {
                             <td
                               key={field.key}
                               className={cn(
-                                "px-3 py-2 text-sm text-muted-foreground",
+                                "px-3 py-2 text-sm break-words text-muted-foreground",
                                 index === 0 && "pl-4 font-medium text-foreground sm:pl-6",
                               )}
                             >
