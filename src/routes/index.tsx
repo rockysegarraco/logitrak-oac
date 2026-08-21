@@ -356,6 +356,7 @@ function TrackerPage() {
                               >
                                 <span
                                   className={cn(
+                                    valueCase === "upper" && "uppercase",
                                     headerMode === "short" && "tracking-wide",
                                     headerMode === "full" && "md:whitespace-normal",
                                   )}
@@ -420,7 +421,10 @@ function TrackerPage() {
 
                       <th
                         scope="col"
-                        className="sticky top-0 z-10 bg-muted px-3 py-3.5 pr-4 text-right text-sm font-semibold whitespace-nowrap text-foreground sm:pr-6"
+                        className={cn(
+                          "sticky top-0 z-10 bg-muted px-3 py-3.5 pr-4 text-right text-sm font-semibold whitespace-nowrap text-foreground sm:pr-6",
+                          valueCase === "upper" && "uppercase",
+                        )}
                       >
                         Actions
                       </th>
