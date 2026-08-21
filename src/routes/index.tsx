@@ -316,15 +316,15 @@ function TrackerPage() {
                                 : "none"
                             }
                             className={cn(
-                              "sticky top-0 z-10 bg-muted px-3 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-foreground backdrop-blur md:whitespace-normal",
+                              "sticky top-0 z-10 bg-muted px-3 py-3.5 text-left text-xs font-semibold whitespace-nowrap text-foreground backdrop-blur md:whitespace-normal",
                               index === 0 && "pl-4 sm:pl-6",
                             )}
                           >
-                            <div className="inline-flex items-center gap-1.5">
+                            <div className="inline-flex items-center gap-1">
                               <button
                                 type="button"
                                 onClick={() => toggleSort(field.key)}
-                                className="group inline-flex items-center gap-1.5 rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                                className="group inline-flex items-center gap-1 rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                                 aria-label={`Sort by ${field.label}`}
                               >
                                 <span
@@ -338,17 +338,18 @@ function TrackerPage() {
                                 <span
                                   className={cn(
                                     "rounded text-muted-foreground",
-                                    !active && "invisible group-hover:visible group-focus-visible:visible",
+                                    !active &&
+                                      "hidden group-hover:inline-flex group-focus-visible:inline-flex",
                                   )}
                                 >
                                   {active ? (
                                     sort!.dir === "asc" ? (
-                                      <ChevronUp className="h-4 w-4" />
+                                      <ChevronUp className="h-3.5 w-3.5" />
                                     ) : (
-                                      <ChevronDown className="h-4 w-4" />
+                                      <ChevronDown className="h-3.5 w-3.5" />
                                     )
                                   ) : (
-                                    <ArrowUpDown className="h-4 w-4" />
+                                    <ArrowUpDown className="h-3.5 w-3.5" />
                                   )}
                                 </span>
                               </button>
@@ -369,11 +370,12 @@ function TrackerPage() {
                                           prev === field.key ? null : field.key,
                                         );
                                       }}
-                                      className="inline-flex min-h-6 min-w-6 items-center justify-center rounded text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                                      className="inline-flex items-center justify-center rounded p-0.5 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                                     >
-                                      <Info className="h-3.5 w-3.5" aria-hidden="true" />
+                                      <Info className="h-3 w-3" aria-hidden="true" />
                                     </button>
                                   </TooltipTrigger>
+
                                   <TooltipContent
                                     side="bottom"
                                     align="start"
