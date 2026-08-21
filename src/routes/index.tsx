@@ -21,6 +21,7 @@ import {
   SearchX,
   SlidersHorizontal,
   SquareArrowOutUpRight,
+  Trash2,
   X,
 } from "lucide-react";
 import { TwButton, TwInput, twButtonClass } from "@/components/ui/tw";
@@ -30,6 +31,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   Sheet,
   SheetClose,
@@ -43,6 +54,7 @@ import {
 import {
   listExhibitors,
   updateExhibitor,
+  deleteExhibitor,
   type Exhibitor,
   type ExhibitorInput,
 } from "@/lib/exhibitors.functions";
@@ -137,6 +149,7 @@ function TrackerPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<Exhibitor | null>(null);
   const [draft, setDraft] = useState<ExhibitorInput | null>(null);
 
   const term = search.trim().toLowerCase();
@@ -189,6 +202,16 @@ function TrackerPage() {
       toast.success("Row updated");
       setEditingId(null);
       setDraft(null);
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => remove({ data: { id } }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["exhibitors"] });
+      toast.success("Row deleted");
+      setPendingDelete(null);
     },
     onError: (error: Error) => toast.error(error.message),
   });
