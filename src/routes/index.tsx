@@ -64,9 +64,6 @@ import { normalizeValue, type ValueCase } from "@/lib/text-case";
 import { useOpenExhibitorCreate } from "@/lib/exhibitor-create-context";
 import { cn } from "@/lib/utils";
 
-const FILTER_FIELDS = EXHIBITOR_FIELDS.filter(
-  (field) => field.key !== "exhibitor_name" && field.key !== "booth_number",
-);
 
 const PAGE_SIZES = [10, 25, 50, 100];
 
