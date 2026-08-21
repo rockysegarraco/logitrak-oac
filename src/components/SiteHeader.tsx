@@ -1,0 +1,65 @@
+import { Link } from "@tanstack/react-router";
+import { Bell, MessageSquare, Plus } from "lucide-react";
+
+const NAV = [
+  { label: "Tracker", to: "/" },
+  { label: "Exhibitors", to: "/" },
+];
+
+export function SiteHeader() {
+  return (
+    <header className="sticky top-0 z-30 border-b border-border bg-card">
+      <div className="flex h-16 w-full items-center gap-8 px-4 sm:px-6 lg:px-8">
+        <Link to="/" className="text-xl font-bold tracking-tight text-foreground">
+          Shiplist
+        </Link>
+
+        <nav className="hidden items-center gap-7 md:flex">
+          {NAV.map((item) => (
+            <Link
+              key={item.label}
+              to={item.to}
+              className="text-sm font-semibold text-foreground/80 transition-colors hover:text-foreground"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="ml-auto flex items-center gap-3">
+          <Link
+            to="/new"
+            className="hidden items-center rounded-full bg-foreground px-5 py-2.5 text-sm font-semibold text-background transition-opacity hover:opacity-90 sm:inline-flex"
+          >
+            Add exhibitor
+          </Link>
+          <Link
+            to="/new"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+          >
+            <Plus className="h-4 w-4" />
+            Create New
+          </Link>
+          <button
+            type="button"
+            aria-label="Messages"
+            className="hidden h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:inline-flex"
+          >
+            <MessageSquare className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            aria-label="Notifications"
+            className="hidden h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:inline-flex"
+          >
+            <Bell className="h-5 w-5" />
+          </button>
+          <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-full bg-muted text-sm font-semibold text-foreground ring-1 ring-border">
+            RS
+            <span className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-card" />
+          </span>
+        </div>
+      </div>
+    </header>
+  );
+}
