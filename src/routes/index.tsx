@@ -325,10 +325,6 @@ function TrackerPage() {
                 </div>
               </SheetContent>
             </Sheet>
-            <Link to="/new" className={twButtonClass("primary")}>
-              <Plus className="-ml-0.5 h-4 w-4" />
-              Add exhibitor
-            </Link>
           </div>
         </div>
 
