@@ -431,7 +431,7 @@ function TrackerPage() {
 
                       <th
                         scope="col"
-                        className="sticky top-0 z-10 bg-muted px-3 py-3.5 pr-4 text-right text-sm font-semibold whitespace-nowrap text-foreground sm:pr-6"
+                        className="sticky top-0 z-10 w-[132px] min-w-[132px] bg-muted px-3 py-3.5 pr-4 text-right text-sm font-semibold whitespace-nowrap text-foreground sm:pr-6"
                       >
                         <span className="sr-only">Actions</span>
                       </th>
@@ -480,7 +480,7 @@ function TrackerPage() {
                               )}
                             </td>
                           ))}
-                          <td className="px-3 py-2 pr-4 text-right text-sm whitespace-nowrap sm:pr-6">
+                          <td className="w-[132px] min-w-[132px] px-3 py-2 pr-4 text-right text-sm whitespace-nowrap sm:pr-6">
                             {editing ? (
                               <div className="flex justify-end gap-2">
                                 <TwButton
