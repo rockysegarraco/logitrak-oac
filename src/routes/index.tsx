@@ -204,11 +204,14 @@ function TrackerPage() {
 
   const saveEdit = () => {
     if (!editingId || !draft) return;
-    if (!draft.exhibitor_name.trim()) {
+    const trimmed = Object.fromEntries(
+      Object.entries(draft).map(([k, v]) => [k, (v ?? "").trim()]),
+    ) as ExhibitorInput;
+    if (!trimmed.exhibitor_name) {
       toast.error("Exhibitor name is required.");
       return;
     }
-    saveMutation.mutate({ ...draft, id: editingId });
+    saveMutation.mutate({ ...trimmed, id: editingId });
   };
 
   const toggleSort = (key: FieldKey) =>
