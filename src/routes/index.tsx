@@ -407,13 +407,11 @@ function TrackerPage() {
 
                       <th
                         scope="col"
-                        className={cn(
-                          "sticky top-0 z-10 bg-muted px-3 py-3.5 pr-4 text-right text-sm font-semibold whitespace-nowrap text-foreground sm:pr-6",
-                          valueCase === "upper" && "uppercase",
-                        )}
+                        className="sticky top-0 z-10 bg-muted px-3 py-3.5 pr-4 text-right text-sm font-semibold whitespace-nowrap text-foreground sm:pr-6"
                       >
-                        Actions
+                        <span className="sr-only">Actions</span>
                       </th>
+
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border bg-card">
