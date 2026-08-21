@@ -287,8 +287,8 @@ function TrackerPage() {
         <div className="mt-8 flow-root">
           <div className="block min-w-full align-middle">
             <div className="rounded-lg bg-card shadow-sm ring-1 ring-border">
-              <div className="max-h-[70vh] overflow-auto rounded-t-lg">
-                <table className="w-full min-w-full divide-y divide-border">
+              <div className="max-h-[70vh] overflow-x-auto overflow-y-auto rounded-t-lg md:overflow-x-hidden">
+                <table className="w-full table-fixed divide-y divide-border md:table-auto">
                   <thead>
                     <tr>
                       {EXHIBITOR_FIELDS.map((field, index) => {
