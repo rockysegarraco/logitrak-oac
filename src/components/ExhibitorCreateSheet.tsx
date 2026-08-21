@@ -37,9 +37,9 @@ export function ExhibitorCreateSheet({
       <SheetContent
         id="create-exhibitor-panel"
         side="right"
-        className="flex w-full flex-col gap-0 p-0 sm:max-w-xl"
+        className="flex w-full flex-col gap-0 p-0 sm:max-w-xl [&>button]:right-4 [&>button]:top-8 [&>button]:-translate-y-1/2 [&>button>svg]:h-6 [&>button>svg]:w-6"
       >
-        <SheetHeader className="border-b border-border bg-card px-4 py-4 sm:px-6">
+        <SheetHeader className="flex h-16 shrink-0 flex-row items-center border-b border-border bg-card px-4 py-0 sm:px-6">
           <SheetTitle className="text-base font-semibold">Add exhibitor</SheetTitle>
           <SheetDescription className="sr-only">
             Add a new exhibitor record.
