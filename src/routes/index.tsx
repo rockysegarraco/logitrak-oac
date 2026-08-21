@@ -368,7 +368,7 @@ function TrackerPage() {
                                     if (event.key === "Enter") saveEdit();
                                     if (event.key === "Escape") cancelEdit();
                                   }}
-                                  className="min-w-32 py-1"
+                                  className="min-w-32 py-1 md:min-w-0"
                                 />
                               ) : (
                                 row[field.key] || (
