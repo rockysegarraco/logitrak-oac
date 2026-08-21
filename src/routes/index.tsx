@@ -206,7 +206,7 @@ function TrackerPage() {
   const saveEdit = () => {
     if (!editingId || !draft) return;
     const trimmed = Object.fromEntries(
-      Object.entries(draft).map(([k, v]) => [k, (v ?? "").trim()]),
+      Object.entries(draft).map(([k, v]) => [k, normalizeValue(v ?? "")]),
     ) as ExhibitorInput;
     if (!trimmed.exhibitor_name) {
       toast.error("Exhibitor name is required.");
