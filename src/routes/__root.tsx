@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 
 import { Toaster } from "../components/ui/sonner";
 import { SiteHeader } from "../components/SiteHeader";
@@ -128,11 +128,12 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const [createOpen, setCreateOpen] = useState(false);
+  const openCreate = useCallback(() => setCreateOpen(true), []);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ExhibitorCreateContext.Provider value={() => setCreateOpen(true)}>
-        <SiteHeader onCreateNew={() => setCreateOpen(true)} />
+      <ExhibitorCreateContext.Provider value={openCreate}>
+        <SiteHeader createOpen={createOpen} onCreateNew={openCreate} />
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
         <ExhibitorCreateSheet open={createOpen} onOpenChange={setCreateOpen} />

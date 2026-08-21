@@ -34,7 +34,11 @@ export function ExhibitorCreateSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="flex w-full flex-col gap-0 sm:max-w-xl">
+      <SheetContent
+        id="create-exhibitor-panel"
+        side="right"
+        className="flex w-full flex-col gap-0 sm:max-w-xl"
+      >
         <SheetHeader className="border-b border-border">
           <SheetTitle className="text-base font-semibold">Add exhibitor</SheetTitle>
           <SheetDescription className="text-sm text-muted-foreground">

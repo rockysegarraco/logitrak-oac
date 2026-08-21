@@ -6,7 +6,13 @@ const NAV = [
   { label: "Exhibitors", to: "/" },
 ];
 
-export function SiteHeader({ onCreateNew }: { onCreateNew: () => void }) {
+export function SiteHeader({
+  createOpen,
+  onCreateNew,
+}: {
+  createOpen: boolean;
+  onCreateNew: () => void;
+}) {
   return (
 
     <header data-site-header className="sticky top-0 z-30 border-b border-border bg-card print:hidden">
@@ -31,6 +37,9 @@ export function SiteHeader({ onCreateNew }: { onCreateNew: () => void }) {
           <button
             type="button"
             onClick={onCreateNew}
+            aria-haspopup="dialog"
+            aria-expanded={createOpen}
+            aria-controls="create-exhibitor-panel"
             className="inline-flex items-center gap-1.5 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
           >
             <Plus className="h-4 w-4" />
