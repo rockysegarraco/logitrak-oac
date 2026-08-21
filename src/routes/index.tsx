@@ -354,7 +354,6 @@ function TrackerPage() {
                             }
                             className={cn(
                               "sticky top-0 z-10 bg-muted px-3 py-3.5 text-left text-xs font-semibold whitespace-nowrap text-foreground md:whitespace-normal",
-                              index === 0 && "pl-4 sm:pl-6",
                             )}
                           >
                             <div className="inline-flex items-center gap-1">
@@ -431,7 +430,7 @@ function TrackerPage() {
 
                       <th
                         scope="col"
-                        className="sticky top-0 z-10 w-[132px] min-w-[132px] bg-muted px-3 py-3.5 pr-4 text-right text-sm font-semibold whitespace-nowrap text-foreground sm:pr-6"
+                        className="sticky top-0 z-10 w-[132px] min-w-[132px] bg-muted px-3 py-3.5 text-right text-sm font-semibold whitespace-nowrap text-foreground"
                       >
                         <span className="sr-only">Actions</span>
                       </th>
@@ -454,7 +453,7 @@ function TrackerPage() {
                               key={field.key}
                               className={cn(
                                 "px-3 py-2 text-sm break-normal [overflow-wrap:normal] hyphens-none text-muted-foreground",
-                                index === 0 && "pl-4 font-medium text-foreground sm:pl-6",
+                                index === 0 && "font-medium text-foreground",
                               )}
                             >
                               {editing && draft ? (
@@ -480,7 +479,7 @@ function TrackerPage() {
                               )}
                             </td>
                           ))}
-                          <td className="w-[132px] min-w-[132px] px-3 py-2 pr-4 text-right text-sm whitespace-nowrap sm:pr-6">
+                          <td className="w-[132px] min-w-[132px] px-3 py-2 text-right text-sm whitespace-nowrap">
                             {editing ? (
                               <div className="flex justify-end gap-2">
                                 <TwButton
