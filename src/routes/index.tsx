@@ -16,7 +16,9 @@ import {
   Pencil,
   Plus,
   Info,
+  Inbox,
   Search,
+  SearchX,
   SlidersHorizontal,
   SquareArrowOutUpRight,
   X,
@@ -156,8 +158,8 @@ function TrackerPage() {
     if (!sort) return filtered;
     const factor = sort.dir === "asc" ? 1 : -1;
     return [...filtered].sort((a, b) => {
-      const av = (a[sort.key] ?? "").trim();
-      const bv = (b[sort.key] ?? "").trim();
+      const av = (a[sort.key] ?? "").trim().toLowerCase();
+      const bv = (b[sort.key] ?? "").trim().toLowerCase();
       if (!av && !bv) return 0;
       if (!av) return 1;
       if (!bv) return -1;
@@ -202,11 +204,14 @@ function TrackerPage() {
 
   const saveEdit = () => {
     if (!editingId || !draft) return;
-    if (!draft.exhibitor_name.trim()) {
+    const trimmed = Object.fromEntries(
+      Object.entries(draft).map(([k, v]) => [k, (v ?? "").trim()]),
+    ) as ExhibitorInput;
+    if (!trimmed.exhibitor_name) {
       toast.error("Exhibitor name is required.");
       return;
     }
-    saveMutation.mutate({ ...draft, id: editingId });
+    saveMutation.mutate({ ...trimmed, id: editingId });
   };
 
   const toggleSort = (key: FieldKey) =>
@@ -454,7 +459,9 @@ function TrackerPage() {
                                   className="min-w-32 py-1 md:min-w-0"
                                 />
                               ) : row[field.key] ? (
-                                <Num caseMode={valueCase}>{row[field.key]}</Num>
+                                <Num caseMode={valueCase} highlight={search}>
+                                  {row[field.key]}
+                                </Num>
                               ) : (
                                 <span className="text-muted-foreground/50">—</span>
                               )}
@@ -513,11 +520,53 @@ function TrackerPage() {
                       <tr>
                         <td
                           colSpan={EXHIBITOR_FIELDS.length + 1}
-                          className="px-3 py-12 text-center text-sm text-muted-foreground"
+                          className="px-6 py-16 text-center"
                         >
-                          {exhibitors.length === 0
-                            ? "No exhibitors yet — add your first one."
-                            : "No exhibitors match your search or filters."}
+                          {exhibitors.length === 0 ? (
+                            <div className="mx-auto max-w-sm">
+                              <Inbox
+                                className="mx-auto h-10 w-10 text-muted-foreground/40"
+                                aria-hidden="true"
+                              />
+                              <h3 className="mt-3 text-sm font-semibold text-foreground">
+                                No exhibitors yet
+                              </h3>
+                              <p className="mt-1 text-sm text-muted-foreground">
+                                Add your first exhibitor to start tracking PAFs, quotes, and
+                                receiver numbers.
+                              </p>
+                              <Link to="/new" className={cn(twButtonClass("primary"), "mt-5")}>
+                                <Plus className="-ml-0.5 h-4 w-4" />
+                                Add exhibitor
+                              </Link>
+                            </div>
+                          ) : (
+                            <div className="mx-auto max-w-sm">
+                              <SearchX
+                                className="mx-auto h-10 w-10 text-muted-foreground/40"
+                                aria-hidden="true"
+                              />
+                              <h3 className="mt-3 text-sm font-semibold text-foreground">
+                                No matching exhibitors
+                              </h3>
+                              <p className="mt-1 text-sm text-muted-foreground">
+                                No records match your current search or filters. Try a different
+                                term or clear the filters.
+                              </p>
+                              <TwButton
+                                variant="secondary"
+                                className="mt-5"
+                                disabled={!hasFilters}
+                                onClick={() => {
+                                  setSearch("");
+                                  setFilters({});
+                                }}
+                              >
+                                <X className="-ml-0.5 h-4 w-4" />
+                                Clear search and filters
+                              </TwButton>
+                            </div>
+                          )}
                         </td>
                       </tr>
                     ) : null}
