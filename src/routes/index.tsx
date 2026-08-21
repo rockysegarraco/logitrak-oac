@@ -159,7 +159,12 @@ function TrackerPage() {
   const [draft, setDraft] = useState<ExhibitorInput | null>(null);
 
   const term = search.trim().toLowerCase();
-  const activeFilters = Object.entries(filters).filter(([, value]) => value && value !== "all");
+
+  const userOptions = useMemo(
+    () =>
+      Array.from(new Set(exhibitors.map((row) => row.created_by_initials).filter(Boolean))).sort(),
+    [exhibitors],
+  );
 
   const rows = useMemo(() => {
     const filtered = exhibitors.filter((row) => {
@@ -169,10 +174,7 @@ function TrackerPage() {
       ) {
         return false;
       }
-      return activeFilters.every(([key, value]) => {
-        const filled = (row[key as keyof typeof row] as string | null)?.trim();
-        return value === "done" ? Boolean(filled) : !filled;
-      });
+      return userFilter === "all" || row.created_by_initials === userFilter;
     });
 
     if (!sort) return filtered;
@@ -185,14 +187,15 @@ function TrackerPage() {
       if (!bv) return -1;
       return av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" }) * factor;
     });
-  }, [exhibitors, term, JSON.stringify(activeFilters), sort]);
+  }, [exhibitors, term, userFilter, sort]);
 
-  const hasFilters = activeFilters.length > 0 || term.length > 0;
+  const hasFilters = userFilter !== "all" || term.length > 0;
   const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
 
   useEffect(() => {
     setPage(1);
-  }, [term, JSON.stringify(activeFilters), pageSize]);
+  }, [term, userFilter, pageSize]);
+
 
   useEffect(() => {
     if (page > pageCount) setPage(pageCount);
