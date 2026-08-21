@@ -19,6 +19,7 @@ export type ExhibitorInput = z.infer<typeof exhibitorInput>;
 
 export type Exhibitor = ExhibitorInput & {
   id: string;
+  created_by_initials: string;
   created_at: string;
   updated_at: string;
 };
@@ -40,8 +41,11 @@ function getClient() {
   });
 }
 
+/** Placeholder until multi-user auth lands. */
+export const CURRENT_USER_INITIALS = "RS";
+
 const COLUMNS =
-  "id, exhibitor_name, booth_number, paf_in_files, request_for_paf_sent, on_time_quote_sent, on_time_charges_processed, late_fee_quote_sent, receiver_numbers_on_time, receiver_numbers_late, created_at, updated_at";
+  "id, exhibitor_name, booth_number, paf_in_files, request_for_paf_sent, on_time_quote_sent, on_time_charges_processed, late_fee_quote_sent, receiver_numbers_on_time, receiver_numbers_late, created_by_initials, created_at, updated_at";
 
 export const listExhibitors = createServerFn({ method: "GET" }).handler(async () => {
   const { data, error } = await getClient()
@@ -69,7 +73,7 @@ export const createExhibitor = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { data: row, error } = await getClient()
       .from("exhibitors")
-      .insert(data)
+      .insert({ ...data, created_by_initials: CURRENT_USER_INITIALS })
       .select(COLUMNS)
       .single();
     if (error) throw new Error(error.message);

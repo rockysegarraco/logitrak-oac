@@ -1,0 +1,1 @@
+ALTER TABLE public.exhibitors ADD COLUMN IF NOT EXISTS created_by_initials text NOT NULL DEFAULT 'RS';
