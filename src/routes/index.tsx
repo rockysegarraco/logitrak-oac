@@ -610,7 +610,7 @@ function TrackerPage() {
                               <button type="button" onClick={() => setCreateOpen(true)} className={cn(twButtonClass("primary"), "mt-5")}>
                                 <Plus className="-ml-0.5 h-4 w-4" />
                                 Add exhibitor
-                              </Link>
+                              </button>
                             </div>
                           ) : (
                             <div className="mx-auto max-w-sm">
