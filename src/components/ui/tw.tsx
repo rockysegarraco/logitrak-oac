@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
  */
 
 const base =
-  "inline-flex items-center justify-center gap-x-1.5 rounded-full px-4 py-2 text-sm font-semibold shadow-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:pointer-events-none";
+  "inline-flex cursor-pointer items-center justify-center gap-x-1.5 rounded-full px-4 py-2 text-sm font-semibold shadow-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none";
 
 
 const variants = {
