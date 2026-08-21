@@ -19,7 +19,6 @@ import {
   Inbox,
   Search,
   SearchX,
-  SlidersHorizontal,
   Trash2,
   X,
 } from "lucide-react";
@@ -40,15 +39,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 
 import {
   listExhibitors,
