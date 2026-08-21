@@ -48,7 +48,7 @@ import {
 } from "@/lib/exhibitors.functions";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { Num } from "@/components/Num";
-import { applyValueCase, type ValueCase } from "@/lib/text-case";
+import type { ValueCase } from "@/lib/text-case";
 import { cn } from "@/lib/utils";
 
 const FILTER_FIELDS = EXHIBITOR_FIELDS.filter(
@@ -123,13 +123,13 @@ function TrackerPage() {
   const [valueCase, setValueCase] = useState<ValueCase>("sentence");
 
   useEffect(() => {
-    const saved = localStorage.getItem("tracker:valueCase");
+    const saved = localStorage.getItem("tracker:valueCase:v2");
     if (saved === "upper" || saved === "sentence") setValueCase(saved);
   }, []);
 
   const changeValueCase = (mode: ValueCase) => {
     setValueCase(mode);
-    localStorage.setItem("tracker:valueCase", mode);
+    localStorage.setItem("tracker:valueCase:v2", mode);
   };
   const [openTip, setOpenTip] = useState<FieldKey | null>(null);
 
