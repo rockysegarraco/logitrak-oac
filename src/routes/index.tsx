@@ -432,10 +432,10 @@ function TrackerPage() {
                                   }}
                                   className="min-w-32 py-1 md:min-w-0"
                                 />
+                              ) : row[field.key] ? (
+                                <Num>{row[field.key]}</Num>
                               ) : (
-                                row[field.key] || (
-                                  <span className="text-muted-foreground/50">—</span>
-                                )
+                                <span className="text-muted-foreground/50">—</span>
                               )}
                             </td>
                           ))}
