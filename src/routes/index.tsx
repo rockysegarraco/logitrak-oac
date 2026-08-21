@@ -316,7 +316,7 @@ function TrackerPage() {
                                 : "none"
                             }
                             className={cn(
-                              "sticky top-0 z-10 bg-muted px-3 py-3.5 text-left text-xs font-semibold whitespace-nowrap text-foreground backdrop-blur md:whitespace-normal",
+                              "sticky top-0 z-10 bg-muted px-3 py-3.5 text-left text-xs font-semibold whitespace-nowrap text-foreground md:whitespace-normal",
                               index === 0 && "pl-4 sm:pl-6",
                             )}
                           >
