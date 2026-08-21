@@ -39,10 +39,10 @@ export function ExhibitorCreateSheet({
         side="right"
         className="flex w-full flex-col gap-0 p-0 sm:max-w-xl"
       >
-        <SheetHeader className="border-b border-border px-4 py-4 sm:px-6">
+        <SheetHeader className="border-b border-border bg-card px-4 py-4 sm:px-6">
           <SheetTitle className="text-base font-semibold">Add exhibitor</SheetTitle>
-          <SheetDescription className="text-sm text-muted-foreground">
-            Type entries exactly as you would in the spreadsheet, e.g. "YES (SENT 1/28)".
+          <SheetDescription className="sr-only">
+            Add a new exhibitor record.
           </SheetDescription>
         </SheetHeader>
         <div className="flex min-h-0 flex-1 flex-col">
