@@ -290,7 +290,7 @@ function TrackerPage() {
               <div className="max-h-[70vh] overflow-x-auto overflow-y-auto rounded-t-lg md:overflow-x-hidden">
                 <table className="w-full min-w-[1100px] divide-y divide-border md:min-w-0 md:table-fixed">
                   <thead>
-                    <tr>
+                    <tr className="divide-x divide-border">
                       {EXHIBITOR_FIELDS.map((field, index) => {
                         const active = sort?.key === field.key;
                         return (
