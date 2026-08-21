@@ -19,7 +19,6 @@ import {
   Inbox,
   Search,
   SearchX,
-  SlidersHorizontal,
   Trash2,
   X,
 } from "lucide-react";
@@ -40,15 +39,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 
 import {
   listExhibitors,
@@ -64,9 +54,6 @@ import { normalizeValue, type ValueCase } from "@/lib/text-case";
 import { useOpenExhibitorCreate } from "@/lib/exhibitor-create-context";
 import { cn } from "@/lib/utils";
 
-const FILTER_FIELDS = EXHIBITOR_FIELDS.filter(
-  (field) => field.key !== "exhibitor_name" && field.key !== "booth_number",
-);
 
 const PAGE_SIZES = [10, 25, 50, 100];
 
@@ -135,7 +122,7 @@ function TrackerPage() {
 
 
   const [search, setSearch] = useState("");
-  const [filters, setFilters] = useState<Record<string, string>>({});
+  const [userFilter, setUserFilter] = useState("all");
   const [sort, setSort] = useState<{ key: FieldKey; dir: "asc" | "desc" } | null>(null);
   const [headerMode, setHeaderMode] = useState<"short" | "full">("short");
   const [valueCase, setValueCase] = useState<ValueCase>("upper");
@@ -159,7 +146,12 @@ function TrackerPage() {
   const [draft, setDraft] = useState<ExhibitorInput | null>(null);
 
   const term = search.trim().toLowerCase();
-  const activeFilters = Object.entries(filters).filter(([, value]) => value && value !== "all");
+
+  const userOptions = useMemo(
+    () =>
+      Array.from(new Set(exhibitors.map((row) => row.created_by_initials).filter(Boolean))).sort(),
+    [exhibitors],
+  );
 
   const rows = useMemo(() => {
     const filtered = exhibitors.filter((row) => {
@@ -169,10 +161,7 @@ function TrackerPage() {
       ) {
         return false;
       }
-      return activeFilters.every(([key, value]) => {
-        const filled = (row[key as keyof typeof row] as string | null)?.trim();
-        return value === "done" ? Boolean(filled) : !filled;
-      });
+      return userFilter === "all" || row.created_by_initials === userFilter;
     });
 
     if (!sort) return filtered;
@@ -185,14 +174,15 @@ function TrackerPage() {
       if (!bv) return -1;
       return av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" }) * factor;
     });
-  }, [exhibitors, term, JSON.stringify(activeFilters), sort]);
+  }, [exhibitors, term, userFilter, sort]);
 
-  const hasFilters = activeFilters.length > 0 || term.length > 0;
+  const hasFilters = userFilter !== "all" || term.length > 0;
   const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
 
   useEffect(() => {
     setPage(1);
-  }, [term, JSON.stringify(activeFilters), pageSize]);
+  }, [term, userFilter, pageSize]);
+
 
   useEffect(() => {
     if (page > pageCount) setPage(pageCount);
@@ -265,72 +255,24 @@ function TrackerPage() {
             />
           </div>
           <div className="flex flex-wrap items-center gap-3">
-
-
-            <Sheet>
-
-              <SheetTrigger asChild>
-                <TwButton variant="secondary">
-                  <SlidersHorizontal className="-ml-0.5 h-4 w-4" />
-                  Filters
-                  {activeFilters.length > 0 ? (
-                    <span className="ml-1 inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                      {activeFilters.length}
-                    </span>
-                  ) : null}
-                </TwButton>
-              </SheetTrigger>
-              <SheetContent side="right" className="flex w-full flex-col sm:max-w-md">
-                <SheetHeader className="border-b border-border">
-                  <SheetTitle className="text-base font-semibold">Filters</SheetTitle>
-                  <SheetDescription className="text-sm text-muted-foreground">
-                    Narrow the list by which steps are completed.
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="flex-1 space-y-6 overflow-y-auto px-4 py-6">
-                  {FILTER_FIELDS.map((field) => (
-                    <div key={field.key}>
-                      <label
-                        htmlFor={`filter-${field.key}`}
-                        className="block text-sm/6 font-medium text-foreground"
-                      >
-                        {field.label}
-                      </label>
-                      <select
-                        id={`filter-${field.key}`}
-                        value={filters[field.key] ?? "all"}
-                        onChange={(event) =>
-                          setFilters((prev) => ({ ...prev, [field.key]: event.target.value }))
-                        }
-                        className="mt-2 block w-full rounded-md bg-card py-1.5 pr-8 pl-3 text-base text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
-                      >
-                        <option value="all">Any</option>
-                        <option value="done">Completed</option>
-                        <option value="pending">Not done</option>
-                      </select>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex gap-3 border-t border-border px-4 py-4">
-                  <TwButton
-                    variant="secondary"
-                    className="flex-1"
-                    disabled={!hasFilters}
-                    onClick={() => {
-                      setFilters({});
-                      setSearch("");
-                    }}
-                  >
-                    <X className="-ml-0.5 h-4 w-4" />
-                    Clear all
-                  </TwButton>
-                  <SheetClose asChild>
-                    <TwButton className="flex-1">Show {rows.length} results</TwButton>
-                  </SheetClose>
-                </div>
-              </SheetContent>
-            </Sheet>
+            <label htmlFor="filter-user" className="sr-only">
+              Filter by user
+            </label>
+            <select
+              id="filter-user"
+              value={userFilter}
+              onChange={(event) => setUserFilter(event.target.value)}
+              className="block rounded-full bg-card py-1.5 pr-8 pl-3 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
+            >
+              <option value="all">All users</option>
+              {userOptions.map((initials) => (
+                <option key={initials} value={initials}>
+                  {initials}
+                </option>
+              ))}
+            </select>
           </div>
+
         </div>
 
         <div className="mt-8 flow-root">
@@ -614,7 +556,8 @@ function TrackerPage() {
                                 disabled={!hasFilters}
                                 onClick={() => {
                                   setSearch("");
-                                  setFilters({});
+                                  setUserFilter("all");
+
                                 }}
                               >
                                 <X className="-ml-0.5 h-4 w-4" />
