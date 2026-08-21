@@ -8,7 +8,7 @@ const NAV = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-card">
+    <header data-site-header className="sticky top-0 z-30 border-b border-border bg-card print:hidden">
       <div className="flex h-16 w-full items-center gap-8 px-4 sm:px-6 lg:px-8">
         <Link to="/" className="text-xl font-bold tracking-tight text-foreground">
           Shiplist

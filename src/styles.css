@@ -199,3 +199,20 @@
   font-feature-settings: "zero" 1;
   letter-spacing: -0.01em;
 }
+
+@media print {
+  @page {
+    size: letter;
+    margin: 14mm;
+  }
+
+  header[data-site-header],
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #fff;
+  }
+}
