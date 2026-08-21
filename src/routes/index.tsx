@@ -614,7 +614,8 @@ function TrackerPage() {
                                 disabled={!hasFilters}
                                 onClick={() => {
                                   setSearch("");
-                                  setFilters({});
+                                  setUserFilter("all");
+
                                 }}
                               >
                                 <X className="-ml-0.5 h-4 w-4" />
