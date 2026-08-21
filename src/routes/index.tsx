@@ -48,7 +48,7 @@ import {
 } from "@/lib/exhibitors.functions";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { Num } from "@/components/Num";
-import type { ValueCase } from "@/lib/text-case";
+import { normalizeValue, type ValueCase } from "@/lib/text-case";
 import { cn } from "@/lib/utils";
 
 const FILTER_FIELDS = EXHIBITOR_FIELDS.filter(
