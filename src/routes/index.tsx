@@ -313,8 +313,22 @@ function TrackerPage() {
                               type="button"
                               onClick={() => toggleSort(field.key)}
                               className="group inline-flex items-center gap-1.5"
+                              title={field.label}
                             >
-                              {field.label}
+                              <span className="uppercase tracking-wide">{field.short}</span>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span
+                                    role="img"
+                                    aria-label={field.label}
+                                    onClick={(event) => event.stopPropagation()}
+                                    className="text-muted-foreground hover:text-foreground"
+                                  >
+                                    <Info className="h-3.5 w-3.5" />
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent>{field.label}</TooltipContent>
+                              </Tooltip>
                               <span
                                 className={cn(
                                   "rounded text-muted-foreground",
