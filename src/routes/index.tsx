@@ -451,7 +451,23 @@ function TrackerPage() {
                             !editing && "hover:bg-muted/60",
                           )}
                         >
+                          <td className="w-[64px] min-w-[64px] px-3 py-2 text-sm whitespace-nowrap">
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span
+                                  className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-[11px] font-semibold text-primary"
+                                  aria-label={`Created by ${row.created_by_initials || "—"}`}
+                                >
+                                  {row.created_by_initials || "—"}
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                Created by {row.created_by_initials || "unknown"}
+                              </TooltipContent>
+                            </Tooltip>
+                          </td>
                           {EXHIBITOR_FIELDS.map((field, index) => (
+
                             <td
                               key={field.key}
                               className={cn(
