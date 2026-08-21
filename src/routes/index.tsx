@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   queryOptions,
   useMutation,
@@ -126,7 +126,6 @@ function toInput(row: Exhibitor): ExhibitorInput {
 
 function TrackerPage() {
   const { data: exhibitors } = useSuspenseQuery(exhibitorsQuery);
-  const router = useRouter();
   const openCreate = useOpenExhibitorCreate();
 
 
