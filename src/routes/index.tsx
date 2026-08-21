@@ -2,25 +2,16 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Plus, Search, SlidersHorizontal, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { TwButton, TwInput, twButtonClass } from "@/components/ui/tw";
 import {
   Sheet,
   SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 import { listExhibitors } from "@/lib/exhibitors.functions";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
@@ -34,7 +25,6 @@ const exhibitorsQuery = queryOptions({
   queryKey: ["exhibitors"],
   queryFn: () => listExhibitors(),
 });
-
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -51,6 +41,8 @@ export const Route = createFileRoute("/")({
         content:
           "Track exhibitor booths, PAF paperwork, quotes, shipment charges, and receiver numbers in one shared list.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   loader: async ({ context }) => {
@@ -92,21 +84,21 @@ function TrackerPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-8">
-        <header className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+      <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6 lg:px-8">
+        <div className="sm:flex sm:items-center">
+          <div className="sm:flex-auto">
+            <h1 className="text-base font-semibold text-foreground">
               Exhibitor Shipping Tracker
             </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-2 text-sm text-muted-foreground">
               Showing {rows.length} of {exhibitors.length} exhibitor
               {exhibitors.length === 1 ? "" : "s"}. Click a row to edit it.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-0 sm:ml-16 sm:flex-none">
             <div className="relative">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
+              <TwInput
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search all columns"
@@ -116,53 +108,50 @@ function TrackerPage() {
             </div>
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline">
-                  <SlidersHorizontal className="mr-1 h-4 w-4" />
+                <TwButton variant="secondary">
+                  <SlidersHorizontal className="-ml-0.5 h-4 w-4" />
                   Filters
                   {activeFilters.length > 0 ? (
-                    <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">
+                    <span className="ml-1 inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                       {activeFilters.length}
                     </span>
                   ) : null}
-                </Button>
+                </TwButton>
               </SheetTrigger>
-              <SheetContent side="right" className="w-full sm:max-w-md">
-                <SheetHeader>
-                  <SheetTitle>Filters</SheetTitle>
-                  <SheetDescription>
+              <SheetContent side="right" className="flex w-full flex-col sm:max-w-md">
+                <SheetHeader className="border-b border-border">
+                  <SheetTitle className="text-base font-semibold">Filters</SheetTitle>
+                  <SheetDescription className="text-sm text-muted-foreground">
                     Narrow the list by which steps are completed.
                   </SheetDescription>
                 </SheetHeader>
-                <div className="mt-6 flex flex-col gap-4 overflow-y-auto pb-6">
+                <div className="flex-1 space-y-6 overflow-y-auto px-4 py-6">
                   {FILTER_FIELDS.map((field) => (
-                    <div key={field.key} className="flex flex-col gap-1.5">
+                    <div key={field.key}>
                       <label
                         htmlFor={`filter-${field.key}`}
-                        className="text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                        className="block text-sm/6 font-medium text-foreground"
                       >
                         {field.label}
                       </label>
-                      <Select
+                      <select
+                        id={`filter-${field.key}`}
                         value={filters[field.key] ?? "all"}
-                        onValueChange={(value) =>
-                          setFilters((prev) => ({ ...prev, [field.key]: value }))
+                        onChange={(event) =>
+                          setFilters((prev) => ({ ...prev, [field.key]: event.target.value }))
                         }
+                        className="mt-2 block w-full rounded-md bg-card py-1.5 pr-8 pl-3 text-base text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
                       >
-                        <SelectTrigger id={`filter-${field.key}`} className="h-9 bg-background">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">Any</SelectItem>
-                          <SelectItem value="done">Completed</SelectItem>
-                          <SelectItem value="pending">Not done</SelectItem>
-                        </SelectContent>
-                      </Select>
+                        <option value="all">Any</option>
+                        <option value="done">Completed</option>
+                        <option value="pending">Not done</option>
+                      </select>
                     </div>
                   ))}
                 </div>
-                <SheetFooter className="mt-auto flex-row gap-2">
-                  <Button
-                    variant="outline"
+                <div className="flex gap-3 border-t border-border px-4 py-4">
+                  <TwButton
+                    variant="secondary"
                     className="flex-1"
                     disabled={!hasFilters}
                     onClick={() => {
@@ -170,90 +159,91 @@ function TrackerPage() {
                       setSearch("");
                     }}
                   >
-                    <X className="mr-1 h-4 w-4" />
+                    <X className="-ml-0.5 h-4 w-4" />
                     Clear all
-                  </Button>
+                  </TwButton>
                   <SheetClose asChild>
-                    <Button className="flex-1">Show {rows.length} results</Button>
+                    <TwButton className="flex-1">Show {rows.length} results</TwButton>
                   </SheetClose>
-                </SheetFooter>
+                </div>
               </SheetContent>
             </Sheet>
-            <Button asChild>
-              <Link to="/new">
-                <Plus className="mr-1 h-4 w-4" />
-                Add Exhibitor
-              </Link>
-            </Button>
+            <Link to="/new" className={twButtonClass("primary")}>
+              <Plus className="-ml-0.5 h-4 w-4" />
+              Add exhibitor
+            </Link>
           </div>
-        </header>
+        </div>
 
-
-        <section className="mt-6 overflow-hidden rounded-lg border shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[1200px] border-collapse text-sm">
-              <thead>
-                <tr className="bg-muted">
-                  {EXHIBITOR_FIELDS.map((field) => (
-                    <th
-                      key={field.key}
-                      scope="col"
-                      className="border px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground"
-                    >
-                      {field.label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    tabIndex={0}
-                    role="button"
-                    onClick={() =>
-                      router.navigate({ to: "/exhibitor/$id", params: { id: row.id } })
-                    }
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        router.navigate({ to: "/exhibitor/$id", params: { id: row.id } });
-                      }
-                    }}
-                    className="cursor-pointer transition-colors hover:bg-accent"
-                  >
-                    {EXHIBITOR_FIELDS.map((field) => (
-                      <td
-                        key={field.key}
-                        className={cn(
-                          "border px-3 py-2 align-top",
-                          field.key === "exhibitor_name" && "font-medium",
-                        )}
+        <div className="mt-8 flow-root">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+              <div className="overflow-hidden rounded-lg bg-card shadow-sm ring-1 ring-border">
+                <table className="min-w-full divide-y divide-border">
+                  <thead className="bg-muted">
+                    <tr>
+                      {EXHIBITOR_FIELDS.map((field, index) => (
+                        <th
+                          key={field.key}
+                          scope="col"
+                          className={cn(
+                            "px-3 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-foreground",
+                            index === 0 && "pl-4 sm:pl-6",
+                          )}
+                        >
+                          {field.label}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border bg-card">
+                    {rows.map((row) => (
+                      <tr
+                        key={row.id}
+                        tabIndex={0}
+                        role="button"
+                        onClick={() =>
+                          router.navigate({ to: "/exhibitor/$id", params: { id: row.id } })
+                        }
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter") {
+                            router.navigate({ to: "/exhibitor/$id", params: { id: row.id } });
+                          }
+                        }}
+                        className="cursor-pointer transition-colors hover:bg-muted/60"
                       >
-                        {row[field.key] || (
-                          <span className="text-muted-foreground/50">—</span>
-                        )}
-                      </td>
+                        {EXHIBITOR_FIELDS.map((field, index) => (
+                          <td
+                            key={field.key}
+                            className={cn(
+                              "px-3 py-4 text-sm text-muted-foreground",
+                              index === 0 && "pl-4 font-medium text-foreground sm:pl-6",
+                            )}
+                          >
+                            {row[field.key] || <span className="text-muted-foreground/50">—</span>}
+                          </td>
+                        ))}
+                      </tr>
                     ))}
-                  </tr>
-                ))}
-                {rows.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={EXHIBITOR_FIELDS.length}
-                      className="border px-3 py-12 text-center text-muted-foreground"
-                    >
-                      {exhibitors.length === 0
-                        ? "No exhibitors yet — add your first one."
-                        : "No exhibitors match your search or filters."}
-                    </td>
-                  </tr>
-                ) : null}
-              </tbody>
-            </table>
+                    {rows.length === 0 ? (
+                      <tr>
+                        <td
+                          colSpan={EXHIBITOR_FIELDS.length}
+                          className="px-3 py-12 text-center text-sm text-muted-foreground"
+                        >
+                          {exhibitors.length === 0
+                            ? "No exhibitors yet — add your first one."
+                            : "No exhibitors match your search or filters."}
+                        </td>
+                      </tr>
+                    ) : null}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
-        </section>
+        </div>
       </div>
     </main>
   );
 }
-
