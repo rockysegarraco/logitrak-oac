@@ -115,6 +115,9 @@ function TrackerPage() {
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [sort, setSort] = useState<{ key: FieldKey; dir: "asc" | "desc" } | null>(null);
+  const [headerMode, setHeaderMode] = useState<"short" | "full">("short");
+  const [openTip, setOpenTip] = useState<FieldKey | null>(null);
+
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [editingId, setEditingId] = useState<string | null>(null);
