@@ -27,19 +27,14 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-3">
-          <Link
-            to="/" search={{ new: true }}
-            className="hidden items-center rounded-full bg-foreground px-5 py-2.5 text-sm font-semibold text-background transition-opacity hover:opacity-90 sm:inline-flex"
-          >
-            Add exhibitor
-          </Link>
-          <Link
-            to="/" search={{ new: true }}
+          <button
+            type="button"
+            onClick={openForm}
             className="inline-flex items-center gap-1.5 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
           >
             <Plus className="h-4 w-4" />
             Create New
-          </Link>
+          </button>
           <button
             type="button"
             aria-label="Messages"
