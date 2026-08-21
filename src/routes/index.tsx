@@ -120,17 +120,18 @@ function TrackerPage() {
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [sort, setSort] = useState<{ key: FieldKey; dir: "asc" | "desc" } | null>(null);
   const [headerMode, setHeaderMode] = useState<"short" | "full">("short");
-  const [valueCase, setValueCase] = useState<ValueCase>("sentence");
+  const [valueCase, setValueCase] = useState<ValueCase>("upper");
 
   useEffect(() => {
-    const saved = localStorage.getItem("tracker:valueCase:v2");
+    const saved = localStorage.getItem("tracker:valueCase:v3");
     if (saved === "upper" || saved === "sentence") setValueCase(saved);
   }, []);
 
   const changeValueCase = (mode: ValueCase) => {
     setValueCase(mode);
-    localStorage.setItem("tracker:valueCase:v2", mode);
+    localStorage.setItem("tracker:valueCase:v3", mode);
   };
+
   const [openTip, setOpenTip] = useState<FieldKey | null>(null);
 
   const [page, setPage] = useState(1);
