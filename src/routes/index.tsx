@@ -135,7 +135,7 @@ function TrackerPage() {
 
 
   const [search, setSearch] = useState("");
-  const [filters, setFilters] = useState<Record<string, string>>({});
+  const [userFilter, setUserFilter] = useState("all");
   const [sort, setSort] = useState<{ key: FieldKey; dir: "asc" | "desc" } | null>(null);
   const [headerMode, setHeaderMode] = useState<"short" | "full">("short");
   const [valueCase, setValueCase] = useState<ValueCase>("upper");
