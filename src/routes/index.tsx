@@ -77,6 +77,13 @@ const exhibitorsQuery = queryOptions({
 type FieldKey = (typeof EXHIBITOR_FIELDS)[number]["key"];
 
 export const Route = createFileRoute("/")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    new:
+      search['new'] === true || search['new'] === "1" || search['new'] === "true"
+        ? true
+        : undefined,
+  }),
+
   head: () => ({
     meta: [
       { title: "Exhibitor Shipping Tracker" },
