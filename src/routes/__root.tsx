@@ -12,6 +12,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Toaster } from "../components/ui/sonner";
 import { SiteHeader } from "../components/SiteHeader";
 import { ExhibitorCreateSheet } from "../components/ExhibitorCreateSheet";
+import { ExhibitorCreateContext } from "../lib/exhibitor-create-context";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -130,10 +131,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SiteHeader onCreateNew={() => setCreateOpen(true)} />
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
-      <ExhibitorCreateSheet open={createOpen} onOpenChange={setCreateOpen} />
+      <ExhibitorCreateContext.Provider value={() => setCreateOpen(true)}>
+        <SiteHeader onCreateNew={() => setCreateOpen(true)} />
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+        <ExhibitorCreateSheet open={createOpen} onOpenChange={setCreateOpen} />
+      </ExhibitorCreateContext.Provider>
       <Toaster />
     </QueryClientProvider>
   );
