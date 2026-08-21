@@ -335,7 +335,14 @@ function TrackerPage() {
                 <table className="w-full min-w-[1100px] table-auto divide-y divide-border md:min-w-0">
                   <thead>
                     <tr className="divide-x divide-border">
+                      <th
+                        scope="col"
+                        className="sticky top-0 z-10 w-[64px] min-w-[64px] bg-muted px-3 py-3.5 text-left text-xs font-semibold whitespace-nowrap text-foreground"
+                      >
+                        <span className={cn(valueCase === "upper" && "uppercase")}>User</span>
+                      </th>
                       {EXHIBITOR_FIELDS.map((field, index) => {
+
                         const active = sort?.key === field.key;
                         return (
                           <th
