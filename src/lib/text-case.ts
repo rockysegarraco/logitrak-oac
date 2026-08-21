@@ -11,3 +11,8 @@ export function applyValueCase(value: string, mode: ValueCase): string {
   if (!value) return value;
   return mode === "upper" ? value.toUpperCase() : toSentenceCase(value);
 }
+
+/** Trims and collapses internal whitespace, then uppercases for storage/display. */
+export function normalizeValue(value: string): string {
+  return value.replace(/\s+/g, " ").trim().toUpperCase();
+}

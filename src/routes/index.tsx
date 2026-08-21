@@ -48,7 +48,7 @@ import {
 } from "@/lib/exhibitors.functions";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { Num } from "@/components/Num";
-import type { ValueCase } from "@/lib/text-case";
+import { normalizeValue, type ValueCase } from "@/lib/text-case";
 import { cn } from "@/lib/utils";
 
 const FILTER_FIELDS = EXHIBITOR_FIELDS.filter(
@@ -206,7 +206,7 @@ function TrackerPage() {
   const saveEdit = () => {
     if (!editingId || !draft) return;
     const trimmed = Object.fromEntries(
-      Object.entries(draft).map(([k, v]) => [k, (v ?? "").trim()]),
+      Object.entries(draft).map(([k, v]) => [k, normalizeValue(v ?? "")]),
     ) as ExhibitorInput;
     if (!trimmed.exhibitor_name) {
       toast.error("Exhibitor name is required.");
@@ -356,6 +356,7 @@ function TrackerPage() {
                               >
                                 <span
                                   className={cn(
+                                    valueCase === "upper" && "uppercase",
                                     headerMode === "short" && "tracking-wide",
                                     headerMode === "full" && "md:whitespace-normal",
                                   )}
@@ -420,7 +421,10 @@ function TrackerPage() {
 
                       <th
                         scope="col"
-                        className="sticky top-0 z-10 bg-muted px-3 py-3.5 pr-4 text-right text-sm font-semibold whitespace-nowrap text-foreground sm:pr-6"
+                        className={cn(
+                          "sticky top-0 z-10 bg-muted px-3 py-3.5 pr-4 text-right text-sm font-semibold whitespace-nowrap text-foreground sm:pr-6",
+                          valueCase === "upper" && "uppercase",
+                        )}
                       >
                         Actions
                       </th>

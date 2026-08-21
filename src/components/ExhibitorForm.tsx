@@ -2,7 +2,7 @@ import { useState } from "react";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import type { ExhibitorInput } from "@/lib/exhibitors.functions";
-import { toSentenceCase } from "@/lib/text-case";
+import { normalizeValue } from "@/lib/text-case";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -28,7 +28,7 @@ export function ExhibitorForm({
 }: Props) {
   const [values, setValues] = useState<ExhibitorInput>(() =>
     Object.fromEntries(
-      Object.entries(initialValues).map(([k, v]) => [k, toSentenceCase(v ?? "")]),
+      Object.entries(initialValues).map(([k, v]) => [k, normalizeValue(v ?? "")]),
     ) as ExhibitorInput,
   );
   const [errors, setErrors] = useState<Partial<Record<keyof ExhibitorInput, string>>>({});
@@ -70,7 +70,7 @@ export function ExhibitorForm({
           return;
         }
         const trimmed = Object.fromEntries(
-          Object.entries(values).map(([k, v]) => [k, (v ?? "").trim()]),
+          Object.entries(values).map(([k, v]) => [k, normalizeValue(v ?? "")]),
         ) as ExhibitorInput;
         setErrors({});
         setFormError(null);
@@ -98,9 +98,12 @@ export function ExhibitorForm({
                   maxLength={500}
                   aria-invalid={error ? true : undefined}
                   aria-describedby={error ? `${field.key}-error` : undefined}
-                  className={cn(error && "outline-destructive focus:outline-destructive")}
-                  onChange={(event) => set(field.key, event.target.value)}
-                  onBlur={(event) => set(field.key, event.target.value.trim())}
+                  className={cn(
+                    "uppercase",
+                    error && "outline-destructive focus:outline-destructive",
+                  )}
+                  onChange={(event) => set(field.key, event.target.value.toUpperCase())}
+                  onBlur={(event) => set(field.key, normalizeValue(event.target.value))}
                 />
               </div>
               {error ? (
