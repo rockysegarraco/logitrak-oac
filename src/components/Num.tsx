@@ -1,16 +1,20 @@
+import { applyValueCase, type ValueCase } from "@/lib/text-case";
+
 /**
  * Renders text with any numeric runs styled in the numeric display font.
+ * Optionally normalizes letter casing for display only.
  */
-export function Num({ children }: { children: React.ReactNode }) {
+export function Num({
+  children,
+  caseMode = "sentence",
+}: {
+  children: React.ReactNode;
+  caseMode?: ValueCase;
+}) {
   if (typeof children !== "string" && typeof children !== "number") {
     return <>{children}</>;
   }
-  const raw = String(children);
-  // Display-only: soften SHOUTED values (no lowercase letters) to sentence case.
-  const text =
-    /[A-Z]/.test(raw) && !/[a-z]/.test(raw)
-      ? raw.charAt(0) + raw.slice(1).toLowerCase()
-      : raw;
+  const text = applyValueCase(String(children), caseMode);
   const parts = text.split(/(\d+(?:[.,]\d+)*)/g);
   return (
     <>

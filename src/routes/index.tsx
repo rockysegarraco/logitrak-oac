@@ -46,6 +46,7 @@ import {
 } from "@/lib/exhibitors.functions";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { Num } from "@/components/Num";
+import { applyValueCase, type ValueCase } from "@/lib/text-case";
 import { cn } from "@/lib/utils";
 
 const FILTER_FIELDS = EXHIBITOR_FIELDS.filter(
@@ -117,6 +118,17 @@ function TrackerPage() {
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [sort, setSort] = useState<{ key: FieldKey; dir: "asc" | "desc" } | null>(null);
   const [headerMode, setHeaderMode] = useState<"short" | "full">("short");
+  const [valueCase, setValueCase] = useState<ValueCase>("sentence");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("tracker:valueCase");
+    if (saved === "upper" || saved === "sentence") setValueCase(saved);
+  }, []);
+
+  const changeValueCase = (mode: ValueCase) => {
+    setValueCase(mode);
+    localStorage.setItem("tracker:valueCase", mode);
+  };
   const [openTip, setOpenTip] = useState<FieldKey | null>(null);
 
   const [page, setPage] = useState(1);
@@ -226,6 +238,14 @@ function TrackerPage() {
             >
               {headerMode === "short" ? "Show full names" : "Show acronyms"}
             </TwButton>
+            <TwButton
+              variant="secondary"
+              aria-pressed={valueCase === "upper"}
+              onClick={() => changeValueCase(valueCase === "upper" ? "sentence" : "upper")}
+              title="Toggle how table values are capitalized"
+            >
+              {valueCase === "upper" ? "Sentence case values" : "UPPERCASE values"}
+            </TwButton>
             <Sheet>
 
               <SheetTrigger asChild>
@@ -330,7 +350,7 @@ function TrackerPage() {
                               >
                                 <span
                                   className={cn(
-                                    headerMode === "short" && "uppercase tracking-wide",
+                                    headerMode === "short" && "tracking-wide",
                                     headerMode === "full" && "md:whitespace-normal",
                                   )}
                                 >
@@ -434,7 +454,7 @@ function TrackerPage() {
                                   className="min-w-32 py-1 md:min-w-0"
                                 />
                               ) : row[field.key] ? (
-                                <Num>{row[field.key]}</Num>
+                                <Num caseMode={valueCase}>{row[field.key]}</Num>
                               ) : (
                                 <span className="text-muted-foreground/50">—</span>
                               )}
