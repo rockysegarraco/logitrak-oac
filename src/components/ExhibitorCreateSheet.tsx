@@ -37,9 +37,9 @@ export function ExhibitorCreateSheet({
       <SheetContent
         id="create-exhibitor-panel"
         side="right"
-        className="flex w-full flex-col gap-0 sm:max-w-xl"
+        className="flex w-full flex-col gap-0 p-0 sm:max-w-xl"
       >
-        <SheetHeader className="border-b border-border">
+        <SheetHeader className="border-b border-border px-4 py-4 sm:px-6">
           <SheetTitle className="text-base font-semibold">Add exhibitor</SheetTitle>
           <SheetDescription className="text-sm text-muted-foreground">
             Type entries exactly as you would in the spreadsheet, e.g. "YES (SENT 1/28)".
