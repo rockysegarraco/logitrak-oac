@@ -347,7 +347,13 @@ function TrackerPage() {
                     {pageRows.map((row) => {
                       const editing = editingId === row.id;
                       return (
-                        <tr key={row.id} className={cn(!editing && "hover:bg-muted/60")}>
+                        <tr
+                          key={row.id}
+                          className={cn(
+                            "divide-x divide-border",
+                            !editing && "hover:bg-muted/60",
+                          )}
+                        >
                           {EXHIBITOR_FIELDS.map((field, index) => (
                             <td
                               key={field.key}
