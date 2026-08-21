@@ -15,6 +15,7 @@ import {
   ChevronUp,
   Pencil,
   Plus,
+  Info,
   Search,
   SlidersHorizontal,
   SquareArrowOutUpRight,
