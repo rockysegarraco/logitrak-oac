@@ -5,6 +5,7 @@ export type FieldTone = "gold" | "slate" | "cyan" | "blue" | "green" | "teal";
 export type ExhibitorField = {
   key: keyof ExhibitorInput;
   label: string;
+  short: string;
   tone: FieldTone;
   placeholder: string;
   wide?: boolean;
@@ -14,14 +15,28 @@ export const EXHIBITOR_FIELDS: ExhibitorField[] = [
   {
     key: "exhibitor_name",
     label: "Exhibitor Name",
+    short: "Exhibitor",
     tone: "gold",
     placeholder: "Venn Technology",
   },
-  { key: "booth_number", label: "Booth #", tone: "slate", placeholder: "102" },
-  { key: "paf_in_files", label: "PAF in Files?", tone: "cyan", placeholder: "YES" },
+  {
+    key: "booth_number",
+    label: "Booth #",
+    short: "Booth",
+    tone: "slate",
+    placeholder: "102",
+  },
+  {
+    key: "paf_in_files",
+    label: "PAF in Files?",
+    short: "PAF",
+    tone: "cyan",
+    placeholder: "YES",
+  },
   {
     key: "request_for_paf_sent",
     label: "Request for PAF sent?",
+    short: "PAF REQ",
     tone: "cyan",
     placeholder: "YES (SENT 1/28/29)",
     wide: true,
@@ -29,12 +44,14 @@ export const EXHIBITOR_FIELDS: ExhibitorField[] = [
   {
     key: "on_time_quote_sent",
     label: "On Time Quote Sent?",
+    short: "OTQ",
     tone: "blue",
     placeholder: "YES (1/29)",
   },
   {
     key: "on_time_charges_processed",
     label: "On-Time shipment Charges Processed?",
+    short: "OTC",
     tone: "blue",
     placeholder: "charged 1/30",
     wide: true,
@@ -42,18 +59,21 @@ export const EXHIBITOR_FIELDS: ExhibitorField[] = [
   {
     key: "late_fee_quote_sent",
     label: "Late Fee Quote Sent?",
+    short: "LFQ",
     tone: "green",
     placeholder: "DRAFT 1671",
   },
   {
     key: "receiver_numbers_on_time",
     label: "Receiver Number(s) - ON TIME",
+    short: "RCV OT",
     tone: "teal",
     placeholder: "4088,",
   },
   {
     key: "receiver_numbers_late",
     label: "Receiver Number(s) - LATE",
+    short: "RCV LATE",
     tone: "teal",
     placeholder: "4087, 4090",
   },

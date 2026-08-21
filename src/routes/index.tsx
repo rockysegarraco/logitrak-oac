@@ -15,12 +15,19 @@ import {
   ChevronUp,
   Pencil,
   Plus,
+  Info,
   Search,
   SlidersHorizontal,
   SquareArrowOutUpRight,
   X,
 } from "lucide-react";
 import { TwButton, TwInput, twButtonClass } from "@/components/ui/tw";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   Sheet,
   SheetClose,
@@ -192,6 +199,7 @@ function TrackerPage() {
     );
 
   return (
+    <TooltipProvider delayDuration={150}>
     <main className="min-h-screen bg-background">
       <div className="w-full px-4 py-10 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center">
@@ -313,8 +321,22 @@ function TrackerPage() {
                               type="button"
                               onClick={() => toggleSort(field.key)}
                               className="group inline-flex items-center gap-1.5"
+                              title={field.label}
                             >
-                              {field.label}
+                              <span className="uppercase tracking-wide">{field.short}</span>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span
+                                    role="img"
+                                    aria-label={field.label}
+                                    onClick={(event) => event.stopPropagation()}
+                                    className="text-muted-foreground hover:text-foreground"
+                                  >
+                                    <Info className="h-3.5 w-3.5" />
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent>{field.label}</TooltipContent>
+                              </Tooltip>
                               <span
                                 className={cn(
                                   "rounded text-muted-foreground",
@@ -505,5 +527,6 @@ function TrackerPage() {
         </div>
       </div>
     </main>
+    </TooltipProvider>
   );
 }
