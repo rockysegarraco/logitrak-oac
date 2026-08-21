@@ -288,7 +288,7 @@ function TrackerPage() {
           <div className="block min-w-full align-middle">
             <div className="rounded-lg bg-card shadow-sm ring-1 ring-border">
               <div className="max-h-[70vh] overflow-x-auto overflow-y-auto rounded-t-lg md:overflow-x-hidden">
-                <table className="w-full table-fixed divide-y divide-border md:table-auto">
+                <table className="w-full min-w-[1100px] divide-y divide-border md:min-w-0 md:table-fixed">
                   <thead>
                     <tr>
                       {EXHIBITOR_FIELDS.map((field, index) => {
