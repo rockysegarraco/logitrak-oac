@@ -451,7 +451,7 @@ function TrackerPage() {
                             !editing && "hover:bg-muted/60",
                           )}
                         >
-                          <td className="w-[64px] min-w-[64px] px-3 py-2 text-sm whitespace-nowrap">
+                          <td className="w-[64px] min-w-[64px] px-3 py-2 text-center text-sm whitespace-nowrap">
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span
