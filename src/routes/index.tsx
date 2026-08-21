@@ -477,23 +477,35 @@ function TrackerPage() {
                           ))}
                           <td className="w-[132px] min-w-[132px] px-3 py-2 text-right text-sm whitespace-nowrap">
                             {editing ? (
-                              <div className="flex justify-end gap-2">
-                                <TwButton
-                                  onClick={saveEdit}
-                                  disabled={saveMutation.isPending}
-                                  className="px-2 py-1"
-                                >
-                                  <Check className="h-4 w-4" />
-                                  Save
-                                </TwButton>
-                                <TwButton
-                                  variant="secondary"
-                                  onClick={cancelEdit}
-                                  className="px-2 py-1"
-                                >
-                                  Cancel
-                                </TwButton>
+                              <div className="flex justify-end gap-1">
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <TwButton
+                                      onClick={saveEdit}
+                                      disabled={saveMutation.isPending}
+                                      className="px-2 py-1"
+                                      aria-label="Save changes"
+                                    >
+                                      <Check className="h-4 w-4" />
+                                    </TwButton>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Save</TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <TwButton
+                                      variant="secondary"
+                                      onClick={cancelEdit}
+                                      className="px-2 py-1"
+                                      aria-label="Cancel editing"
+                                    >
+                                      <X className="h-4 w-4" />
+                                    </TwButton>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Cancel</TooltipContent>
+                                </Tooltip>
                               </div>
+
                             ) : (
                               <div className="flex justify-end gap-1">
                                 <Tooltip>
