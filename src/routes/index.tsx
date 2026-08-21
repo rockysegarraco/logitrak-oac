@@ -476,30 +476,54 @@ function TrackerPage() {
                                 </TwButton>
                               </div>
                             ) : (
-                              <div className="flex justify-end gap-2">
-                                <TwButton
-                                  variant="secondary"
-                                  className="px-2 py-1"
-                                  onClick={() => startEdit(row)}
-                                  aria-label={`Quick edit ${row.exhibitor_name}`}
-                                >
-                                  <Pencil className="h-4 w-4" />
-                                  Edit
-                                </TwButton>
-                                <TwButton
-                                  variant="ghost"
-                                  className="px-2 py-1"
-                                  aria-label={`Open ${row.exhibitor_name}`}
-                                  onClick={() =>
-                                    router.navigate({
-                                      to: "/exhibitor/$id",
-                                      params: { id: row.id },
-                                    })
-                                  }
-                                >
-                                  <SquareArrowOutUpRight className="h-4 w-4" />
-                                </TwButton>
+                              <div className="flex justify-end gap-1">
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <TwButton
+                                      variant="ghost"
+                                      className="px-2 py-1"
+                                      onClick={() => startEdit(row)}
+                                      aria-label={`Quick edit ${row.exhibitor_name}`}
+                                    >
+                                      <Pencil className="h-4 w-4" />
+                                    </TwButton>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Edit</TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <TwButton
+                                      variant="ghost"
+                                      className="px-2 py-1 text-destructive hover:bg-destructive/10"
+                                      aria-label={`Delete ${row.exhibitor_name}`}
+                                      disabled={deleteMutation.isPending}
+                                      onClick={() => setPendingDelete(row)}
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </TwButton>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Delete</TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <TwButton
+                                      variant="ghost"
+                                      className="px-2 py-1"
+                                      aria-label={`Open ${row.exhibitor_name}`}
+                                      onClick={() =>
+                                        router.navigate({
+                                          to: "/exhibitor/$id",
+                                          params: { id: row.id },
+                                        })
+                                      }
+                                    >
+                                      <SquareArrowOutUpRight className="h-4 w-4" />
+                                    </TwButton>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Open</TooltipContent>
+                                </Tooltip>
                               </div>
+
                             )}
                           </td>
                         </tr>
