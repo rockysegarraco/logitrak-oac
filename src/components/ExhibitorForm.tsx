@@ -61,6 +61,7 @@ export function ExhibitorForm({
   return (
     <form
       noValidate
+      className="flex min-h-0 flex-1 flex-col"
       onSubmit={(event) => {
         event.preventDefault();
         const found = validate();
@@ -77,6 +78,7 @@ export function ExhibitorForm({
         onSubmit(trimmed);
       }}
     >
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6">
       <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
         {EXHIBITOR_FIELDS.map((field) => {
           const error = errors[field.key];
@@ -121,8 +123,9 @@ export function ExhibitorForm({
           {formError}
         </p>
       ) : null}
+      </div>
 
-      <div className="sticky bottom-0 z-10 -mx-4 -mb-6 mt-8 flex items-center gap-x-4 border-t border-border bg-background px-4 py-4 sm:-mx-6 sm:px-6">
+      <div className="flex shrink-0 items-center gap-x-4 border-t border-border bg-background px-4 py-4 sm:px-6">
         <TwButton type="submit" variant="primary" disabled={pending}>
           {pending ? "Saving..." : submitLabel}
         </TwButton>
