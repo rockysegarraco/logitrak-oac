@@ -156,8 +156,8 @@ function TrackerPage() {
     if (!sort) return filtered;
     const factor = sort.dir === "asc" ? 1 : -1;
     return [...filtered].sort((a, b) => {
-      const av = (a[sort.key] ?? "").trim();
-      const bv = (b[sort.key] ?? "").trim();
+      const av = (a[sort.key] ?? "").trim().toLowerCase();
+      const bv = (b[sort.key] ?? "").trim().toLowerCase();
       if (!av && !bv) return 0;
       if (!av) return 1;
       if (!bv) return -1;
