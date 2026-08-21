@@ -1,17 +1,29 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { listExhibitors } from "@/lib/exhibitors.functions";
-import { EXHIBITOR_FIELDS, TONE_HEADER } from "@/lib/exhibitor-fields";
+import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { cn } from "@/lib/utils";
+
+const FILTER_FIELDS = EXHIBITOR_FIELDS.filter(
+  (field) => field.key !== "exhibitor_name" && field.key !== "booth_number",
+);
 
 const exhibitorsQuery = queryOptions({
   queryKey: ["exhibitors"],
   queryFn: () => listExhibitors(),
 });
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
