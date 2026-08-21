@@ -14,7 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      exhibitors: {
+        Row: {
+          booth_number: string
+          created_at: string
+          exhibitor_name: string
+          id: string
+          late_fee_quote_sent: string
+          on_time_charges_processed: string
+          on_time_quote_sent: string
+          paf_in_files: string
+          receiver_numbers_late: string
+          receiver_numbers_on_time: string
+          request_for_paf_sent: string
+          updated_at: string
+        }
+        Insert: {
+          booth_number?: string
+          created_at?: string
+          exhibitor_name: string
+          id?: string
+          late_fee_quote_sent?: string
+          on_time_charges_processed?: string
+          on_time_quote_sent?: string
+          paf_in_files?: string
+          receiver_numbers_late?: string
+          receiver_numbers_on_time?: string
+          request_for_paf_sent?: string
+          updated_at?: string
+        }
+        Update: {
+          booth_number?: string
+          created_at?: string
+          exhibitor_name?: string
+          id?: string
+          late_fee_quote_sent?: string
+          on_time_charges_processed?: string
+          on_time_quote_sent?: string
+          paf_in_files?: string
+          receiver_numbers_late?: string
+          receiver_numbers_on_time?: string
+          request_for_paf_sent?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
