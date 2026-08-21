@@ -1,9 +1,19 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Plus, Search, X } from "lucide-react";
+import { Plus, Search, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   Select,
   SelectContent,
@@ -11,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { listExhibitors } from "@/lib/exhibitors.functions";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { cn } from "@/lib/utils";
@@ -103,6 +114,71 @@ function TrackerPage() {
                 aria-label="Search exhibitors"
               />
             </div>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline">
+                  <SlidersHorizontal className="mr-1 h-4 w-4" />
+                  Filters
+                  {activeFilters.length > 0 ? (
+                    <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">
+                      {activeFilters.length}
+                    </span>
+                  ) : null}
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-full sm:max-w-md">
+                <SheetHeader>
+                  <SheetTitle>Filters</SheetTitle>
+                  <SheetDescription>
+                    Narrow the list by which steps are completed.
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="mt-6 flex flex-col gap-4 overflow-y-auto pb-6">
+                  {FILTER_FIELDS.map((field) => (
+                    <div key={field.key} className="flex flex-col gap-1.5">
+                      <label
+                        htmlFor={`filter-${field.key}`}
+                        className="text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                      >
+                        {field.label}
+                      </label>
+                      <Select
+                        value={filters[field.key] ?? "all"}
+                        onValueChange={(value) =>
+                          setFilters((prev) => ({ ...prev, [field.key]: value }))
+                        }
+                      >
+                        <SelectTrigger id={`filter-${field.key}`} className="h-9 bg-background">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Any</SelectItem>
+                          <SelectItem value="done">Completed</SelectItem>
+                          <SelectItem value="pending">Not done</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  ))}
+                </div>
+                <SheetFooter className="mt-auto flex-row gap-2">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    disabled={!hasFilters}
+                    onClick={() => {
+                      setFilters({});
+                      setSearch("");
+                    }}
+                  >
+                    <X className="mr-1 h-4 w-4" />
+                    Clear all
+                  </Button>
+                  <SheetClose asChild>
+                    <Button className="flex-1">Show {rows.length} results</Button>
+                  </SheetClose>
+                </SheetFooter>
+              </SheetContent>
+            </Sheet>
             <Button asChild>
               <Link to="/new">
                 <Plus className="mr-1 h-4 w-4" />
@@ -112,49 +188,6 @@ function TrackerPage() {
           </div>
         </header>
 
-        <section className="mt-6 rounded-lg border bg-muted/30 p-4">
-          <div className="flex flex-wrap items-end gap-3">
-            {FILTER_FIELDS.map((field) => (
-              <div key={field.key} className="flex flex-col gap-1">
-                <label
-                  htmlFor={`filter-${field.key}`}
-                  className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
-                >
-                  {field.label}
-                </label>
-                <Select
-                  value={filters[field.key] ?? "all"}
-                  onValueChange={(value) =>
-                    setFilters((prev) => ({ ...prev, [field.key]: value }))
-                  }
-                >
-                  <SelectTrigger id={`filter-${field.key}`} className="h-9 w-44 bg-background">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Any</SelectItem>
-                    <SelectItem value="done">Completed</SelectItem>
-                    <SelectItem value="pending">Not done</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            ))}
-            {hasFilters ? (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-9"
-                onClick={() => {
-                  setFilters({});
-                  setSearch("");
-                }}
-              >
-                <X className="mr-1 h-4 w-4" />
-                Clear
-              </Button>
-            ) : null}
-          </div>
-        </section>
 
         <section className="mt-6 overflow-hidden rounded-lg border shadow-sm">
           <div className="overflow-x-auto">
