@@ -506,9 +506,9 @@ function TrackerPage() {
                               )}
                             </td>
                           ))}
-                          <td className="w-[132px] min-w-[132px] px-3 py-2 text-right text-sm whitespace-nowrap">
+                          <td className="w-[132px] min-w-[132px] px-3 py-2 text-center text-sm whitespace-nowrap">
                             {editing ? (
-                              <div className="flex justify-end gap-1">
+                              <div className="flex justify-center gap-1">
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <TwButton
@@ -538,7 +538,7 @@ function TrackerPage() {
                               </div>
 
                             ) : (
-                              <div className="flex justify-end gap-1">
+                              <div className="flex justify-center gap-1">
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <TwButton
