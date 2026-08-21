@@ -130,11 +130,8 @@ function TrackerPage() {
   const router = useRouter();
   const [createOpen, setCreateOpen] = useState(false);
 
-  useEffect(() => {
-    const open = () => setCreateOpen(true);
-    window.addEventListener("open-exhibitor-form", open);
-    return () => window.removeEventListener("open-exhibitor-form", open);
-  }, []);
+  useEffect(() => subscribeOpenExhibitorForm(() => setCreateOpen(true)), []);
+
 
   const queryClient = useQueryClient();
   const update = useServerFn(updateExhibitor);
