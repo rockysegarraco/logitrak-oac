@@ -735,6 +735,13 @@ function TrackerPage() {
         </AlertDialogContent>
       </AlertDialog>
     </main>
+    <ExhibitorCreateSheet
+      open={createOpen === true}
+      onOpenChange={(open) =>
+        navigate({ to: "/", search: open ? { new: true } : {}, replace: true })
+      }
+    />
     </TooltipProvider>
+
   );
 }
