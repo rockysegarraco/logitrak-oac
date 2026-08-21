@@ -45,7 +45,7 @@ export function ExhibitorCreateSheet({
             Type entries exactly as you would in the spreadsheet, e.g. "YES (SENT 1/28)".
           </SheetDescription>
         </SheetHeader>
-        <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+        <div className="flex min-h-0 flex-1 flex-col">
           <ExhibitorForm
             initialValues={EMPTY_EXHIBITOR}
             submitLabel="Add Exhibitor"
