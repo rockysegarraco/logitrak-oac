@@ -1,16 +1,10 @@
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
-import { toast } from "sonner";
-import { ArrowLeft } from "lucide-react";
-import { ExhibitorForm } from "@/components/ExhibitorForm";
-import { EMPTY_EXHIBITOR } from "@/lib/exhibitor-fields";
-import {
-  deleteExhibitor,
-  getExhibitor,
-  updateExhibitor,
-  type ExhibitorInput,
-} from "@/lib/exhibitors.functions";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { ArrowLeft, Printer } from "lucide-react";
+import { Num } from "@/components/Num";
+import { TwButton } from "@/components/ui/tw";
+import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
+import { getExhibitor } from "@/lib/exhibitors.functions";
 
 const exhibitorQuery = (id: string) =>
   queryOptions({
@@ -21,22 +15,25 @@ const exhibitorQuery = (id: string) =>
 export const Route = createFileRoute("/exhibitor/$id")({
   head: () => ({
     meta: [
-      { title: "Edit Exhibitor — Shipping Tracker" },
+      { title: "Exhibitor Shipping Summary — Tracker" },
       {
         name: "description",
-        content: "Update booth, PAF, quote, charge, and receiver details for this exhibitor.",
+        content:
+          "Printable one-page summary of an exhibitor's booth, PAF, quote, charge, and receiver details.",
       },
-      { property: "og:title", content: "Edit Exhibitor — Shipping Tracker" },
+      { property: "og:title", content: "Exhibitor Shipping Summary — Tracker" },
       {
         property: "og:description",
-        content: "Update tracking details for an exhibitor in the shared shipping tracker.",
+        content: "View and print a single exhibitor's shipping tracking record.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   loader: async ({ context, params }) => {
     await context.queryClient.ensureQueryData(exhibitorQuery(params.id));
   },
-  component: EditExhibitorPage,
+  component: ExhibitorSummaryPage,
   errorComponent: ({ error }) => (
     <div className="mx-auto max-w-xl p-10 text-center" role="alert">
       <h1 className="text-lg font-semibold">Couldn't load this exhibitor</h1>
@@ -48,39 +45,19 @@ export const Route = createFileRoute("/exhibitor/$id")({
   ),
 });
 
-function EditExhibitorPage() {
+const SECTIONS: { title: string; keys: string[] }[] = [
+  { title: "Exhibitor", keys: ["exhibitor_name", "booth_number"] },
+  { title: "PAF", keys: ["paf_in_files", "request_for_paf_sent"] },
+  {
+    title: "Quotes & Charges",
+    keys: ["on_time_quote_sent", "on_time_charges_processed", "late_fee_quote_sent"],
+  },
+  { title: "Receivers", keys: ["receiver_numbers_on_time", "receiver_numbers_late"] },
+];
+
+function ExhibitorSummaryPage() {
   const { id } = Route.useParams();
-  const router = useRouter();
-  const queryClient = useQueryClient();
   const { data: exhibitor } = useSuspenseQuery(exhibitorQuery(id));
-  const update = useServerFn(updateExhibitor);
-  const remove = useServerFn(deleteExhibitor);
-
-  const invalidate = () =>
-    Promise.all([
-      queryClient.invalidateQueries({ queryKey: ["exhibitors"] }),
-      queryClient.invalidateQueries({ queryKey: ["exhibitors", id] }),
-    ]);
-
-  const saveMutation = useMutation({
-    mutationFn: (values: ExhibitorInput) => update({ data: { ...values, id } }),
-    onSuccess: async () => {
-      await invalidate();
-      toast.success("Changes saved");
-      router.navigate({ to: "/" });
-    },
-    onError: (error: Error) => toast.error(error.message),
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: () => remove({ data: { id } }),
-    onSuccess: async () => {
-      await invalidate();
-      toast.success("Exhibitor deleted");
-      router.navigate({ to: "/" });
-    },
-    onError: (error: Error) => toast.error(error.message),
-  });
 
   if (!exhibitor) {
     return (
@@ -93,39 +70,85 @@ function EditExhibitorPage() {
     );
   }
 
-  const initialValues: ExhibitorInput = {
-    ...EMPTY_EXHIBITOR,
-    exhibitor_name: exhibitor.exhibitor_name,
-    booth_number: exhibitor.booth_number,
-    paf_in_files: exhibitor.paf_in_files,
-    request_for_paf_sent: exhibitor.request_for_paf_sent,
-    on_time_quote_sent: exhibitor.on_time_quote_sent,
-    on_time_charges_processed: exhibitor.on_time_charges_processed,
-    late_fee_quote_sent: exhibitor.late_fee_quote_sent,
-    receiver_numbers_on_time: exhibitor.receiver_numbers_on_time,
-    receiver_numbers_late: exhibitor.receiver_numbers_late,
-  };
+  const value = (key: string) => (exhibitor as Record<string, string>)[key]?.trim() ?? "";
 
   return (
-    <main className="min-h-screen bg-background">
-      <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
-        <Link to="/" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" />
-          Back to tracker
-        </Link>
-        <h1 className="mt-4 text-base font-semibold text-foreground">{exhibitor.exhibitor_name}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Edit this exhibitor's tracking details.</p>
-        <div className="mt-6 rounded-lg bg-card px-4 py-6 shadow-sm ring-1 ring-border sm:p-8">
-          <ExhibitorForm
-            initialValues={initialValues}
-            submitLabel="Save Changes"
-            pending={saveMutation.isPending}
-            deletePending={deleteMutation.isPending}
-            onSubmit={(values) => saveMutation.mutate(values)}
-            onCancel={() => router.navigate({ to: "/" })}
-            onDelete={() => deleteMutation.mutate()}
-          />
+    <main className="min-h-screen bg-muted/40 print:bg-transparent">
+      <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 print:max-w-none print:p-0">
+        <div className="flex items-center justify-between gap-3 print:hidden">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to tracker
+          </Link>
+          <TwButton onClick={() => window.print()} aria-label="Print this summary">
+            <Printer className="h-4 w-4" />
+            Print
+          </TwButton>
         </div>
+
+        <article className="mt-5 rounded-lg bg-card p-8 shadow-sm ring-1 ring-border print:mt-0 print:rounded-none print:p-0 print:shadow-none print:ring-0">
+          <header className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5">
+            <div>
+              <p className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+                Exhibitor Shipping Summary
+              </p>
+              <h1 className="mt-1 text-2xl font-semibold text-foreground uppercase">
+                <Num caseMode="upper">{exhibitor.exhibitor_name || "—"}</Num>
+              </h1>
+            </div>
+            <div className="text-right">
+              <p className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+                Booth
+              </p>
+              <p className="text-2xl font-semibold text-foreground">
+                <Num caseMode="upper">{exhibitor.booth_number || "—"}</Num>
+              </p>
+            </div>
+          </header>
+
+          <div className="mt-6 space-y-6">
+            {SECTIONS.slice(1).map((section) => (
+              <section key={section.title} className="break-inside-avoid">
+                <h2 className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+                  {section.title}
+                </h2>
+                <dl className="mt-2 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
+                  {section.keys.map((key) => {
+                    const field = EXHIBITOR_FIELDS.find((f) => f.key === key)!;
+                    const v = value(key);
+                    return (
+                      <div
+                        key={key}
+                        className="border-b border-border/70 pb-2 last:border-b sm:last:border-b"
+                      >
+                        <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                          {field.label}
+                        </dt>
+                        <dd className="mt-1 text-sm font-medium text-foreground uppercase">
+                          {v ? (
+                            <Num caseMode="upper">{v}</Num>
+                          ) : (
+                            <span className="text-muted-foreground/60">—</span>
+                          )}
+                        </dd>
+                      </div>
+                    );
+                  })}
+                </dl>
+              </section>
+            ))}
+          </div>
+
+          <footer className="mt-8 flex items-center justify-between border-t border-border pt-4 text-[11px] text-muted-foreground">
+            <span>Exhibitor Shipping Tracker</span>
+            <span>
+              Printed <Num caseMode="upper">{new Date().toLocaleDateString()}</Num>
+            </span>
+          </footer>
+        </article>
       </div>
     </main>
   );
