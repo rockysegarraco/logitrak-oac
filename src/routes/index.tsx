@@ -59,15 +59,25 @@ function TrackerPage() {
   const { data: exhibitors } = useSuspenseQuery(exhibitorsQuery);
   const router = useRouter();
   const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState<Record<string, string>>({});
 
   const term = search.trim().toLowerCase();
-  const rows = term
-    ? exhibitors.filter(
-        (row) =>
-          row.exhibitor_name.toLowerCase().includes(term) ||
-          row.booth_number.toLowerCase().includes(term),
-      )
-    : exhibitors;
+  const activeFilters = Object.entries(filters).filter(([, value]) => value && value !== "all");
+
+  const rows = exhibitors.filter((row) => {
+    if (
+      term &&
+      !EXHIBITOR_FIELDS.some((field) => (row[field.key] ?? "").toLowerCase().includes(term))
+    ) {
+      return false;
+    }
+    return activeFilters.every(([key, value]) => {
+      const filled = (row[key as keyof typeof row] as string | null)?.trim();
+      return value === "done" ? Boolean(filled) : !filled;
+    });
+  });
+
+  const hasFilters = activeFilters.length > 0 || term.length > 0;
 
   return (
     <main className="min-h-screen bg-background">
@@ -78,8 +88,8 @@ function TrackerPage() {
               Exhibitor Shipping Tracker
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              {exhibitors.length} exhibitor{exhibitors.length === 1 ? "" : "s"} tracked. Click a
-              row to edit it.
+              Showing {rows.length} of {exhibitors.length} exhibitor
+              {exhibitors.length === 1 ? "" : "s"}. Click a row to edit it.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -88,8 +98,8 @@ function TrackerPage() {
               <Input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search name or booth"
-                className="w-56 pl-9"
+                placeholder="Search all columns"
+                className="w-64 pl-9"
                 aria-label="Search exhibitors"
               />
             </div>
@@ -102,19 +112,60 @@ function TrackerPage() {
           </div>
         </header>
 
-        <section className="mt-8 overflow-hidden rounded-lg border shadow-sm">
+        <section className="mt-6 rounded-lg border bg-muted/30 p-4">
+          <div className="flex flex-wrap items-end gap-3">
+            {FILTER_FIELDS.map((field) => (
+              <div key={field.key} className="flex flex-col gap-1">
+                <label
+                  htmlFor={`filter-${field.key}`}
+                  className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
+                >
+                  {field.label}
+                </label>
+                <Select
+                  value={filters[field.key] ?? "all"}
+                  onValueChange={(value) =>
+                    setFilters((prev) => ({ ...prev, [field.key]: value }))
+                  }
+                >
+                  <SelectTrigger id={`filter-${field.key}`} className="h-9 w-44 bg-background">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Any</SelectItem>
+                    <SelectItem value="done">Completed</SelectItem>
+                    <SelectItem value="pending">Not done</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            ))}
+            {hasFilters ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-9"
+                onClick={() => {
+                  setFilters({});
+                  setSearch("");
+                }}
+              >
+                <X className="mr-1 h-4 w-4" />
+                Clear
+              </Button>
+            ) : null}
+          </div>
+        </section>
+
+        <section className="mt-6 overflow-hidden rounded-lg border shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[1200px] border-collapse text-sm">
               <thead>
-                <tr>
+                <tr className="bg-muted">
                   {EXHIBITOR_FIELDS.map((field) => (
                     <th
                       key={field.key}
                       scope="col"
-                      className={cn(
-                        "border border-background/20 px-3 py-3 text-center text-xs font-bold uppercase tracking-wide",
-                        TONE_HEADER[field.tone],
-                      )}
+                      className="border px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground"
                     >
                       {field.label}
                     </th>
@@ -122,7 +173,7 @@ function TrackerPage() {
                 </tr>
               </thead>
               <tbody>
-                {rows.map((row, index) => (
+                {rows.map((row) => (
                   <tr
                     key={row.id}
                     tabIndex={0}
@@ -135,10 +186,7 @@ function TrackerPage() {
                         router.navigate({ to: "/exhibitor/$id", params: { id: row.id } });
                       }
                     }}
-                    className={cn(
-                      "cursor-pointer transition-colors hover:bg-accent",
-                      index % 2 === 1 && "bg-sheet-row/40",
-                    )}
+                    className="cursor-pointer transition-colors hover:bg-accent"
                   >
                     {EXHIBITOR_FIELDS.map((field) => (
                       <td
@@ -163,7 +211,7 @@ function TrackerPage() {
                     >
                       {exhibitors.length === 0
                         ? "No exhibitors yet — add your first one."
-                        : "No exhibitors match that search."}
+                        : "No exhibitors match your search or filters."}
                     </td>
                   </tr>
                 ) : null}
@@ -175,3 +223,4 @@ function TrackerPage() {
     </main>
   );
 }
+
