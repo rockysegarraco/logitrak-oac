@@ -265,72 +265,24 @@ function TrackerPage() {
             />
           </div>
           <div className="flex flex-wrap items-center gap-3">
-
-
-            <Sheet>
-
-              <SheetTrigger asChild>
-                <TwButton variant="secondary">
-                  <SlidersHorizontal className="-ml-0.5 h-4 w-4" />
-                  Filters
-                  {activeFilters.length > 0 ? (
-                    <span className="ml-1 inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                      {activeFilters.length}
-                    </span>
-                  ) : null}
-                </TwButton>
-              </SheetTrigger>
-              <SheetContent side="right" className="flex w-full flex-col sm:max-w-md">
-                <SheetHeader className="border-b border-border">
-                  <SheetTitle className="text-base font-semibold">Filters</SheetTitle>
-                  <SheetDescription className="text-sm text-muted-foreground">
-                    Narrow the list by which steps are completed.
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="flex-1 space-y-6 overflow-y-auto px-4 py-6">
-                  {FILTER_FIELDS.map((field) => (
-                    <div key={field.key}>
-                      <label
-                        htmlFor={`filter-${field.key}`}
-                        className="block text-sm/6 font-medium text-foreground"
-                      >
-                        {field.label}
-                      </label>
-                      <select
-                        id={`filter-${field.key}`}
-                        value={filters[field.key] ?? "all"}
-                        onChange={(event) =>
-                          setFilters((prev) => ({ ...prev, [field.key]: event.target.value }))
-                        }
-                        className="mt-2 block w-full rounded-md bg-card py-1.5 pr-8 pl-3 text-base text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
-                      >
-                        <option value="all">Any</option>
-                        <option value="done">Completed</option>
-                        <option value="pending">Not done</option>
-                      </select>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex gap-3 border-t border-border px-4 py-4">
-                  <TwButton
-                    variant="secondary"
-                    className="flex-1"
-                    disabled={!hasFilters}
-                    onClick={() => {
-                      setFilters({});
-                      setSearch("");
-                    }}
-                  >
-                    <X className="-ml-0.5 h-4 w-4" />
-                    Clear all
-                  </TwButton>
-                  <SheetClose asChild>
-                    <TwButton className="flex-1">Show {rows.length} results</TwButton>
-                  </SheetClose>
-                </div>
-              </SheetContent>
-            </Sheet>
+            <label htmlFor="filter-user" className="sr-only">
+              Filter by user
+            </label>
+            <select
+              id="filter-user"
+              value={userFilter}
+              onChange={(event) => setUserFilter(event.target.value)}
+              className="block rounded-full bg-card py-1.5 pr-8 pl-3 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
+            >
+              <option value="all">All users</option>
+              {userOptions.map((initials) => (
+                <option key={initials} value={initials}>
+                  {initials}
+                </option>
+              ))}
+            </select>
           </div>
+
         </div>
 
         <div className="mt-8 flow-root">
