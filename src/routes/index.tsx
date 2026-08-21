@@ -129,6 +129,13 @@ function TrackerPage() {
   const { data: exhibitors } = useSuspenseQuery(exhibitorsQuery);
   const router = useRouter();
   const [createOpen, setCreateOpen] = useState(false);
+
+  useEffect(() => {
+    const open = () => setCreateOpen(true);
+    window.addEventListener("open-exhibitor-form", open);
+    return () => window.removeEventListener("open-exhibitor-form", open);
+  }, []);
+
   const queryClient = useQueryClient();
   const update = useServerFn(updateExhibitor);
   const remove = useServerFn(deleteExhibitor);
