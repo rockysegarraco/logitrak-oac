@@ -285,9 +285,9 @@ function TrackerPage() {
         </div>
 
         <div className="mt-8 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-              <div className="overflow-hidden rounded-lg bg-card shadow-sm ring-1 ring-border">
+          <div className="block min-w-full align-middle">
+            <div className="rounded-lg bg-card shadow-sm ring-1 ring-border">
+              <div className="max-h-[70vh] overflow-auto rounded-t-lg">
                 <table className="w-full min-w-full divide-y divide-border">
                   <thead>
                     <tr>
@@ -440,8 +440,9 @@ function TrackerPage() {
                     ) : null}
                   </tbody>
                 </table>
+              </div>
 
-                <nav
+              <nav
                   aria-label="Pagination"
                   className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-card px-4 py-3 sm:px-6"
                 >
@@ -492,8 +493,7 @@ function TrackerPage() {
                       Next
                     </TwButton>
                   </div>
-                </nav>
-              </div>
+              </nav>
             </div>
           </div>
         </div>
