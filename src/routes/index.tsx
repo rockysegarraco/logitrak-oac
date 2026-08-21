@@ -566,24 +566,6 @@ function TrackerPage() {
                                   </TooltipTrigger>
                                   <TooltipContent>Delete</TooltipContent>
                                 </Tooltip>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <TwButton
-                                      variant="ghost"
-                                      className="px-2 py-1"
-                                      aria-label={`Open ${row.exhibitor_name}`}
-                                      onClick={() =>
-                                        router.navigate({
-                                          to: "/exhibitor/$id",
-                                          params: { id: row.id },
-                                        })
-                                      }
-                                    >
-                                      <SquareArrowOutUpRight className="h-4 w-4" />
-                                    </TwButton>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Open</TooltipContent>
-                                </Tooltip>
                               </div>
 
                             )}
