@@ -171,6 +171,26 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
+
+  button:not(:disabled),
+  a[href],
+  summary,
+  label[for],
+  [role="button"]:not([aria-disabled="true"]),
+  [role="link"],
+  [role="menuitem"],
+  [role="option"],
+  [role="tab"],
+  [role="checkbox"],
+  [role="radio"],
+  [role="switch"] {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
 }
 
 @utility num {
