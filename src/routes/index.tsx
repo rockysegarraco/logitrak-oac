@@ -586,7 +586,7 @@ function TrackerPage() {
                     {pageRows.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={EXHIBITOR_FIELDS.length + 1}
+                          colSpan={EXHIBITOR_FIELDS.length + 2}
                           className="px-6 py-16 text-center"
                         >
                           {exhibitors.length === 0 ? (
