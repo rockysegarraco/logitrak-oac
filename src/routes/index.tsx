@@ -226,7 +226,15 @@ function TrackerPage() {
                 aria-label="Search exhibitors"
               />
             </div>
+            <TwButton
+              variant="secondary"
+              aria-pressed={headerMode === "full"}
+              onClick={() => setHeaderMode((m) => (m === "short" ? "full" : "short"))}
+            >
+              {headerMode === "short" ? "Show full names" : "Show acronyms"}
+            </TwButton>
             <Sheet>
+
               <SheetTrigger asChild>
                 <TwButton variant="secondary">
                   <SlidersHorizontal className="-ml-0.5 h-4 w-4" />
