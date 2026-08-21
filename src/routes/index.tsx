@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import {
   queryOptions,
   useMutation,
@@ -20,7 +20,6 @@ import {
   Search,
   SearchX,
   SlidersHorizontal,
-  SquareArrowOutUpRight,
   Trash2,
   X,
 } from "lucide-react";
@@ -127,7 +126,6 @@ function toInput(row: Exhibitor): ExhibitorInput {
 
 function TrackerPage() {
   const { data: exhibitors } = useSuspenseQuery(exhibitorsQuery);
-  const router = useRouter();
   const openCreate = useOpenExhibitorCreate();
 
 
@@ -565,24 +563,6 @@ function TrackerPage() {
                                     </TwButton>
                                   </TooltipTrigger>
                                   <TooltipContent>Delete</TooltipContent>
-                                </Tooltip>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <TwButton
-                                      variant="ghost"
-                                      className="px-2 py-1"
-                                      aria-label={`Open ${row.exhibitor_name}`}
-                                      onClick={() =>
-                                        router.navigate({
-                                          to: "/exhibitor/$id",
-                                          params: { id: row.id },
-                                        })
-                                      }
-                                    >
-                                      <SquareArrowOutUpRight className="h-4 w-4" />
-                                    </TwButton>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Open</TooltipContent>
                                 </Tooltip>
                               </div>
 
