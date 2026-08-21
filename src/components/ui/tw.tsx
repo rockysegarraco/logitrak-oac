@@ -7,7 +7,8 @@ import { cn } from "@/lib/utils";
  */
 
 const base =
-  "inline-flex items-center justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold shadow-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:pointer-events-none";
+  "inline-flex items-center justify-center gap-x-1.5 rounded-full px-4 py-2 text-sm font-semibold shadow-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:pointer-events-none";
+
 
 const variants = {
   primary: "bg-primary text-primary-foreground hover:bg-primary/90",
