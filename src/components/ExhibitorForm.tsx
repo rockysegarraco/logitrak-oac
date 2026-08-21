@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { EXHIBITOR_FIELDS, TONE_ACCENT } from "@/lib/exhibitor-fields";
+import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
+import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import type { ExhibitorInput } from "@/lib/exhibitors.functions";
 import { cn } from "@/lib/utils";
 
@@ -45,42 +43,43 @@ export function ExhibitorForm({
         setError(null);
         onSubmit(trimmed);
       }}
-      className="space-y-6"
     >
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
         {EXHIBITOR_FIELDS.map((field) => (
           <div
             key={field.key}
-            className={cn("space-y-2", field.wide && "sm:col-span-2")}
+            className={cn("sm:col-span-3", field.wide && "sm:col-span-6")}
           >
-            <Label htmlFor={field.key} className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide">
-              <span className={cn("h-3 w-1.5 rounded-full", TONE_ACCENT[field.tone])} />
-              {field.label}
-            </Label>
-            <Input
-              id={field.key}
-              value={values[field.key]}
-              placeholder={field.placeholder}
-              maxLength={500}
-              onChange={(event) => set(field.key, event.target.value)}
-            />
+            <TwLabel htmlFor={field.key}>{field.label}</TwLabel>
+            <div className="mt-2">
+              <TwInput
+                id={field.key}
+                value={values[field.key]}
+                placeholder={field.placeholder}
+                maxLength={500}
+                onChange={(event) => set(field.key, event.target.value)}
+              />
+            </div>
           </div>
         ))}
       </div>
 
-      {error ? <p className="text-sm text-destructive">{error}</p> : null}
+      {error ? (
+        <p className="mt-4 text-sm text-destructive" role="alert">
+          {error}
+        </p>
+      ) : null}
 
-      <div className="flex flex-wrap items-center gap-3 border-t pt-5">
-        <Button type="submit" disabled={pending}>
+      <div className="mt-8 flex items-center gap-x-4 border-t border-border pt-6">
+        <TwButton type="submit" variant="primary" disabled={pending}>
           {pending ? "Saving..." : submitLabel}
-        </Button>
-        <Button type="button" variant="outline" onClick={onCancel}>
+        </TwButton>
+        <TwButton variant="ghost" onClick={onCancel}>
           Cancel
-        </Button>
+        </TwButton>
         {onDelete ? (
-          <Button
-            type="button"
-            variant="destructive"
+          <TwButton
+            variant="danger"
             className="ml-auto"
             disabled={deletePending}
             onClick={() => {
@@ -88,7 +87,7 @@ export function ExhibitorForm({
             }}
           >
             {deletePending ? "Deleting..." : "Delete"}
-          </Button>
+          </TwButton>
         ) : null}
       </div>
     </form>
