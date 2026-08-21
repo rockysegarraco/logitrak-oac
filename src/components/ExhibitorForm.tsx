@@ -15,6 +15,8 @@ type Props = {
   deletePending?: boolean;
 };
 
+const REQUIRED_FIELDS: (keyof ExhibitorInput)[] = ["exhibitor_name"];
+
 export function ExhibitorForm({
   initialValues,
   submitLabel,
@@ -29,49 +31,91 @@ export function ExhibitorForm({
       Object.entries(initialValues).map(([k, v]) => [k, toSentenceCase(v ?? "")]),
     ) as ExhibitorInput,
   );
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Partial<Record<keyof ExhibitorInput, string>>>({});
+  const [formError, setFormError] = useState<string | null>(null);
 
-  const set = (key: keyof ExhibitorInput, value: string) =>
+  const set = (key: keyof ExhibitorInput, value: string) => {
     setValues((prev) => ({ ...prev, [key]: value }));
+    setErrors((prev) => {
+      if (!prev[key]) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  };
+
+  const validate = () => {
+    const next: Partial<Record<keyof ExhibitorInput, string>> = {};
+    for (const field of EXHIBITOR_FIELDS) {
+      const raw = values[field.key] ?? "";
+      const trimmed = raw.trim();
+      if (!trimmed && REQUIRED_FIELDS.includes(field.key)) {
+        next[field.key] = `${field.label} is required.`;
+      } else if (raw.length > 0 && !trimmed) {
+        next[field.key] = `${field.label} can't be only spaces.`;
+      }
+    }
+    return next;
+  };
 
   return (
     <form
+      noValidate
       onSubmit={(event) => {
         event.preventDefault();
-        const trimmed = Object.fromEntries(
-          Object.entries(values).map(([k, v]) => [k, v.trim()]),
-        ) as ExhibitorInput;
-        if (!trimmed.exhibitor_name) {
-          setError("Exhibitor name is required.");
+        const found = validate();
+        if (Object.keys(found).length > 0) {
+          setErrors(found);
+          setFormError("Please fix the highlighted fields before saving.");
           return;
         }
-        setError(null);
+        const trimmed = Object.fromEntries(
+          Object.entries(values).map(([k, v]) => [k, (v ?? "").trim()]),
+        ) as ExhibitorInput;
+        setErrors({});
+        setFormError(null);
         onSubmit(trimmed);
       }}
     >
       <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
-        {EXHIBITOR_FIELDS.map((field) => (
-          <div
-            key={field.key}
-            className={cn("sm:col-span-3", field.wide && "sm:col-span-6")}
-          >
-            <TwLabel htmlFor={field.key}>{field.label}</TwLabel>
-            <div className="mt-2">
-              <TwInput
-                id={field.key}
-                value={values[field.key]}
-                placeholder={field.placeholder}
-                maxLength={500}
-                onChange={(event) => set(field.key, event.target.value)}
-              />
+        {EXHIBITOR_FIELDS.map((field) => {
+          const error = errors[field.key];
+          const required = REQUIRED_FIELDS.includes(field.key);
+          return (
+            <div
+              key={field.key}
+              className={cn("sm:col-span-3", field.wide && "sm:col-span-6")}
+            >
+              <TwLabel htmlFor={field.key}>
+                {field.label}
+                {required ? <span className="ml-1 text-destructive">*</span> : null}
+              </TwLabel>
+              <div className="mt-2">
+                <TwInput
+                  id={field.key}
+                  value={values[field.key]}
+                  placeholder={field.placeholder}
+                  maxLength={500}
+                  aria-invalid={error ? true : undefined}
+                  aria-describedby={error ? `${field.key}-error` : undefined}
+                  className={cn(error && "outline-destructive focus:outline-destructive")}
+                  onChange={(event) => set(field.key, event.target.value)}
+                  onBlur={(event) => set(field.key, event.target.value.trim())}
+                />
+              </div>
+              {error ? (
+                <p id={`${field.key}-error`} className="mt-1 text-sm text-destructive">
+                  {error}
+                </p>
+              ) : null}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {error ? (
+      {formError ? (
         <p className="mt-4 text-sm text-destructive" role="alert">
-          {error}
+          {formError}
         </p>
       ) : null}
 
