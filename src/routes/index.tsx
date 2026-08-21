@@ -20,7 +20,6 @@ import {
   Search,
   SearchX,
   SlidersHorizontal,
-  SquareArrowOutUpRight,
   Trash2,
   X,
 } from "lucide-react";
