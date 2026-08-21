@@ -127,6 +127,7 @@ function TrackerPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const update = useServerFn(updateExhibitor);
+  const remove = useServerFn(deleteExhibitor);
 
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<Record<string, string>>({});
@@ -666,6 +667,33 @@ function TrackerPage() {
           </div>
         </div>
       </div>
+      <AlertDialog
+        open={pendingDelete !== null}
+        onOpenChange={(open) => !open && setPendingDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this exhibitor?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {pendingDelete?.exhibitor_name} will be permanently removed. This
+              can&apos;t be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={(event) => {
+                event.preventDefault();
+                if (pendingDelete) deleteMutation.mutate(pendingDelete.id);
+              }}
+              disabled={deleteMutation.isPending}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </main>
     </TooltipProvider>
   );
