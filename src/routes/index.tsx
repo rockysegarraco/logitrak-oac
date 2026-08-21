@@ -125,9 +125,12 @@ function toInput(row: Exhibitor): ExhibitorInput {
 function TrackerPage() {
   const { data: exhibitors } = useSuspenseQuery(exhibitorsQuery);
   const router = useRouter();
+  const navigate = useNavigate();
+  const { new: createOpen } = Route.useSearch();
   const queryClient = useQueryClient();
   const update = useServerFn(updateExhibitor);
   const remove = useServerFn(deleteExhibitor);
+
 
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<Record<string, string>>({});
