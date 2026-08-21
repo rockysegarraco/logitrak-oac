@@ -199,6 +199,7 @@ function TrackerPage() {
     );
 
   return (
+    <TooltipProvider delayDuration={150}>
     <main className="min-h-screen bg-background">
       <div className="w-full px-4 py-10 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center">
