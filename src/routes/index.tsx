@@ -448,13 +448,14 @@ function TrackerPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border bg-card">
-                    {pageRows.map((row) => {
+                    {pageRows.map((row, rowIndex) => {
                       const editing = editingId === row.id;
                       return (
                         <tr
                           key={row.id}
                           className={cn(
                             "divide-x divide-border",
+                            rowIndex % 2 === 1 && "bg-muted/40",
                             !editing && "hover:bg-muted/60",
                           )}
                         >
