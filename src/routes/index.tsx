@@ -61,6 +61,7 @@ import {
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { Num } from "@/components/Num";
 import { ExhibitorCreateSheet } from "@/components/ExhibitorCreateSheet";
+import { subscribeOpenExhibitorForm } from "@/lib/exhibitor-form-signal";
 
 import { normalizeValue, type ValueCase } from "@/lib/text-case";
 import { cn } from "@/lib/utils";
@@ -130,11 +131,8 @@ function TrackerPage() {
   const router = useRouter();
   const [createOpen, setCreateOpen] = useState(false);
 
-  useEffect(() => {
-    const open = () => setCreateOpen(true);
-    window.addEventListener("open-exhibitor-form", open);
-    return () => window.removeEventListener("open-exhibitor-form", open);
-  }, []);
+  useEffect(() => subscribeOpenExhibitorForm(() => setCreateOpen(true)), []);
+
 
   const queryClient = useQueryClient();
   const update = useServerFn(updateExhibitor);

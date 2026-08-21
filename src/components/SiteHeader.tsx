@@ -1,5 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Bell, MessageSquare, Plus } from "lucide-react";
+import { requestOpenExhibitorForm } from "@/lib/exhibitor-form-signal";
 
 const NAV = [
   { label: "Tracker", to: "/" },
@@ -12,7 +13,7 @@ export function SiteHeader() {
 
   const openForm = async () => {
     if (pathname !== "/") await navigate({ to: "/" });
-    setTimeout(() => window.dispatchEvent(new CustomEvent("open-exhibitor-form")), 0);
+    requestOpenExhibitorForm();
   };
 
   return (
