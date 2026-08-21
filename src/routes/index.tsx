@@ -290,7 +290,7 @@ function TrackerPage() {
               <div className="max-h-[70vh] overflow-x-auto overflow-y-auto rounded-t-lg md:overflow-x-hidden">
                 <table className="w-full min-w-[1100px] divide-y divide-border md:min-w-0 md:table-fixed">
                   <thead>
-                    <tr>
+                    <tr className="divide-x divide-border">
                       {EXHIBITOR_FIELDS.map((field, index) => {
                         const active = sort?.key === field.key;
                         return (
@@ -347,7 +347,13 @@ function TrackerPage() {
                     {pageRows.map((row) => {
                       const editing = editingId === row.id;
                       return (
-                        <tr key={row.id} className={cn(!editing && "hover:bg-muted/60")}>
+                        <tr
+                          key={row.id}
+                          className={cn(
+                            "divide-x divide-border",
+                            !editing && "hover:bg-muted/60",
+                          )}
+                        >
                           {EXHIBITOR_FIELDS.map((field, index) => (
                             <td
                               key={field.key}
