@@ -60,6 +60,8 @@ import {
 } from "@/lib/exhibitors.functions";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { Num } from "@/components/Num";
+import { ExhibitorCreateSheet } from "@/components/ExhibitorCreateSheet";
+
 import { normalizeValue, type ValueCase } from "@/lib/text-case";
 import { cn } from "@/lib/utils";
 
@@ -77,6 +79,7 @@ const exhibitorsQuery = queryOptions({
 type FieldKey = (typeof EXHIBITOR_FIELDS)[number]["key"];
 
 export const Route = createFileRoute("/")({
+
   head: () => ({
     meta: [
       { title: "Exhibitor Shipping Tracker" },
@@ -125,9 +128,18 @@ function toInput(row: Exhibitor): ExhibitorInput {
 function TrackerPage() {
   const { data: exhibitors } = useSuspenseQuery(exhibitorsQuery);
   const router = useRouter();
+  const [createOpen, setCreateOpen] = useState(false);
+
+  useEffect(() => {
+    const open = () => setCreateOpen(true);
+    window.addEventListener("open-exhibitor-form", open);
+    return () => window.removeEventListener("open-exhibitor-form", open);
+  }, []);
+
   const queryClient = useQueryClient();
   const update = useServerFn(updateExhibitor);
   const remove = useServerFn(deleteExhibitor);
+
 
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<Record<string, string>>({});
@@ -602,10 +614,10 @@ function TrackerPage() {
                                 Add your first exhibitor to start tracking PAFs, quotes, and
                                 receiver numbers.
                               </p>
-                              <Link to="/new" className={cn(twButtonClass("primary"), "mt-5")}>
+                              <button type="button" onClick={() => setCreateOpen(true)} className={cn(twButtonClass("primary"), "mt-5")}>
                                 <Plus className="-ml-0.5 h-4 w-4" />
                                 Add exhibitor
-                              </Link>
+                              </button>
                             </div>
                           ) : (
                             <div className="mx-auto max-w-sm">
@@ -725,6 +737,8 @@ function TrackerPage() {
         </AlertDialogContent>
       </AlertDialog>
     </main>
+    <ExhibitorCreateSheet open={createOpen} onOpenChange={setCreateOpen} />
     </TooltipProvider>
+
   );
 }
