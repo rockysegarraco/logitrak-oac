@@ -21,6 +21,7 @@ import {
   SearchX,
   SlidersHorizontal,
   SquareArrowOutUpRight,
+  Trash2,
   X,
 } from "lucide-react";
 import { TwButton, TwInput, twButtonClass } from "@/components/ui/tw";
@@ -30,6 +31,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   Sheet,
   SheetClose,
@@ -43,6 +54,7 @@ import {
 import {
   listExhibitors,
   updateExhibitor,
+  deleteExhibitor,
   type Exhibitor,
   type ExhibitorInput,
 } from "@/lib/exhibitors.functions";
@@ -115,6 +127,7 @@ function TrackerPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const update = useServerFn(updateExhibitor);
+  const remove = useServerFn(deleteExhibitor);
 
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<Record<string, string>>({});
@@ -137,6 +150,7 @@ function TrackerPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<Exhibitor | null>(null);
   const [draft, setDraft] = useState<ExhibitorInput | null>(null);
 
   const term = search.trim().toLowerCase();
@@ -189,6 +203,16 @@ function TrackerPage() {
       toast.success("Row updated");
       setEditingId(null);
       setDraft(null);
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => remove({ data: { id } }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["exhibitors"] });
+      toast.success("Row deleted");
+      setPendingDelete(null);
     },
     onError: (error: Error) => toast.error(error.message),
   });
@@ -407,13 +431,11 @@ function TrackerPage() {
 
                       <th
                         scope="col"
-                        className={cn(
-                          "sticky top-0 z-10 bg-muted px-3 py-3.5 pr-4 text-right text-sm font-semibold whitespace-nowrap text-foreground sm:pr-6",
-                          valueCase === "upper" && "uppercase",
-                        )}
+                        className="sticky top-0 z-10 bg-muted px-3 py-3.5 pr-4 text-right text-sm font-semibold whitespace-nowrap text-foreground sm:pr-6"
                       >
-                        Actions
+                        <span className="sr-only">Actions</span>
                       </th>
+
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border bg-card">
@@ -478,30 +500,54 @@ function TrackerPage() {
                                 </TwButton>
                               </div>
                             ) : (
-                              <div className="flex justify-end gap-2">
-                                <TwButton
-                                  variant="secondary"
-                                  className="px-2 py-1"
-                                  onClick={() => startEdit(row)}
-                                  aria-label={`Quick edit ${row.exhibitor_name}`}
-                                >
-                                  <Pencil className="h-4 w-4" />
-                                  Edit
-                                </TwButton>
-                                <TwButton
-                                  variant="ghost"
-                                  className="px-2 py-1"
-                                  aria-label={`Open ${row.exhibitor_name}`}
-                                  onClick={() =>
-                                    router.navigate({
-                                      to: "/exhibitor/$id",
-                                      params: { id: row.id },
-                                    })
-                                  }
-                                >
-                                  <SquareArrowOutUpRight className="h-4 w-4" />
-                                </TwButton>
+                              <div className="flex justify-end gap-1">
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <TwButton
+                                      variant="ghost"
+                                      className="px-2 py-1"
+                                      onClick={() => startEdit(row)}
+                                      aria-label={`Quick edit ${row.exhibitor_name}`}
+                                    >
+                                      <Pencil className="h-4 w-4" />
+                                    </TwButton>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Edit</TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <TwButton
+                                      variant="ghost"
+                                      className="px-2 py-1 text-destructive hover:bg-destructive/10"
+                                      aria-label={`Delete ${row.exhibitor_name}`}
+                                      disabled={deleteMutation.isPending}
+                                      onClick={() => setPendingDelete(row)}
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </TwButton>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Delete</TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <TwButton
+                                      variant="ghost"
+                                      className="px-2 py-1"
+                                      aria-label={`Open ${row.exhibitor_name}`}
+                                      onClick={() =>
+                                        router.navigate({
+                                          to: "/exhibitor/$id",
+                                          params: { id: row.id },
+                                        })
+                                      }
+                                    >
+                                      <SquareArrowOutUpRight className="h-4 w-4" />
+                                    </TwButton>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Open</TooltipContent>
+                                </Tooltip>
                               </div>
+
                             )}
                           </td>
                         </tr>
@@ -621,6 +667,33 @@ function TrackerPage() {
           </div>
         </div>
       </div>
+      <AlertDialog
+        open={pendingDelete !== null}
+        onOpenChange={(open) => !open && setPendingDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this exhibitor?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {pendingDelete?.exhibitor_name} will be permanently removed. This
+              can&apos;t be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={(event) => {
+                event.preventDefault();
+                if (pendingDelete) deleteMutation.mutate(pendingDelete.id);
+              }}
+              disabled={deleteMutation.isPending}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </main>
     </TooltipProvider>
   );
