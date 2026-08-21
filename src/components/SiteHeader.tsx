@@ -1,21 +1,12 @@
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Bell, MessageSquare, Plus } from "lucide-react";
-import { requestOpenExhibitorForm } from "@/lib/exhibitor-form-signal";
 
 const NAV = [
   { label: "Tracker", to: "/" },
   { label: "Exhibitors", to: "/" },
 ];
 
-export function SiteHeader() {
-  const navigate = useNavigate();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-
-  const openForm = async () => {
-    if (pathname !== "/") await navigate({ to: "/" });
-    requestOpenExhibitorForm();
-  };
-
+export function SiteHeader({ onCreateNew }: { onCreateNew: () => void }) {
   return (
 
     <header data-site-header className="sticky top-0 z-30 border-b border-border bg-card print:hidden">
@@ -39,7 +30,7 @@ export function SiteHeader() {
         <div className="ml-auto flex items-center gap-3">
           <button
             type="button"
-            onClick={openForm}
+            onClick={onCreateNew}
             className="inline-flex items-center gap-1.5 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
           >
             <Plus className="h-4 w-4" />

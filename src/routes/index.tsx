@@ -60,10 +60,9 @@ import {
 } from "@/lib/exhibitors.functions";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { Num } from "@/components/Num";
-import { ExhibitorCreateSheet } from "@/components/ExhibitorCreateSheet";
-import { subscribeOpenExhibitorForm } from "@/lib/exhibitor-form-signal";
 
 import { normalizeValue, type ValueCase } from "@/lib/text-case";
+import { useOpenExhibitorCreate } from "@/lib/exhibitor-create-context";
 import { cn } from "@/lib/utils";
 
 const FILTER_FIELDS = EXHIBITOR_FIELDS.filter(
@@ -129,9 +128,7 @@ function toInput(row: Exhibitor): ExhibitorInput {
 function TrackerPage() {
   const { data: exhibitors } = useSuspenseQuery(exhibitorsQuery);
   const router = useRouter();
-  const [createOpen, setCreateOpen] = useState(false);
-
-  useEffect(() => subscribeOpenExhibitorForm(() => setCreateOpen(true)), []);
+  const openCreate = useOpenExhibitorCreate();
 
 
   const queryClient = useQueryClient();
@@ -612,7 +609,7 @@ function TrackerPage() {
                                 Add your first exhibitor to start tracking PAFs, quotes, and
                                 receiver numbers.
                               </p>
-                              <button type="button" onClick={() => setCreateOpen(true)} className={cn(twButtonClass("primary"), "mt-5")}>
+                              <button type="button" onClick={openCreate} className={cn(twButtonClass("primary"), "mt-5")}>
                                 <Plus className="-ml-0.5 h-4 w-4" />
                                 Add exhibitor
                               </button>
@@ -735,7 +732,6 @@ function TrackerPage() {
         </AlertDialogContent>
       </AlertDialog>
     </main>
-    <ExhibitorCreateSheet open={createOpen} onOpenChange={setCreateOpen} />
     </TooltipProvider>
 
   );
