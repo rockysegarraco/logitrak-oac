@@ -61,6 +61,7 @@ import {
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { Num } from "@/components/Num";
 import { ExhibitorCreateSheet } from "@/components/ExhibitorCreateSheet";
+import { subscribeOpenExhibitorForm } from "@/lib/exhibitor-form-signal";
 
 import { normalizeValue, type ValueCase } from "@/lib/text-case";
 import { cn } from "@/lib/utils";
