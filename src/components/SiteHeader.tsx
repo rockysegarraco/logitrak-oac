@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Bell, MessageSquare, Plus } from "lucide-react";
 
 const NAV = [
@@ -7,7 +7,16 @@ const NAV = [
 ];
 
 export function SiteHeader() {
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  const openForm = async () => {
+    if (pathname !== "/") await navigate({ to: "/" });
+    setTimeout(() => window.dispatchEvent(new CustomEvent("open-exhibitor-form")), 0);
+  };
+
   return (
+
     <header data-site-header className="sticky top-0 z-30 border-b border-border bg-card print:hidden">
       <div className="flex h-16 w-full items-center gap-8 px-4 sm:px-6 lg:px-8">
         <Link to="/" className="text-xl font-bold tracking-tight text-foreground">
