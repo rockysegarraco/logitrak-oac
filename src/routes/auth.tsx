@@ -1,5 +1,7 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import authArt from "@/assets/auth-art.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
 import { usernameToEmail } from "@/lib/username";
@@ -35,6 +37,8 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [keepSignedIn, setKeepSignedIn] = useState(true);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -53,51 +57,106 @@ function AuthPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
-      <div className="w-full max-w-sm rounded-2xl bg-card p-8 shadow-sm ring-1 ring-border">
-        <h1 className="text-xl font-bold tracking-tight text-foreground">Sign in</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Use the username and password your admin gave you.
-        </p>
+    <main className="flex min-h-screen items-stretch bg-muted p-0 sm:p-6 lg:p-10">
+      <div className="flex w-full overflow-hidden rounded-none bg-card shadow-xl ring-1 ring-border sm:rounded-3xl">
+        <div className="relative hidden w-1/2 bg-black lg:block">
+          <img
+            src={authArt}
+            alt=""
+            width={1024}
+            height={1408}
+            className="h-full w-full object-cover"
+          />
+        </div>
 
-        <form className="mt-6 space-y-4" onSubmit={onSubmit} noValidate>
-          <div>
-            <TwLabel htmlFor="username">Username</TwLabel>
-            <div className="mt-2">
-              <TwInput
-                id="username"
-                value={username}
-                autoComplete="username"
-                autoCapitalize="none"
-                maxLength={40}
-                onChange={(event) => setUsername(event.target.value)}
-              />
+        <div className="flex w-full flex-col justify-center px-6 py-16 sm:px-14 lg:w-1/2">
+          <div className="mx-auto w-full max-w-sm">
+            <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-card shadow-md ring-1 ring-border">
+              <span className="text-lg font-black tracking-tight text-primary">SL</span>
             </div>
-          </div>
-          <div>
-            <TwLabel htmlFor="password">Password</TwLabel>
-            <div className="mt-2">
-              <TwInput
-                id="password"
-                type="password"
-                value={password}
-                autoComplete="current-password"
-                maxLength={72}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            </div>
-          </div>
 
-          {error ? (
-            <p className="text-sm text-destructive" role="alert">
-              {error}
+            <h1 className="mt-8 text-center text-3xl font-semibold tracking-tight text-foreground">
+              Welcome back.
+            </h1>
+            <p className="mt-1 text-center text-2xl font-light tracking-tight text-muted-foreground">
+              Sign in to the shiplist.
             </p>
-          ) : null}
 
-          <TwButton type="submit" className="w-full" disabled={pending}>
-            {pending ? "Signing in..." : "Sign in"}
-          </TwButton>
-        </form>
+            <form className="mt-10 space-y-4" onSubmit={onSubmit} noValidate>
+              <div>
+                <TwLabel htmlFor="username" className="sr-only">
+                  Username
+                </TwLabel>
+                <TwInput
+                  id="username"
+                  value={username}
+                  placeholder="Enter your username"
+                  autoComplete="username"
+                  autoCapitalize="none"
+                  maxLength={40}
+                  className="rounded-xl bg-muted/60 px-4 py-3 outline-transparent"
+                  onChange={(event) => setUsername(event.target.value)}
+                />
+              </div>
+
+              <div className="relative">
+                <TwLabel htmlFor="password" className="sr-only">
+                  Password
+                </TwLabel>
+                <TwInput
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
+                  maxLength={72}
+                  className="rounded-xl bg-muted/60 px-4 py-3 pr-12 outline-transparent"
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((value) => !value)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute inset-y-0 right-3 flex cursor-pointer items-center text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? (
+                    <Eye className="size-5" aria-hidden="true" />
+                  ) : (
+                    <EyeOff className="size-5" aria-hidden="true" />
+                  )}
+                </button>
+              </div>
+
+              <label className="flex cursor-pointer items-center gap-x-2.5 text-sm text-foreground">
+                <input
+                  type="checkbox"
+                  checked={keepSignedIn}
+                  onChange={(event) => setKeepSignedIn(event.target.checked)}
+                  className="size-4 cursor-pointer rounded border-border accent-primary"
+                />
+                Keep me signed in
+              </label>
+
+              {error ? (
+                <p className="text-sm text-destructive" role="alert">
+                  {error}
+                </p>
+              ) : null}
+
+              <TwButton
+                type="submit"
+                className="w-full rounded-xl py-3 text-base"
+                disabled={pending}
+              >
+                {pending ? "Signing in..." : "Sign in"}
+              </TwButton>
+            </form>
+
+            <p className="mt-8 text-center text-sm text-muted-foreground">
+              Accounts are created by your admin.
+            </p>
+          </div>
+        </div>
       </div>
     </main>
   );
