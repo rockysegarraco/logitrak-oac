@@ -84,10 +84,8 @@ function AuthPage() {
       <div className="flex w-full overflow-hidden rounded-none bg-card shadow-xl ring-1 ring-border sm:rounded-3xl">
         <div className="relative hidden w-1/2 bg-black lg:block">
           <img
-            src={authArt}
+            src={authArt.url}
             alt=""
-            width={1024}
-            height={1408}
             className="h-full w-full object-cover"
           />
         </div>
