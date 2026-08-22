@@ -258,19 +258,26 @@ function TrackerPage() {
             <label htmlFor="filter-user" className="sr-only">
               Filter by user
             </label>
-            <select
-              id="filter-user"
-              value={userFilter}
-              onChange={(event) => setUserFilter(event.target.value)}
-              className="block rounded-full bg-card py-1.5 pr-8 pl-3 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
-            >
-              <option value="all">All users</option>
-              {userOptions.map((initials) => (
-                <option key={initials} value={initials}>
-                  {initials}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                id="filter-user"
+                value={userFilter}
+                onChange={(event) => setUserFilter(event.target.value)}
+                className="block appearance-none rounded-full bg-card py-1.5 pr-9 pl-4 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
+              >
+                <option value="all">All users</option>
+                {userOptions.map((initials) => (
+                  <option key={initials} value={initials}>
+                    {initials}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                aria-hidden
+                className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+              />
+            </div>
+
           </div>
 
         </div>
