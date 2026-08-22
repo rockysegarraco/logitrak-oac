@@ -95,6 +95,13 @@ export function SiteHeader({
                   </span>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to="/account">
+                    <User className="mr-2 h-4 w-4" />
+                    My account
+                  </Link>
+                </DropdownMenuItem>
+
                 {me.isAdmin ? (
                   <DropdownMenuItem asChild className="cursor-pointer">
                     <Link to="/users">
