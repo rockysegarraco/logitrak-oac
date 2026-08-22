@@ -72,7 +72,7 @@ function AuthPage() {
 
   return (
     <main
-      className="flex h-[100dvh] max-h-[100dvh] items-stretch overflow-hidden bg-muted p-0 sm:p-6 lg:p-10"
+      className="flex h-[100dvh] max-h-[100dvh] items-stretch overflow-hidden bg-muted [--auth-pad:0px] sm:[--auth-pad:1.5rem] lg:[--auth-pad:2.5rem]"
       style={{
         paddingTop: "max(env(safe-area-inset-top), var(--auth-pad, 0px))",
         paddingBottom: "max(env(safe-area-inset-bottom), var(--auth-pad, 0px))",
@@ -97,14 +97,14 @@ function AuthPage() {
               <span className="text-lg font-black tracking-tight text-primary">SL</span>
             </div>
 
-            <h1 className="mt-8 text-center text-3xl font-semibold tracking-tight text-foreground">
+            <h1 className="mt-6 text-center text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
               Welcome back.
             </h1>
-            <p className="mt-1 text-center text-2xl font-light tracking-tight text-muted-foreground">
+            <p className="mt-1 text-center text-xl font-light sm:text-2xl tracking-tight text-muted-foreground">
               Sign in to the shiplist.
             </p>
 
-            <form className="mt-10 space-y-4" onSubmit={onSubmit} noValidate>
+            <form className="mt-8 space-y-4" onSubmit={onSubmit} noValidate>
               <div>
                 <TwLabel htmlFor="username" className="sr-only">
                   Username
@@ -174,7 +174,7 @@ function AuthPage() {
               </TwButton>
             </form>
 
-            <p className="mt-8 text-center text-sm text-muted-foreground">
+            <p className="mt-6 text-center text-sm text-muted-foreground">
               Accounts are created by your admin.
             </p>
           </div>
