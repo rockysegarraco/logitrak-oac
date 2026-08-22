@@ -3,7 +3,7 @@ import { queryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/r
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Copy, RefreshCw, Trash2 } from "lucide-react";
+import { ChevronDown, Copy, RefreshCw, Trash2 } from "lucide-react";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
 import {
   createAppUser,
@@ -190,6 +190,7 @@ function UsersPage() {
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
               </select>
+              <ChevronDown className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             </div>
           </div>
 
