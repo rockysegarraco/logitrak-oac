@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import authArt from "@/assets/auth-art.jpg";
+import authArt from "@/assets/auth-truck.jpg.asset.json";
 import oacMark from "@/assets/oac-mark.svg";
 import { supabase } from "@/integrations/supabase/client";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
@@ -84,10 +84,8 @@ function AuthPage() {
       <div className="flex w-full overflow-hidden rounded-none bg-card shadow-xl ring-1 ring-border sm:rounded-3xl">
         <div className="relative hidden w-1/2 bg-black lg:block">
           <img
-            src={authArt}
+            src={authArt.url}
             alt=""
-            width={1024}
-            height={1408}
             className="h-full w-full object-cover"
           />
         </div>
