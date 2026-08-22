@@ -1,6 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { LogOut, Plus, Users } from "lucide-react";
+import { LogOut, Plus, User, Users } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
