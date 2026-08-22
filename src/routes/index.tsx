@@ -585,18 +585,25 @@ function TrackerPage() {
                 >
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <label htmlFor="page-size">Rows per page</label>
-                    <select
-                      id="page-size"
-                      value={pageSize}
-                      onChange={(event) => setPageSize(Number(event.target.value))}
-                      className="rounded-md bg-card py-1 pr-7 pl-2 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
-                    >
-                      {PAGE_SIZES.map((size) => (
-                        <option key={size} value={size}>
-                          {size}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="relative">
+                      <select
+                        id="page-size"
+                        value={pageSize}
+                        onChange={(event) => setPageSize(Number(event.target.value))}
+                        className="appearance-none rounded-full bg-card py-1 pr-8 pl-3 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
+                      >
+                        {PAGE_SIZES.map((size) => (
+                          <option key={size} value={size}>
+                            {size}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown
+                        aria-hidden
+                        className="pointer-events-none absolute top-1/2 right-2.5 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                      />
+                    </div>
+
                   </div>
                   <p className="text-sm text-muted-foreground">
                     {rows.length === 0 ? (
