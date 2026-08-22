@@ -1,6 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { LogOut, Plus, Users } from "lucide-react";
+import { LogOut, Plus, User, Users } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -95,6 +95,13 @@ export function SiteHeader({
                   </span>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to="/account">
+                    <User className="mr-2 h-4 w-4" />
+                    My account
+                  </Link>
+                </DropdownMenuItem>
+
                 {me.isAdmin ? (
                   <DropdownMenuItem asChild className="cursor-pointer">
                     <Link to="/users">
