@@ -64,7 +64,7 @@ const exhibitorsQuery = queryOptions({
 
 type FieldKey = (typeof EXHIBITOR_FIELDS)[number]["key"];
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/")({
 
   head: () => ({
     meta: [

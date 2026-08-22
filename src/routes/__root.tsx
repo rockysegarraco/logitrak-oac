@@ -13,6 +13,7 @@ import { Toaster } from "../components/ui/sonner";
 import { SiteHeader } from "../components/SiteHeader";
 import { ExhibitorCreateSheet } from "../components/ExhibitorCreateSheet";
 import { ExhibitorCreateContext } from "../lib/exhibitor-create-context";
+import { supabase } from "@/integrations/supabase/client";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -82,11 +83,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Shiplist | Exhibitor Shipping Tracker" },
+      {
+        name: "description",
+        content: "Track exhibitor booth shipping paperwork, quotes and receiver numbers.",
+      },
+      { property: "og:title", content: "Shiplist | Exhibitor Shipping Tracker" },
+      {
+        property: "og:description",
+        content: "Track exhibitor booth shipping paperwork, quotes and receiver numbers.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
@@ -127,8 +133,19 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
   const [createOpen, setCreateOpen] = useState(false);
   const openCreate = useCallback(() => setCreateOpen(true), []);
+
+  useEffect(() => {
+    const { data } = supabase.auth.onAuthStateChange((event) => {
+      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+      router.invalidate();
+      if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+    });
+    return () => data.subscription.unsubscribe();
+  }, [router, queryClient]);
+
 
   return (
     <QueryClientProvider client={queryClient}>
