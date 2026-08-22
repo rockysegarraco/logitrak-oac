@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LogOut, Plus, User, Users } from "lucide-react";
+import oacMark from "@/assets/oac-mark.svg";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,7 +65,8 @@ export function SiteHeader({
       className="sticky top-0 z-30 border-b border-border bg-card print:hidden"
     >
       <div className="flex h-16 w-full items-center gap-8 px-4 sm:px-6 lg:px-8">
-        <Link to="/" className="text-xl font-bold tracking-tight text-foreground">
+        <Link to="/" className="flex items-center gap-2.5 text-xl font-bold tracking-tight text-foreground">
+          <img src={oacMark} alt="" className="size-8" />
           Shiplist
         </Link>
 

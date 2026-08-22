@@ -2,6 +2,7 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import authArt from "@/assets/auth-art.jpg";
+import oacMark from "@/assets/oac-mark.svg";
 import { supabase } from "@/integrations/supabase/client";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
 import { usernameToEmail } from "@/lib/username";
@@ -93,9 +94,7 @@ function AuthPage() {
 
         <div className="flex w-full min-h-0 flex-col justify-center overflow-y-auto overscroll-contain px-6 py-8 sm:px-14 lg:w-1/2">
           <div className="mx-auto w-full max-w-sm">
-            <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-primary shadow-md ring-1 ring-border">
-              <span className="text-lg font-black tracking-tight text-primary-foreground">SL</span>
-            </div>
+            <img src={oacMark} alt="Ortiz&Co" className="mx-auto size-14" />
 
             <h1 className="mt-6 text-center text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
               Welcome back.
