@@ -57,14 +57,6 @@ export function SiteHeader({
           >
             Tracker
           </Link>
-          {me?.isAdmin ? (
-            <Link
-              to="/users"
-              className="text-sm font-semibold text-foreground/80 transition-colors hover:text-foreground"
-            >
-              Users
-            </Link>
-          ) : null}
         </nav>
 
         <div className="ml-auto flex items-center gap-3">
@@ -75,33 +67,52 @@ export function SiteHeader({
               aria-haspopup="dialog"
               aria-expanded={createOpen}
               aria-controls="create-exhibitor-panel"
-              className="inline-flex items-center gap-1.5 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+              className="inline-flex items-center gap-1.5 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted cursor-pointer"
             >
               <Plus className="h-4 w-4" />
               Create New
             </button>
           ) : null}
           {me?.profile ? (
-            <>
-              <button
-                type="button"
-                onClick={signOut}
-                aria-label="Sign out"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              >
-                <LogOut className="h-5 w-5" />
-              </button>
-              <span
-                title={`${me.profile.first_name} ${me.profile.last_name}`}
-                className="relative inline-flex h-9 w-9 items-center justify-center rounded-full bg-muted text-sm font-semibold text-foreground ring-1 ring-border"
-              >
-                {me.profile.initials}
-                <span className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-card" />
-              </span>
-            </>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  aria-label="Account menu"
+                  className="relative inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-muted text-sm font-semibold text-foreground ring-1 ring-border transition-colors hover:bg-muted/70"
+                >
+                  {me.profile.initials}
+                  <span className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-card" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="font-normal">
+                  <span className="block text-sm font-semibold text-foreground">
+                    {me.profile.first_name} {me.profile.last_name}
+                  </span>
+                  <span className="block text-xs text-muted-foreground">
+                    {me.profile.username}
+                  </span>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {me.isAdmin ? (
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link to="/users">
+                      <Users className="mr-2 h-4 w-4" />
+                      Users
+                    </Link>
+                  </DropdownMenuItem>
+                ) : null}
+                <DropdownMenuItem onSelect={() => void signOut()} className="cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : null}
         </div>
       </div>
     </header>
   );
 }
+
