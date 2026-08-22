@@ -93,8 +93,8 @@ function AuthPage() {
 
         <div className="flex w-full min-h-0 flex-col justify-center overflow-y-auto overscroll-contain px-6 py-8 sm:px-14 lg:w-1/2">
           <div className="mx-auto w-full max-w-sm">
-            <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-card shadow-md ring-1 ring-border">
-              <span className="text-lg font-black tracking-tight text-primary">SL</span>
+            <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-primary shadow-md ring-1 ring-border">
+              <span className="text-lg font-black tracking-tight text-primary-foreground">SL</span>
             </div>
 
             <h1 className="mt-6 text-center text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
