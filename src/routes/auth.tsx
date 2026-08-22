@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import authArt from "@/assets/auth-art.jpg";
 import { supabase } from "@/integrations/supabase/client";
@@ -40,6 +40,20 @@ function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [keepSignedIn, setKeepSignedIn] = useState(true);
 
+  // Lock page scrolling while the sign-in screen is mounted.
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtml = html.style.overflow;
+    const prevBody = body.style.overflow;
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    return () => {
+      html.style.overflow = prevHtml;
+      body.style.overflow = prevBody;
+    };
+  }, []);
+
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
@@ -57,7 +71,15 @@ function AuthPage() {
   }
 
   return (
-    <main className="flex h-screen max-h-screen items-stretch overflow-hidden bg-muted p-0 sm:p-6 lg:p-10">
+    <main
+      className="flex h-[100dvh] max-h-[100dvh] items-stretch overflow-hidden bg-muted [--auth-pad:0px] sm:[--auth-pad:1.5rem] lg:[--auth-pad:2.5rem]"
+      style={{
+        paddingTop: "max(env(safe-area-inset-top), var(--auth-pad, 0px))",
+        paddingBottom: "max(env(safe-area-inset-bottom), var(--auth-pad, 0px))",
+        paddingLeft: "max(env(safe-area-inset-left), var(--auth-pad, 0px))",
+        paddingRight: "max(env(safe-area-inset-right), var(--auth-pad, 0px))",
+      }}
+    >
       <div className="flex w-full overflow-hidden rounded-none bg-card shadow-xl ring-1 ring-border sm:rounded-3xl">
         <div className="relative hidden w-1/2 bg-black lg:block">
           <img
@@ -69,20 +91,20 @@ function AuthPage() {
           />
         </div>
 
-        <div className="flex w-full flex-col justify-center overflow-y-auto px-6 py-10 sm:px-14 lg:w-1/2">
+        <div className="flex w-full min-h-0 flex-col justify-center overflow-y-auto overscroll-contain px-6 py-8 sm:px-14 lg:w-1/2">
           <div className="mx-auto w-full max-w-sm">
             <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-card shadow-md ring-1 ring-border">
               <span className="text-lg font-black tracking-tight text-primary">SL</span>
             </div>
 
-            <h1 className="mt-8 text-center text-3xl font-semibold tracking-tight text-foreground">
+            <h1 className="mt-6 text-center text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
               Welcome back.
             </h1>
-            <p className="mt-1 text-center text-2xl font-light tracking-tight text-muted-foreground">
+            <p className="mt-1 text-center text-xl font-light sm:text-2xl tracking-tight text-muted-foreground">
               Sign in to the shiplist.
             </p>
 
-            <form className="mt-10 space-y-4" onSubmit={onSubmit} noValidate>
+            <form className="mt-8 space-y-4" onSubmit={onSubmit} noValidate>
               <div>
                 <TwLabel htmlFor="username" className="sr-only">
                   Username
@@ -152,7 +174,7 @@ function AuthPage() {
               </TwButton>
             </form>
 
-            <p className="mt-8 text-center text-sm text-muted-foreground">
+            <p className="mt-6 text-center text-sm text-muted-foreground">
               Accounts are created by your admin.
             </p>
           </div>
