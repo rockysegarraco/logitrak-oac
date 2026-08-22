@@ -63,7 +63,6 @@ export const createExhibitor = createServerFn({ method: "POST" })
       .from("exhibitors")
       .insert({
         ...data,
-        created_by: context.userId,
         created_by_initials: profile?.initials ?? "??",
       })
       .select(COLUMNS)
