@@ -410,7 +410,7 @@ function TrackerPage() {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span
-                                  className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-[11px] font-semibold text-primary"
+                                  className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground"
                                   aria-label={`Created by ${row.created_by_initials || "—"}`}
                                 >
                                   {row.created_by_initials || "—"}
