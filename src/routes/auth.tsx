@@ -57,7 +57,7 @@ function AuthPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-stretch bg-muted p-0 sm:p-6 lg:p-10">
+    <main className="flex h-screen max-h-screen items-stretch overflow-hidden bg-muted p-0 sm:p-6 lg:p-10">
       <div className="flex w-full overflow-hidden rounded-none bg-card shadow-xl ring-1 ring-border sm:rounded-3xl">
         <div className="relative hidden w-1/2 bg-black lg:block">
           <img
@@ -69,7 +69,7 @@ function AuthPage() {
           />
         </div>
 
-        <div className="flex w-full flex-col justify-center px-6 py-16 sm:px-14 lg:w-1/2">
+        <div className="flex w-full flex-col justify-center overflow-y-auto px-6 py-10 sm:px-14 lg:w-1/2">
           <div className="mx-auto w-full max-w-sm">
             <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-card shadow-md ring-1 ring-border">
               <span className="text-lg font-black tracking-tight text-primary">SL</span>
