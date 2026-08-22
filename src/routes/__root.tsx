@@ -13,6 +13,7 @@ import { Toaster } from "../components/ui/sonner";
 import { SiteHeader } from "../components/SiteHeader";
 import { ExhibitorCreateSheet } from "../components/ExhibitorCreateSheet";
 import { ExhibitorCreateContext } from "../lib/exhibitor-create-context";
+import { supabase } from "@/integrations/supabase/client";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
