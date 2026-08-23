@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { LogOut, Plus, User, Users } from "lucide-react";
+import { LogOut, Plus, Shield, User, Users } from "lucide-react";
 import oacMark from "@/assets/oac-mark.svg";
 import {
   DropdownMenu,
@@ -108,7 +108,7 @@ export function SiteHeader({
                   aria-label="Account menu"
                   className="relative inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-muted text-sm font-semibold text-foreground ring-1 ring-border transition-colors hover:bg-muted/70"
                 >
-                  {me.profile.initials}
+                  {me.isAdmin ? <Shield className="h-4 w-4" /> : me.profile.initials}
                   <span className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-card" />
                 </button>
               </DropdownMenuTrigger>
