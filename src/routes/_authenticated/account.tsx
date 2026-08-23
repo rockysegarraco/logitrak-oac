@@ -5,15 +5,15 @@ import { getMe } from "@/lib/users.functions";
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({
     meta: [
-      { title: "My account | Shiplist" },
+      { title: "My account | FreightTRAK" },
       {
         name: "description",
-        content: "View your Shiplist profile details, username, initials and account role.",
+        content: "View your FreightTRAK profile details, username, initials and account role.",
       },
-      { property: "og:title", content: "My account | Shiplist" },
+      { property: "og:title", content: "My account | FreightTRAK" },
       {
         property: "og:description",
-        content: "View your Shiplist profile details, username, initials and account role.",
+        content: "View your FreightTRAK profile details, username, initials and account role.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

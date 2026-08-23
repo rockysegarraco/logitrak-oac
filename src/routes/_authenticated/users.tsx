@@ -17,15 +17,15 @@ import { generatePassword, normalizeUsername } from "@/lib/username";
 export const Route = createFileRoute("/_authenticated/users")({
   head: () => ({
     meta: [
-      { title: "Users | Shiplist Admin" },
+      { title: "Users | FreightTRAK Admin" },
       {
         name: "description",
-        content: "Create and manage Shiplist accounts with usernames and generated passwords.",
+        content: "Create and manage FreightTRAK accounts with usernames and generated passwords.",
       },
-      { property: "og:title", content: "Users | Shiplist Admin" },
+      { property: "og:title", content: "Users | FreightTRAK Admin" },
       {
         property: "og:description",
-        content: "Create and manage Shiplist accounts with usernames and generated passwords.",
+        content: "Create and manage FreightTRAK accounts with usernames and generated passwords.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
