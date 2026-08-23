@@ -169,6 +169,8 @@ function TrackerPage() {
     [exhibitors],
   );
 
+  const activeUserFilter = isAdmin ? userFilter : "all";
+
   const rows = useMemo(() => {
     const filtered = exhibitors.filter((row) => {
       if (
@@ -177,7 +179,7 @@ function TrackerPage() {
       ) {
         return false;
       }
-      return userFilter === "all" || row.created_by_initials === userFilter;
+      return activeUserFilter === "all" || row.created_by_initials === activeUserFilter;
     });
 
     if (!sort) return filtered;
@@ -190,9 +192,36 @@ function TrackerPage() {
       if (!bv) return -1;
       return av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" }) * factor;
     });
-  }, [exhibitors, term, userFilter, sort]);
+  }, [exhibitors, term, activeUserFilter, sort]);
 
-  const hasFilters = userFilter !== "all" || term.length > 0;
+  const exportCsv = () => {
+    if (rows.length === 0) {
+      toast.error("Nothing to export");
+      return;
+    }
+    const header = ["User", ...EXHIBITOR_FIELDS.map((field) => field.label)];
+    const lines = [
+      header.map(csvCell).join(","),
+      ...rows.map((row) =>
+        [row.created_by_initials ?? "", ...EXHIBITOR_FIELDS.map((f) => row[f.key] ?? "")]
+          .map(csvCell)
+          .join(","),
+      ),
+    ];
+    const blob = new Blob([`\uFEFF${lines.join("\r\n")}`], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `exhibitors-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${rows.length} row${rows.length === 1 ? "" : "s"}`);
+  };
+
+  const hasFilters = activeUserFilter !== "all" || term.length > 0;
+
   const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
 
   useEffect(() => {
