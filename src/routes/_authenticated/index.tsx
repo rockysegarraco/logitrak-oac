@@ -587,7 +587,7 @@ function TrackerPage() {
                         </tr>
                       );
                     })}
-                    {pageRows.length === 0 ? (
+                    {!refreshing && pageRows.length === 0 ? (
                       <tr>
                         <td
                           colSpan={EXHIBITOR_FIELDS.length + 2}
