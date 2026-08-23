@@ -461,7 +461,8 @@ function TrackerPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border bg-card">
-                    {pageRows.map((row, rowIndex) => {
+                    {refreshing ? <SkeletonRows rows={Math.max(pageRows.length, 5)} /> : null}
+                    {!refreshing && pageRows.map((row, rowIndex) => {
                       const editing = editingId === row.id;
                       return (
                         <tr
