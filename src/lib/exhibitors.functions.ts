@@ -27,7 +27,7 @@ export type Exhibitor = ExhibitorInput & {
 };
 
 const COLUMNS =
-  "id, exhibitor_name, booth_number, paf_in_files, request_for_paf_sent, on_time_quote_sent, on_time_charges_processed, late_fee_quote_sent, receiver_numbers_on_time, receiver_numbers_late, created_by_initials, created_at, updated_at";
+  "id, booth_number, exhibitor_name, pro_number, invoice_number, city, state, estimated_weight, shipping_date, delivery_date, actual_costs, final_invoice, actual_revenue, created_by_initials, created_at, updated_at";
 
 export const listExhibitors = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
