@@ -21,6 +21,7 @@ import {
   Plus,
   Info,
   Inbox,
+  RefreshCw,
   Search,
   SearchX,
   Trash2,
