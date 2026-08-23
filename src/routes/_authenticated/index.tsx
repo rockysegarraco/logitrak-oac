@@ -154,17 +154,9 @@ export const Route = createFileRoute("/_authenticated/")({
 });
 
 function toInput(row: Exhibitor): ExhibitorInput {
-  return {
-    exhibitor_name: row.exhibitor_name ?? "",
-    booth_number: row.booth_number ?? "",
-    paf_in_files: row.paf_in_files ?? "",
-    request_for_paf_sent: row.request_for_paf_sent ?? "",
-    on_time_quote_sent: row.on_time_quote_sent ?? "",
-    on_time_charges_processed: row.on_time_charges_processed ?? "",
-    late_fee_quote_sent: row.late_fee_quote_sent ?? "",
-    receiver_numbers_on_time: row.receiver_numbers_on_time ?? "",
-    receiver_numbers_late: row.receiver_numbers_late ?? "",
-  };
+  return Object.fromEntries(
+    EXHIBITOR_FIELDS.map((field) => [field.key, row[field.key] ?? ""]),
+  ) as ExhibitorInput;
 }
 
 function TrackerPage() {
