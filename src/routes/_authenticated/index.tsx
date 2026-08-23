@@ -68,6 +68,13 @@ const exhibitorsQuery = queryOptions({
   queryFn: () => listExhibitors(),
 });
 
+const meQuery = queryOptions({ queryKey: ["me"], queryFn: () => getMe() });
+
+function csvCell(value: string) {
+  return `"${(value ?? "").replace(/"/g, '""')}"`;
+}
+
+
 type FieldKey = (typeof EXHIBITOR_FIELDS)[number]["key"];
 
 export const Route = createFileRoute("/_authenticated/")({
