@@ -21,6 +21,7 @@ import {
   Plus,
   Info,
   Inbox,
+  RefreshCw,
   Search,
   SearchX,
   Trash2,
@@ -54,6 +55,7 @@ import {
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { getMe, listUsers } from "@/lib/users.functions";
 import { Num } from "@/components/Num";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 import { normalizeValue, type ValueCase } from "@/lib/text-case";
@@ -79,6 +81,43 @@ function csvCell(value: string) {
 
 type FieldKey = (typeof EXHIBITOR_FIELDS)[number]["key"];
 
+function SkeletonRows({ rows }: { rows: number }) {
+  return (
+    <>
+      {Array.from({ length: rows }).map((_, index) => (
+        <tr key={`skeleton-${index}`} className="divide-x divide-border">
+          {Array.from({ length: EXHIBITOR_FIELDS.length + 2 }).map((__, cell) => (
+            <td key={cell} className="px-3 py-3">
+              <Skeleton className="h-4 w-full min-w-12" />
+            </td>
+          ))}
+        </tr>
+      ))}
+    </>
+  );
+}
+
+function TrackerSkeleton() {
+  return (
+    <main className="min-h-screen bg-background">
+      <div className="w-full px-4 py-10 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap items-center gap-3">
+          <Skeleton className="h-9 min-w-0 flex-1 rounded-full" />
+          <Skeleton className="h-9 w-28 rounded-full" />
+          <Skeleton className="h-9 w-32 rounded-full" />
+        </div>
+        <div className="mt-8 rounded-t-lg bg-card p-4 shadow-sm ring-1 ring-border">
+          <div className="space-y-3">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <Skeleton key={index} className="h-8 w-full" />
+            ))}
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
 export const Route = createFileRoute("/_authenticated/")({
 
   head: () => ({
@@ -103,6 +142,8 @@ export const Route = createFileRoute("/_authenticated/")({
     await context.queryClient.ensureQueryData(exhibitorsQuery);
   },
   component: TrackerPage,
+  pendingMs: 200,
+  pendingComponent: TrackerSkeleton,
   errorComponent: ({ error }) => (
     <div className="mx-auto max-w-xl p-10 text-center" role="alert">
       <h1 className="text-lg font-semibold">Couldn't load the tracker</h1>
@@ -155,6 +196,22 @@ function TrackerPage() {
     setValueCase(mode);
     localStorage.setItem("tracker:valueCase:v3", mode);
   };
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function hardRefresh() {
+    setRefreshing(true);
+    try {
+      await queryClient.invalidateQueries({ queryKey: ["exhibitors"] });
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+      await queryClient.refetchQueries({ queryKey: ["exhibitors"] });
+      toast.success("Data refreshed");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Refresh failed");
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   const [openTip, setOpenTip] = useState<FieldKey | null>(null);
 
@@ -338,6 +395,15 @@ function TrackerPage() {
                 </div>
               </>
             ) : null}
+            <TwButton
+              variant="secondary"
+              onClick={hardRefresh}
+              disabled={refreshing}
+              aria-label="Refresh data"
+            >
+              <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
+              {refreshing ? "Refreshing…" : "Refresh"}
+            </TwButton>
             <TwButton variant="secondary" onClick={exportCsv}>
               <Download className="h-4 w-4" />
               Export CSV
@@ -461,7 +527,8 @@ function TrackerPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border bg-card">
-                    {pageRows.map((row, rowIndex) => {
+                    {refreshing ? <SkeletonRows rows={Math.max(pageRows.length, 5)} /> : null}
+                    {!refreshing && pageRows.map((row, rowIndex) => {
                       const editing = editingId === row.id;
                       return (
                         <tr
@@ -586,7 +653,7 @@ function TrackerPage() {
                         </tr>
                       );
                     })}
-                    {pageRows.length === 0 ? (
+                    {!refreshing && pageRows.length === 0 ? (
                       <tr>
                         <td
                           colSpan={EXHIBITOR_FIELDS.length + 2}
