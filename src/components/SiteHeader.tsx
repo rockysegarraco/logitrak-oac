@@ -87,7 +87,7 @@ export function SiteHeader({
         </nav>
 
         <div className="ml-auto flex items-center gap-3">
-          {onTracker ? (
+          {onTracker && me && !me.isAdmin ? (
             <button
               type="button"
               onClick={onCreateNew}
