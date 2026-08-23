@@ -2,10 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   queryOptions,
   useMutation,
+  useQuery,
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -13,6 +15,8 @@ import {
   Check,
   ChevronDown,
   ChevronUp,
+  Download,
+
   Pencil,
   Plus,
   Info,
@@ -48,7 +52,9 @@ import {
   type ExhibitorInput,
 } from "@/lib/exhibitors.functions";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
+import { getMe } from "@/lib/users.functions";
 import { Num } from "@/components/Num";
+
 
 import { normalizeValue, type ValueCase } from "@/lib/text-case";
 import { useOpenExhibitorCreate } from "@/lib/exhibitor-create-context";
@@ -61,6 +67,13 @@ const exhibitorsQuery = queryOptions({
   queryKey: ["exhibitors"],
   queryFn: () => listExhibitors(),
 });
+
+const meQuery = queryOptions({ queryKey: ["me"], queryFn: () => getMe() });
+
+function csvCell(value: string) {
+  return `"${(value ?? "").replace(/"/g, '""')}"`;
+}
+
 
 type FieldKey = (typeof EXHIBITOR_FIELDS)[number]["key"];
 
@@ -113,7 +126,10 @@ function toInput(row: Exhibitor): ExhibitorInput {
 
 function TrackerPage() {
   const { data: exhibitors } = useSuspenseQuery(exhibitorsQuery);
+  const { data: me } = useQuery(meQuery);
+  const isAdmin = Boolean(me?.isAdmin);
   const openCreate = useOpenExhibitorCreate();
+
 
 
   const queryClient = useQueryClient();
@@ -153,6 +169,8 @@ function TrackerPage() {
     [exhibitors],
   );
 
+  const activeUserFilter = isAdmin ? userFilter : "all";
+
   const rows = useMemo(() => {
     const filtered = exhibitors.filter((row) => {
       if (
@@ -161,7 +179,7 @@ function TrackerPage() {
       ) {
         return false;
       }
-      return userFilter === "all" || row.created_by_initials === userFilter;
+      return activeUserFilter === "all" || row.created_by_initials === activeUserFilter;
     });
 
     if (!sort) return filtered;
@@ -174,9 +192,36 @@ function TrackerPage() {
       if (!bv) return -1;
       return av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" }) * factor;
     });
-  }, [exhibitors, term, userFilter, sort]);
+  }, [exhibitors, term, activeUserFilter, sort]);
 
-  const hasFilters = userFilter !== "all" || term.length > 0;
+  const exportCsv = () => {
+    if (rows.length === 0) {
+      toast.error("Nothing to export");
+      return;
+    }
+    const header = ["User", ...EXHIBITOR_FIELDS.map((field) => field.label)];
+    const lines = [
+      header.map(csvCell).join(","),
+      ...rows.map((row) =>
+        [row.created_by_initials ?? "", ...EXHIBITOR_FIELDS.map((f) => row[f.key] ?? "")]
+          .map(csvCell)
+          .join(","),
+      ),
+    ];
+    const blob = new Blob([`\uFEFF${lines.join("\r\n")}`], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `exhibitors-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${rows.length} row${rows.length === 1 ? "" : "s"}`);
+  };
+
+  const hasFilters = activeUserFilter !== "all" || term.length > 0;
+
   const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
 
   useEffect(() => {
@@ -255,28 +300,37 @@ function TrackerPage() {
             />
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <label htmlFor="filter-user" className="sr-only">
-              Filter by user
-            </label>
-            <div className="relative">
-              <select
-                id="filter-user"
-                value={userFilter}
-                onChange={(event) => setUserFilter(event.target.value)}
-                className="block appearance-none rounded-full bg-card py-1.5 pr-9 pl-4 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
-              >
-                <option value="all">All users</option>
-                {userOptions.map((initials) => (
-                  <option key={initials} value={initials}>
-                    {initials}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown
-                aria-hidden
-                className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-              />
-            </div>
+            {isAdmin ? (
+              <>
+                <label htmlFor="filter-user" className="sr-only">
+                  Filter by user
+                </label>
+                <div className="relative">
+                  <select
+                    id="filter-user"
+                    value={userFilter}
+                    onChange={(event) => setUserFilter(event.target.value)}
+                    className="block appearance-none rounded-full bg-card py-1.5 pr-9 pl-4 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
+                  >
+                    <option value="all">All users</option>
+                    {userOptions.map((initials) => (
+                      <option key={initials} value={initials}>
+                        {initials}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown
+                    aria-hidden
+                    className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                  />
+                </div>
+              </>
+            ) : null}
+            <TwButton variant="secondary" onClick={exportCsv}>
+              <Download className="h-4 w-4" />
+              Export CSV
+            </TwButton>
+
 
           </div>
 
