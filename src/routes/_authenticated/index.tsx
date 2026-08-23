@@ -130,6 +130,7 @@ function TrackerPage() {
   const { data: exhibitors } = useSuspenseQuery(exhibitorsQuery);
   const { data: me } = useQuery(meQuery);
   const isAdmin = Boolean(me?.isAdmin);
+  const { data: allUsers } = useQuery({ ...usersQuery, enabled: isAdmin });
   const openCreate = useOpenExhibitorCreate();
 
 
