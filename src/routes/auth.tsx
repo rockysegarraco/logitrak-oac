@@ -11,15 +11,15 @@ export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Sign in | Shiplist Admin" },
+      { title: "Sign in | FreightTRAK Admin" },
       {
         name: "description",
-        content: "Sign in to the Shiplist exhibitor shipping tracker admin console.",
+        content: "Sign in to the FreightTRAK exhibitor shipping tracker admin console.",
       },
-      { property: "og:title", content: "Sign in | Shiplist Admin" },
+      { property: "og:title", content: "Sign in | FreightTRAK Admin" },
       {
         property: "og:description",
-        content: "Sign in to the Shiplist exhibitor shipping tracker admin console.",
+        content: "Sign in to the FreightTRAK exhibitor shipping tracker admin console.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -98,7 +98,7 @@ function AuthPage() {
               Welcome back.
             </h1>
             <p className="mt-1 text-center text-xl font-light sm:text-2xl tracking-tight text-muted-foreground">
-              Sign in to the shiplist.
+              Sign in to FreightTRAK.
             </p>
 
             <form className="mt-8 space-y-4" onSubmit={onSubmit} noValidate>

@@ -83,12 +83,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Shiplist | Exhibitor Shipping Tracker" },
+      { title: "FreightTRAK | Exhibitor Shipping Tracker" },
       {
         name: "description",
         content: "Track exhibitor booth shipping paperwork, quotes and receiver numbers.",
       },
-      { property: "og:title", content: "Shiplist | Exhibitor Shipping Tracker" },
+      { property: "og:title", content: "FreightTRAK | Exhibitor Shipping Tracker" },
       {
         property: "og:description",
         content: "Track exhibitor booth shipping paperwork, quotes and receiver numbers.",
