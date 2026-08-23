@@ -52,7 +52,9 @@ import {
   type ExhibitorInput,
 } from "@/lib/exhibitors.functions";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
+import { getMe } from "@/lib/users.functions";
 import { Num } from "@/components/Num";
+
 
 import { normalizeValue, type ValueCase } from "@/lib/text-case";
 import { useOpenExhibitorCreate } from "@/lib/exhibitor-create-context";
