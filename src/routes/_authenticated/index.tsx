@@ -65,6 +65,17 @@ import { cn } from "@/lib/utils";
 
 const PAGE_SIZES = [10, 25, 50, 100];
 
+const MONEY_FIELDS = ["actual_costs", "final_invoice", "actual_revenue"] as const;
+
+function parseMoney(value: string | null | undefined) {
+  const n = Number(String(value ?? "").replace(/[^0-9.-]/g, ""));
+  return Number.isFinite(n) ? n : 0;
+}
+
+function formatMoney(value: number) {
+  return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
+}
+
 const exhibitorsQuery = queryOptions({
   queryKey: ["exhibitors"],
   queryFn: () => listExhibitors(),
@@ -254,6 +265,14 @@ function TrackerPage() {
       return av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" }) * factor;
     });
   }, [exhibitors, term, activeUserFilter, sort]);
+
+  const totals = useMemo(() => {
+    const acc: Record<string, number> = {};
+    for (const key of MONEY_FIELDS) {
+      acc[key] = rows.reduce((sum, row) => sum + parseMoney(row[key]), 0);
+    }
+    return acc;
+  }, [rows]);
 
   const exportCsv = () => {
     if (rows.length === 0) {
@@ -701,6 +720,23 @@ function TrackerPage() {
                       </tr>
                     ) : null}
                   </tbody>
+                  {rows.length > 0 ? (
+                    <tfoot className="border-t-2 border-border bg-muted/60 font-semibold">
+                      <tr className="divide-x divide-border">
+                        <td className="px-3 py-2.5 text-xs uppercase text-muted-foreground" colSpan={2}>
+                          Total
+                        </td>
+                        {EXHIBITOR_FIELDS.slice(1).map((field) => (
+                          <td key={field.key} className="whitespace-nowrap px-3 py-2.5 text-sm">
+                            {(MONEY_FIELDS as readonly string[]).includes(field.key) ? (
+                              <Num>{formatMoney(totals[field.key] ?? 0)}</Num>
+                            ) : null}
+                          </td>
+                        ))}
+                        <td className="px-3 py-2.5" />
+                      </tr>
+                    </tfoot>
+                  ) : null}
                 </table>
               </div>
 
