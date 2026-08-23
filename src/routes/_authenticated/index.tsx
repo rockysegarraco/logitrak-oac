@@ -80,6 +80,43 @@ function csvCell(value: string) {
 
 type FieldKey = (typeof EXHIBITOR_FIELDS)[number]["key"];
 
+function SkeletonRows({ rows }: { rows: number }) {
+  return (
+    <>
+      {Array.from({ length: rows }).map((_, index) => (
+        <tr key={`skeleton-${index}`} className="divide-x divide-border">
+          {Array.from({ length: EXHIBITOR_FIELDS.length + 2 }).map((__, cell) => (
+            <td key={cell} className="px-3 py-3">
+              <Skeleton className="h-4 w-full min-w-12" />
+            </td>
+          ))}
+        </tr>
+      ))}
+    </>
+  );
+}
+
+function TrackerSkeleton() {
+  return (
+    <main className="min-h-screen bg-background">
+      <div className="w-full px-4 py-10 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap items-center gap-3">
+          <Skeleton className="h-9 min-w-0 flex-1 rounded-full" />
+          <Skeleton className="h-9 w-28 rounded-full" />
+          <Skeleton className="h-9 w-32 rounded-full" />
+        </div>
+        <div className="mt-8 rounded-t-lg bg-card p-4 shadow-sm ring-1 ring-border">
+          <div className="space-y-3">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <Skeleton key={index} className="h-8 w-full" />
+            ))}
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
 export const Route = createFileRoute("/_authenticated/")({
 
   head: () => ({
