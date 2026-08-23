@@ -550,7 +550,7 @@ function TrackerPage() {
                                 </Tooltip>
                               </div>
 
-                            ) : (
+                            ) : isAdmin ? null : (
                               <div className="flex justify-center gap-1">
                                 <Tooltip>
                                   <TooltipTrigger asChild>
