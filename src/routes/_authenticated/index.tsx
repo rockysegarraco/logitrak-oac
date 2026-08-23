@@ -165,11 +165,20 @@ function TrackerPage() {
 
   const term = search.trim().toLowerCase();
 
-  const userOptions = useMemo(
-    () =>
-      Array.from(new Set(exhibitors.map((row) => row.created_by_initials).filter(Boolean))).sort(),
-    [exhibitors],
-  );
+  const userOptions = useMemo(() => {
+    const byInitials = new Map<string, string>();
+    for (const initials of exhibitors.map((row) => row.created_by_initials).filter(Boolean)) {
+      byInitials.set(initials, initials);
+    }
+    for (const user of allUsers ?? []) {
+      if (!user.initials) continue;
+      const fullName = [user.first_name, user.last_name].filter(Boolean).join(" ").trim();
+      byInitials.set(user.initials, fullName || user.username);
+    }
+    return Array.from(byInitials, ([value, label]) => ({ value, label })).sort((a, b) =>
+      a.label.localeCompare(b.label),
+    );
+  }, [exhibitors, allUsers]);
 
   const activeUserFilter = isAdmin ? userFilter : "all";
 
