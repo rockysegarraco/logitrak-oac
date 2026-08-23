@@ -65,6 +65,17 @@ import { cn } from "@/lib/utils";
 
 const PAGE_SIZES = [10, 25, 50, 100];
 
+const MONEY_FIELDS = ["actual_costs", "final_invoice", "actual_revenue"] as const;
+
+function parseMoney(value: string | null | undefined) {
+  const n = Number(String(value ?? "").replace(/[^0-9.-]/g, ""));
+  return Number.isFinite(n) ? n : 0;
+}
+
+function formatMoney(value: number) {
+  return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
+}
+
 const exhibitorsQuery = queryOptions({
   queryKey: ["exhibitors"],
   queryFn: () => listExhibitors(),
