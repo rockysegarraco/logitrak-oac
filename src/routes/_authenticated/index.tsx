@@ -325,9 +325,9 @@ function TrackerPage() {
                     className="block appearance-none rounded-full bg-card py-1.5 pr-9 pl-4 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
                   >
                     <option value="all">All users</option>
-                    {userOptions.map((initials) => (
-                      <option key={initials} value={initials}>
-                        {initials}
+                    {userOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
                       </option>
                     ))}
                   </select>
