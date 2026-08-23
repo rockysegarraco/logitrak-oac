@@ -266,6 +266,14 @@ function TrackerPage() {
     });
   }, [exhibitors, term, activeUserFilter, sort]);
 
+  const totals = useMemo(() => {
+    const acc: Record<string, number> = {};
+    for (const key of MONEY_FIELDS) {
+      acc[key] = rows.reduce((sum, row) => sum + parseMoney(row[key]), 0);
+    }
+    return acc;
+  }, [rows]);
+
   const exportCsv = () => {
     if (rows.length === 0) {
       toast.error("Nothing to export");
