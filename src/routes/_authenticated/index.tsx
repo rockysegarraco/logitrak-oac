@@ -70,6 +70,8 @@ const exhibitorsQuery = queryOptions({
 
 const meQuery = queryOptions({ queryKey: ["me"], queryFn: () => getMe() });
 
+const usersQuery = queryOptions({ queryKey: ["users"], queryFn: () => listUsers() });
+
 function csvCell(value: string) {
   return `"${(value ?? "").replace(/"/g, '""')}"`;
 }
