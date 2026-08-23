@@ -156,6 +156,22 @@ function TrackerPage() {
     localStorage.setItem("tracker:valueCase:v3", mode);
   };
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function hardRefresh() {
+    setRefreshing(true);
+    try {
+      await queryClient.invalidateQueries({ queryKey: ["exhibitors"] });
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+      await queryClient.refetchQueries({ queryKey: ["exhibitors"] });
+      toast.success("Data refreshed");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Refresh failed");
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
   const [openTip, setOpenTip] = useState<FieldKey | null>(null);
 
   const [page, setPage] = useState(1);
