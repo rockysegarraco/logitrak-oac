@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      exhibitor_audit: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_initials: string
+          changes: Json
+          created_at: string
+          exhibitor_id: string | null
+          exhibitor_name: string
+          id: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_initials?: string
+          changes?: Json
+          created_at?: string
+          exhibitor_id?: string | null
+          exhibitor_name?: string
+          id?: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_initials?: string
+          changes?: Json
+          created_at?: string
+          exhibitor_id?: string | null
+          exhibitor_name?: string
+          id?: string
+        }
+        Relationships: []
+      }
       exhibitors: {
         Row: {
           booth_number: string
@@ -29,6 +62,7 @@ export type Database = {
           receiver_numbers_late: string
           receiver_numbers_on_time: string
           request_for_paf_sent: string
+          status: string
           updated_at: string
         }
         Insert: {
@@ -45,6 +79,7 @@ export type Database = {
           receiver_numbers_late?: string
           receiver_numbers_on_time?: string
           request_for_paf_sent?: string
+          status?: string
           updated_at?: string
         }
         Update: {
@@ -61,6 +96,7 @@ export type Database = {
           receiver_numbers_late?: string
           receiver_numbers_on_time?: string
           request_for_paf_sent?: string
+          status?: string
           updated_at?: string
         }
         Relationships: []
