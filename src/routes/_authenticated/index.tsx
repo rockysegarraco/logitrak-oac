@@ -701,6 +701,23 @@ function TrackerPage() {
                       </tr>
                     ) : null}
                   </tbody>
+                  {rows.length > 0 ? (
+                    <tfoot className="border-t-2 border-border bg-muted/60 font-semibold">
+                      <tr className="divide-x divide-border">
+                        <td className="px-3 py-2.5 text-xs uppercase text-muted-foreground" colSpan={2}>
+                          Total
+                        </td>
+                        {EXHIBITOR_FIELDS.slice(1).map((field) => (
+                          <td key={field.key} className="whitespace-nowrap px-3 py-2.5 text-sm">
+                            {MONEY_FIELDS.includes(field.key) ? (
+                              <Num>{formatMoney(totals[field.key] ?? 0)}</Num>
+                            ) : null}
+                          </td>
+                        ))}
+                        <td className="px-3 py-2.5" />
+                      </tr>
+                    </tfoot>
+                  ) : null}
                 </table>
               </div>
 
