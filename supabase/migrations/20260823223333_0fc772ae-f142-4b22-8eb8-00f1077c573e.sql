@@ -1,0 +1,18 @@
+ALTER TABLE public.exhibitors
+  DROP COLUMN paf_in_files,
+  DROP COLUMN request_for_paf_sent,
+  DROP COLUMN on_time_quote_sent,
+  DROP COLUMN on_time_charges_processed,
+  DROP COLUMN late_fee_quote_sent,
+  DROP COLUMN receiver_numbers_on_time,
+  DROP COLUMN receiver_numbers_late,
+  ADD COLUMN pro_number text NOT NULL DEFAULT '',
+  ADD COLUMN invoice_number text NOT NULL DEFAULT '',
+  ADD COLUMN city text NOT NULL DEFAULT '',
+  ADD COLUMN state text NOT NULL DEFAULT '',
+  ADD COLUMN estimated_weight text NOT NULL DEFAULT '',
+  ADD COLUMN shipping_date text NOT NULL DEFAULT '',
+  ADD COLUMN delivery_date text NOT NULL DEFAULT '',
+  ADD COLUMN actual_costs text NOT NULL DEFAULT '',
+  ADD COLUMN final_invoice text NOT NULL DEFAULT '',
+  ADD COLUMN actual_revenue text NOT NULL DEFAULT '';

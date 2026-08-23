@@ -49,53 +49,62 @@ export type Database = {
       }
       exhibitors: {
         Row: {
+          actual_costs: string
+          actual_revenue: string
           booth_number: string
+          city: string
           created_at: string
           created_by: string | null
           created_by_initials: string
+          delivery_date: string
+          estimated_weight: string
           exhibitor_name: string
+          final_invoice: string
           id: string
-          late_fee_quote_sent: string
-          on_time_charges_processed: string
-          on_time_quote_sent: string
-          paf_in_files: string
-          receiver_numbers_late: string
-          receiver_numbers_on_time: string
-          request_for_paf_sent: string
+          invoice_number: string
+          pro_number: string
+          shipping_date: string
+          state: string
           status: string
           updated_at: string
         }
         Insert: {
+          actual_costs?: string
+          actual_revenue?: string
           booth_number?: string
+          city?: string
           created_at?: string
           created_by?: string | null
           created_by_initials?: string
+          delivery_date?: string
+          estimated_weight?: string
           exhibitor_name: string
+          final_invoice?: string
           id?: string
-          late_fee_quote_sent?: string
-          on_time_charges_processed?: string
-          on_time_quote_sent?: string
-          paf_in_files?: string
-          receiver_numbers_late?: string
-          receiver_numbers_on_time?: string
-          request_for_paf_sent?: string
+          invoice_number?: string
+          pro_number?: string
+          shipping_date?: string
+          state?: string
           status?: string
           updated_at?: string
         }
         Update: {
+          actual_costs?: string
+          actual_revenue?: string
           booth_number?: string
+          city?: string
           created_at?: string
           created_by?: string | null
           created_by_initials?: string
+          delivery_date?: string
+          estimated_weight?: string
           exhibitor_name?: string
+          final_invoice?: string
           id?: string
-          late_fee_quote_sent?: string
-          on_time_charges_processed?: string
-          on_time_quote_sent?: string
-          paf_in_files?: string
-          receiver_numbers_late?: string
-          receiver_numbers_on_time?: string
-          request_for_paf_sent?: string
+          invoice_number?: string
+          pro_number?: string
+          shipping_date?: string
+          state?: string
           status?: string
           updated_at?: string
         }
