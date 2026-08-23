@@ -126,7 +126,10 @@ function toInput(row: Exhibitor): ExhibitorInput {
 
 function TrackerPage() {
   const { data: exhibitors } = useSuspenseQuery(exhibitorsQuery);
+  const { data: me } = useQuery(meQuery);
+  const isAdmin = Boolean(me?.isAdmin);
   const openCreate = useOpenExhibitorCreate();
+
 
 
   const queryClient = useQueryClient();
