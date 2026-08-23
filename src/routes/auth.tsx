@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import authArt from "@/assets/auth-truck-2.png.asset.json";
+import authArt from "@/assets/auth-truck-3.png.asset.json";
 import oacMark from "@/assets/oac-mark.svg";
 import { supabase } from "@/integrations/supabase/client";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
