@@ -52,7 +52,7 @@ import {
   type ExhibitorInput,
 } from "@/lib/exhibitors.functions";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
-import { getMe } from "@/lib/users.functions";
+import { getMe, listUsers } from "@/lib/users.functions";
 import { Num } from "@/components/Num";
 
 
