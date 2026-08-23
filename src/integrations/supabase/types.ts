@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           booth_number: string
           created_at: string
+          created_by: string | null
           created_by_initials: string
           exhibitor_name: string
           id: string
@@ -33,6 +34,7 @@ export type Database = {
         Insert: {
           booth_number?: string
           created_at?: string
+          created_by?: string | null
           created_by_initials?: string
           exhibitor_name: string
           id?: string
@@ -48,6 +50,7 @@ export type Database = {
         Update: {
           booth_number?: string
           created_at?: string
+          created_by?: string | null
           created_by_initials?: string
           exhibitor_name?: string
           id?: string
