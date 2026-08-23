@@ -17,6 +17,7 @@ import {
   ChevronUp,
   Download,
 
+  MoreHorizontal,
   Pencil,
   Plus,
   Info,
@@ -55,6 +56,12 @@ import {
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { getMe, listUsers } from "@/lib/users.functions";
 import { Num } from "@/components/Num";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 
 
