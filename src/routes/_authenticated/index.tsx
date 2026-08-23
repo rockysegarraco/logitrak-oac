@@ -629,34 +629,35 @@ function TrackerPage() {
                               </div>
 
                             ) : (
-                              <div className="flex justify-center gap-1">
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
+                              <div className="flex justify-center">
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
                                     <TwButton
                                       variant="ghost"
                                       className="px-2 py-1"
-                                      onClick={() => startEdit(row)}
-                                      aria-label={`Quick edit ${row.exhibitor_name}`}
+                                      aria-label={`Actions for ${row.exhibitor_name}`}
                                     >
-                                      <Pencil className="h-4 w-4" />
+                                      <MoreHorizontal className="h-4 w-4" />
                                     </TwButton>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Edit</TooltipContent>
-                                </Tooltip>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <TwButton
-                                      variant="ghost"
-                                      className="px-2 py-1 text-destructive hover:bg-destructive/10"
-                                      aria-label={`Delete ${row.exhibitor_name}`}
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end" className="w-36">
+                                    <DropdownMenuItem
+                                      className="cursor-pointer"
+                                      onSelect={() => startEdit(row)}
+                                    >
+                                      <Pencil className="mr-2 h-4 w-4" />
+                                      Edit
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      className="cursor-pointer text-destructive focus:text-destructive"
                                       disabled={deleteMutation.isPending}
-                                      onClick={() => setPendingDelete(row)}
+                                      onSelect={() => setPendingDelete(row)}
                                     >
-                                      <Trash2 className="h-4 w-4" />
-                                    </TwButton>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Delete</TooltipContent>
-                                </Tooltip>
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      Delete
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
                               </div>
 
                             )}
