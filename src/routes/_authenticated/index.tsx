@@ -338,6 +338,15 @@ function TrackerPage() {
                 </div>
               </>
             ) : null}
+            <TwButton
+              variant="secondary"
+              onClick={hardRefresh}
+              disabled={refreshing}
+              aria-label="Refresh data"
+            >
+              <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
+              {refreshing ? "Refreshing…" : "Refresh"}
+            </TwButton>
             <TwButton variant="secondary" onClick={exportCsv}>
               <Download className="h-4 w-4" />
               Export CSV
