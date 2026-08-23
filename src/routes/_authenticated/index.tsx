@@ -609,7 +609,7 @@ function TrackerPage() {
                                 </Tooltip>
                               </div>
 
-                            ) : isAdmin ? null : (
+                            ) : (
                               <div className="flex justify-center gap-1">
                                 <Tooltip>
                                   <TooltipTrigger asChild>
@@ -664,12 +664,10 @@ function TrackerPage() {
                                 Add your first exhibitor to start tracking PAFs, quotes, and
                                 receiver numbers.
                               </p>
-                              {isAdmin ? null : (
-                                <button type="button" onClick={openCreate} className={cn(twButtonClass("primary"), "mt-5")}>
-                                  <Plus className="-ml-0.5 h-4 w-4" />
-                                  Add exhibitor
-                                </button>
-                              )}
+                              <button type="button" onClick={openCreate} className={cn(twButtonClass("primary"), "mt-5")}>
+                                <Plus className="-ml-0.5 h-4 w-4" />
+                                Add exhibitor
+                              </button>
                             </div>
                           ) : (
                             <div className="mx-auto max-w-sm">
