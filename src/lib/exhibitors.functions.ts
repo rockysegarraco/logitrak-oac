@@ -3,15 +3,18 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 
 const exhibitorInput = z.object({
-  exhibitor_name: z.string().trim().min(1, "Exhibitor name is required").max(200),
   booth_number: z.string().trim().max(50).default(""),
-  paf_in_files: z.string().trim().max(200).default(""),
-  request_for_paf_sent: z.string().trim().max(200).default(""),
-  on_time_quote_sent: z.string().trim().max(200).default(""),
-  on_time_charges_processed: z.string().trim().max(200).default(""),
-  late_fee_quote_sent: z.string().trim().max(200).default(""),
-  receiver_numbers_on_time: z.string().trim().max(500).default(""),
-  receiver_numbers_late: z.string().trim().max(500).default(""),
+  exhibitor_name: z.string().trim().min(1, "Exhibitor name is required").max(200),
+  pro_number: z.string().trim().max(100).default(""),
+  invoice_number: z.string().trim().max(100).default(""),
+  city: z.string().trim().max(120).default(""),
+  state: z.string().trim().max(50).default(""),
+  estimated_weight: z.string().trim().max(50).default(""),
+  shipping_date: z.string().trim().max(50).default(""),
+  delivery_date: z.string().trim().max(50).default(""),
+  actual_costs: z.string().trim().max(50).default(""),
+  final_invoice: z.string().trim().max(50).default(""),
+  actual_revenue: z.string().trim().max(50).default(""),
 });
 
 export type ExhibitorInput = z.infer<typeof exhibitorInput>;
