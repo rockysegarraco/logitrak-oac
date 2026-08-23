@@ -728,7 +728,7 @@ function TrackerPage() {
                         </td>
                         {EXHIBITOR_FIELDS.slice(1).map((field) => (
                           <td key={field.key} className="whitespace-nowrap px-3 py-2.5 text-sm">
-                            {MONEY_FIELDS.includes(field.key) ? (
+                            {(MONEY_FIELDS as readonly string[]).includes(field.key) ? (
                               <Num>{formatMoney(totals[field.key] ?? 0)}</Num>
                             ) : null}
                           </td>
