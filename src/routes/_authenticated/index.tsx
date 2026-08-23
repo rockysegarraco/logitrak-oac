@@ -55,6 +55,7 @@ import {
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { getMe, listUsers } from "@/lib/users.functions";
 import { Num } from "@/components/Num";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 import { normalizeValue, type ValueCase } from "@/lib/text-case";
@@ -141,6 +142,8 @@ export const Route = createFileRoute("/_authenticated/")({
     await context.queryClient.ensureQueryData(exhibitorsQuery);
   },
   component: TrackerPage,
+  pendingMs: 200,
+  pendingComponent: TrackerSkeleton,
   errorComponent: ({ error }) => (
     <div className="mx-auto max-w-xl p-10 text-center" role="alert">
       <h1 className="text-lg font-semibold">Couldn't load the tracker</h1>
