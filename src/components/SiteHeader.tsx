@@ -26,6 +26,11 @@ export function SiteHeader({
   const queryClient = useQueryClient();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [hasSession, setHasSession] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -48,7 +53,9 @@ export function SiteHeader({
     enabled: hasSession && pathname !== "/auth",
   });
 
-  if (pathname === "/auth") return null;
+  // Render only after hydration: the server has no session, so a server-rendered
+  // header can survive as stale markup next to the hydrated one on slow loads.
+  if (!mounted || pathname === "/auth") return null;
 
   const onTracker = pathname === "/";
 
