@@ -52,7 +52,7 @@ import {
   type ExhibitorInput,
 } from "@/lib/exhibitors.functions";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
-import { getMe } from "@/lib/users.functions";
+import { getMe, listUsers } from "@/lib/users.functions";
 import { Num } from "@/components/Num";
 
 
@@ -69,6 +69,8 @@ const exhibitorsQuery = queryOptions({
 });
 
 const meQuery = queryOptions({ queryKey: ["me"], queryFn: () => getMe() });
+
+const usersQuery = queryOptions({ queryKey: ["users"], queryFn: () => listUsers() });
 
 function csvCell(value: string) {
   return `"${(value ?? "").replace(/"/g, '""')}"`;
@@ -128,6 +130,7 @@ function TrackerPage() {
   const { data: exhibitors } = useSuspenseQuery(exhibitorsQuery);
   const { data: me } = useQuery(meQuery);
   const isAdmin = Boolean(me?.isAdmin);
+  const { data: allUsers } = useQuery({ ...usersQuery, enabled: isAdmin });
   const openCreate = useOpenExhibitorCreate();
 
 
@@ -163,11 +166,20 @@ function TrackerPage() {
 
   const term = search.trim().toLowerCase();
 
-  const userOptions = useMemo(
-    () =>
-      Array.from(new Set(exhibitors.map((row) => row.created_by_initials).filter(Boolean))).sort(),
-    [exhibitors],
-  );
+  const userOptions = useMemo(() => {
+    const byInitials = new Map<string, string>();
+    for (const initials of exhibitors.map((row) => row.created_by_initials).filter(Boolean)) {
+      byInitials.set(initials, initials);
+    }
+    for (const user of allUsers ?? []) {
+      if (!user.initials) continue;
+      const fullName = [user.first_name, user.last_name].filter(Boolean).join(" ").trim();
+      byInitials.set(user.initials, fullName || user.username);
+    }
+    return Array.from(byInitials, ([value, label]) => ({ value, label })).sort((a, b) =>
+      a.label.localeCompare(b.label),
+    );
+  }, [exhibitors, allUsers]);
 
   const activeUserFilter = isAdmin ? userFilter : "all";
 
@@ -313,9 +325,9 @@ function TrackerPage() {
                     className="block appearance-none rounded-full bg-card py-1.5 pr-9 pl-4 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
                   >
                     <option value="all">All users</option>
-                    {userOptions.map((initials) => (
-                      <option key={initials} value={initials}>
-                        {initials}
+                    {userOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
                       </option>
                     ))}
                   </select>
