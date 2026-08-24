@@ -748,65 +748,19 @@ function TrackerPage() {
                 </table>
               </div>
 
-              <nav
-                  aria-label="Pagination"
-                  className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-card px-4 py-3 sm:px-6"
-                >
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <label htmlFor="page-size">Rows per page</label>
-                    <div className="relative">
-                      <select
-                        id="page-size"
-                        value={pageSize}
-                        onChange={(event) => setPageSize(Number(event.target.value))}
-                        className="appearance-none rounded-full bg-card py-1 pr-8 pl-3 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
-                      >
-                        {PAGE_SIZES.map((size) => (
-                          <option key={size} value={size}>
-                            {size}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDown
-                        aria-hidden
-                        className="pointer-events-none absolute top-1/2 right-2.5 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                      />
-                    </div>
+              <div className="border-t border-border bg-card px-4 py-3 sm:px-6">
+                <p className="text-sm text-muted-foreground">
+                  {rows.length === 0 ? (
+                    "No results"
+                  ) : (
+                    <>
+                      <span className="num font-medium text-foreground">{rows.length}</span>{" "}
+                      {rows.length === 1 ? "row" : "rows"}
+                    </>
+                  )}
+                </p>
+              </div>
 
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {rows.length === 0 ? (
-                      "No results"
-                    ) : (
-                      <>
-                        Showing <span className="num font-medium text-foreground">{start + 1}</span> to{" "}
-                        <span className="num font-medium text-foreground">
-                          {Math.min(start + pageSize, rows.length)}
-                        </span>{" "}
-                        of <span className="num font-medium text-foreground">{rows.length}</span>
-                      </>
-                    )}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <TwButton
-                      variant="secondary"
-                      disabled={page <= 1}
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    >
-                      Previous
-                    </TwButton>
-                    <span className="text-sm text-muted-foreground">
-                      Page <span className="num">{page}</span> of <span className="num">{pageCount}</span>
-                    </span>
-                    <TwButton
-                      variant="secondary"
-                      disabled={page >= pageCount}
-                      onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-                    >
-                      Next
-                    </TwButton>
-                  </div>
-              </nav>
             </div>
           </div>
         </div>
