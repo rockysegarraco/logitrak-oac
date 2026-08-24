@@ -309,19 +309,8 @@ function TrackerPage() {
 
   const hasFilters = activeUserFilter !== "all" || term.length > 0;
 
-  const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
+  const pageRows = rows;
 
-  useEffect(() => {
-    setPage(1);
-  }, [term, userFilter, pageSize]);
-
-
-  useEffect(() => {
-    if (page > pageCount) setPage(pageCount);
-  }, [page, pageCount]);
-
-  const start = (page - 1) * pageSize;
-  const pageRows = rows.slice(start, start + pageSize);
 
   const saveMutation = useMutation({
     mutationFn: (values: ExhibitorInput & { id: string }) => update({ data: values }),
