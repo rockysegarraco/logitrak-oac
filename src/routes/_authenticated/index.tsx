@@ -70,7 +70,7 @@ import { useOpenExhibitorCreate } from "@/lib/exhibitor-create-context";
 import { cn } from "@/lib/utils";
 
 
-const PAGE_SIZES = [10, 25, 50, 100];
+
 
 const MONEY_FIELDS = ["actual_costs", "final_invoice", "actual_revenue"] as const;
 
