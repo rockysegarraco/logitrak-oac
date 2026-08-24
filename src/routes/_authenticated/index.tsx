@@ -225,8 +225,6 @@ function TrackerPage() {
 
   const [openTip, setOpenTip] = useState<FieldKey | null>(null);
 
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(25);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<Exhibitor | null>(null);
   const [draft, setDraft] = useState<ExhibitorInput | null>(null);
