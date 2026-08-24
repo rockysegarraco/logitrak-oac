@@ -735,18 +735,7 @@ function TrackerPage() {
                 </table>
               </div>
 
-              <div className="border-t border-border bg-card px-4 py-3 sm:px-6">
-                <p className="text-sm text-muted-foreground">
-                  {rows.length === 0 ? (
-                    "No results"
-                  ) : (
-                    <>
-                      <span className="num font-medium text-foreground">{rows.length}</span>{" "}
-                      {rows.length === 1 ? "row" : "rows"}
-                    </>
-                  )}
-                </p>
-              </div>
+
 
             </div>
           </div>
