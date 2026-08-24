@@ -596,31 +596,33 @@ function TrackerPage() {
                               <div className="flex justify-center gap-1">
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <TwButton
+                                    <button
+                                      type="button"
                                       onClick={saveEdit}
                                       disabled={saveMutation.isPending}
-                                      className="px-2 py-1"
+                                      className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50 focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
                                       aria-label="Save changes"
                                     >
                                       <Check className="h-4 w-4" />
-                                    </TwButton>
+                                    </button>
                                   </TooltipTrigger>
                                   <TooltipContent>Save</TooltipContent>
                                 </Tooltip>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <TwButton
-                                      variant="secondary"
+                                    <button
+                                      type="button"
                                       onClick={cancelEdit}
-                                      className="px-2 py-1"
+                                      className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-border bg-card text-foreground transition-colors hover:bg-muted focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
                                       aria-label="Cancel editing"
                                     >
                                       <X className="h-4 w-4" />
-                                    </TwButton>
+                                    </button>
                                   </TooltipTrigger>
                                   <TooltipContent>Cancel</TooltipContent>
                                 </Tooltip>
                               </div>
+
 
                             ) : (
                               <div className="flex justify-center">
