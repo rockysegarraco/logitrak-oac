@@ -524,7 +524,7 @@ function TrackerPage() {
 
                       <th
                         scope="col"
-                        className="sticky top-0 z-10 w-14 min-w-14 bg-muted px-3 py-3.5 text-right text-sm font-semibold whitespace-nowrap text-foreground"
+                        className="sticky top-0 z-10 w-14 min-w-14 bg-muted px-1 py-3.5 text-right text-sm font-semibold whitespace-nowrap text-foreground"
                       >
                         <span className="sr-only">Actions</span>
                       </th>
@@ -591,7 +591,7 @@ function TrackerPage() {
                               )}
                             </td>
                           ))}
-                          <td className="w-14 min-w-14 px-3 py-2 text-center text-sm whitespace-nowrap">
+                          <td className="w-14 min-w-14 px-1 py-2 text-center text-sm whitespace-nowrap">
                             {editing ? (
                               <div className="flex justify-center gap-1">
                                 <Tooltip>
