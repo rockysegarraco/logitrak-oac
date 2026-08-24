@@ -524,7 +524,7 @@ function TrackerPage() {
 
                       <th
                         scope="col"
-                        className="sticky top-0 z-10 w-[132px] min-w-[132px] bg-muted px-3 py-3.5 text-right text-sm font-semibold whitespace-nowrap text-foreground"
+                        className="sticky top-0 z-10 w-14 min-w-14 bg-muted px-1 py-3.5 text-right text-sm font-semibold whitespace-nowrap text-foreground"
                       >
                         <span className="sr-only">Actions</span>
                       </th>
@@ -591,7 +591,7 @@ function TrackerPage() {
                               )}
                             </td>
                           ))}
-                          <td className="w-[132px] min-w-[132px] px-3 py-2 text-center text-sm whitespace-nowrap">
+                          <td className="w-14 min-w-14 px-1 py-2 text-center text-sm whitespace-nowrap">
                             {editing ? (
                               <div className="flex justify-center gap-1">
                                 <Tooltip>
@@ -626,14 +626,15 @@ function TrackerPage() {
                               <div className="flex justify-center">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
-                                    <TwButton
-                                      variant="ghost"
-                                      className="px-2 py-1"
+                                    <button
+                                      type="button"
+                                      className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
                                       aria-label={`Actions for ${row.exhibitor_name}`}
                                     >
                                       <MoreHorizontal className="h-4 w-4" />
-                                    </TwButton>
+                                    </button>
                                   </DropdownMenuTrigger>
+
                                   <DropdownMenuContent align="end" className="w-36">
                                     <DropdownMenuItem
                                       className="cursor-pointer"
