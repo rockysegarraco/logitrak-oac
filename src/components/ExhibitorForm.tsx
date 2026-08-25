@@ -90,8 +90,55 @@ export function ExhibitorForm({
       }}
     >
       <div className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6">
-      <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
-        {EXHIBITOR_FIELDS.map((field) => {
+      <div className="mb-6">
+        <TwLabel htmlFor="exhibitor_name">
+          Exhibitor Name
+          <span className="ml-1 text-destructive">*</span>
+        </TwLabel>
+        <div className="mt-2">
+          <select
+            id="exhibitor_name"
+            value={values.exhibitor_name ?? ""}
+            aria-invalid={errors.exhibitor_name ? true : undefined}
+            onChange={(event) => set("exhibitor_name", event.target.value)}
+            className={cn(
+              "block w-full cursor-pointer rounded-md bg-card px-3 py-1.5 text-base uppercase text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6",
+              errors.exhibitor_name && "outline-destructive focus:outline-destructive",
+            )}
+          >
+            <option value="">
+              {directoryLoading
+                ? "Loading exhibitors..."
+                : options.length === 0
+                  ? "No exhibitors added yet"
+                  : "Select an exhibitor..."}
+            </option>
+            {options.map((entry) => (
+              <option key={entry.id} value={entry.name}>
+                {entry.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        {errors.exhibitor_name ? (
+          <p className="mt-1 text-sm text-destructive">{errors.exhibitor_name}</p>
+        ) : null}
+        <p className="mt-2 text-sm text-muted-foreground">
+          Pick an exhibitor to fill in the rest.{" "}
+          <Link to="/exhibitors" className="font-semibold text-foreground underline">
+            Manage exhibitor list
+          </Link>
+        </p>
+      </div>
+
+      <div
+        aria-hidden={!picked}
+        className={cn(
+          "grid grid-cols-1 gap-x-6 gap-y-6 transition-opacity sm:grid-cols-6",
+          !picked && "pointer-events-none opacity-50",
+        )}
+      >
+        {EXHIBITOR_FIELDS.filter((field) => field.key !== "exhibitor_name").map((field) => {
           const error = errors[field.key];
           const required = REQUIRED_FIELDS.includes(field.key);
           return (
@@ -109,6 +156,7 @@ export function ExhibitorForm({
                   value={values[field.key]}
                   placeholder={field.placeholder}
                   maxLength={500}
+                  disabled={!picked}
                   aria-invalid={error ? true : undefined}
                   aria-describedby={error ? `${field.key}-error` : undefined}
                   className={cn(
@@ -128,6 +176,7 @@ export function ExhibitorForm({
           );
         })}
       </div>
+
 
       {formError ? (
         <p className="mt-4 text-sm text-destructive" role="alert">
