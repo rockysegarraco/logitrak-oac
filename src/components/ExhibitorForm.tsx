@@ -186,7 +186,7 @@ export function ExhibitorForm({
       </div>
 
       <div className="flex w-full shrink-0 items-center gap-x-4 border-t border-border bg-card px-4 py-4 sm:px-6">
-        <TwButton type="submit" variant="primary" disabled={pending}>
+        <TwButton type="submit" variant="primary" disabled={pending || !picked}>
           {pending ? "Saving..." : submitLabel}
         </TwButton>
         <TwButton variant="ghost" onClick={onCancel}>
