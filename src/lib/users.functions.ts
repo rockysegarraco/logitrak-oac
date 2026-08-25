@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { requireAppAuth } from "@/lib/supabase-auth-middleware";
 import { z } from "zod";
 import { initialsFrom, normalizeUsername, usernameToEmail } from "./username";
 
@@ -27,7 +27,7 @@ const newUserInput = z.object({
 });
 
 export const getMe = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAppAuth])
   .handler(async ({ context }) => {
     const { data: profile } = await context.supabase
       .from("profiles")
@@ -42,7 +42,7 @@ export const getMe = createServerFn({ method: "GET" })
   });
 
 export const listUsers = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAppAuth])
   .handler(async ({ context }) => {
     const { data: profiles, error } = await context.supabase
       .from("profiles")
@@ -58,7 +58,7 @@ export const listUsers = createServerFn({ method: "GET" })
   });
 
 export const createAppUser = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAppAuth])
   .inputValidator((input: unknown) => newUserInput.parse(input))
   .handler(async ({ data, context }) => {
     const { data: isAdmin } = await context.supabase.rpc("has_role", {
@@ -99,7 +99,7 @@ export const createAppUser = createServerFn({ method: "POST" })
   });
 
 export const deleteAppUser = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAppAuth])
   .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
     const { data: isAdmin } = await context.supabase.rpc("has_role", {
