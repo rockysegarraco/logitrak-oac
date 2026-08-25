@@ -129,7 +129,7 @@ function ExhibitorsPage() {
                   className={`flex items-center gap-3 px-4 py-3 ${index % 2 === 1 ? "bg-muted/40" : ""}`}
                 >
                   <span className="text-sm font-semibold uppercase text-foreground">
-                    <Num>{entry.name}</Num>
+                    <Num caseMode="upper">{entry.name}</Num>
                   </span>
                   <span className="ml-auto text-xs font-semibold text-muted-foreground">
                     {entry.created_by_initials}
