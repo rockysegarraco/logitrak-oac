@@ -37,6 +37,14 @@ export function ExhibitorForm({
   const [errors, setErrors] = useState<Partial<Record<keyof ExhibitorInput, string>>>({});
   const [formError, setFormError] = useState<string | null>(null);
 
+  const { data: directory, isLoading: directoryLoading } = useQuery({
+    queryKey: ["exhibitor-directory"],
+    queryFn: () => listDirectory(),
+  });
+  const options = directory ?? [];
+  const picked = (values.exhibitor_name ?? "").trim().length > 0;
+
+
   const set = (key: keyof ExhibitorInput, value: string) => {
     setValues((prev) => ({ ...prev, [key]: value }));
     setErrors((prev) => {
