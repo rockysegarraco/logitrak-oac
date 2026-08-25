@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { requireAppAuth } from "@/lib/supabase-auth-middleware";
 import { z } from "zod";
 
 const exhibitorInput = z.object({
@@ -30,7 +30,7 @@ const COLUMNS =
   "id, booth_number, exhibitor_name, pro_number, invoice_number, city, state, estimated_weight, shipping_date, delivery_date, actual_costs, final_invoice, actual_revenue, created_by_initials, created_at, updated_at";
 
 export const listExhibitors = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAppAuth])
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("exhibitors")
@@ -41,7 +41,7 @@ export const listExhibitors = createServerFn({ method: "GET" })
   });
 
 export const getExhibitor = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAppAuth])
   .inputValidator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
     const { data: row, error } = await context.supabase
@@ -54,7 +54,7 @@ export const getExhibitor = createServerFn({ method: "GET" })
   });
 
 export const createExhibitor = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAppAuth])
   .inputValidator((input: unknown) => exhibitorInput.parse(input))
   .handler(async ({ data, context }) => {
     const { data: profile } = await context.supabase
@@ -76,7 +76,7 @@ export const createExhibitor = createServerFn({ method: "POST" })
   });
 
 export const updateExhibitor = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAppAuth])
   .inputValidator((input: unknown) =>
     exhibitorInput.extend({ id: z.string().uuid() }).parse(input),
   )
@@ -93,7 +93,7 @@ export const updateExhibitor = createServerFn({ method: "POST" })
   });
 
 export const deleteExhibitor = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAppAuth])
   .inputValidator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase.from("exhibitors").delete().eq("id", data.id);
