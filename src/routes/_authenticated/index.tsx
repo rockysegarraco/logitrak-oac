@@ -65,7 +65,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 
-import { normalizeValue, type ValueCase } from "@/lib/text-case";
+import { avatarTone, normalizeValue, type ValueCase } from "@/lib/text-case";
 import { useOpenExhibitorCreate } from "@/lib/exhibitor-create-context";
 import { cn } from "@/lib/utils";
 
@@ -548,7 +548,10 @@ function TrackerPage() {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span
-                                  className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground"
+                                  className={cn(
+                                    "inline-flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold",
+                                    avatarTone(row.created_by_initials || "?"),
+                                  )}
                                   aria-label={`Created by ${row.created_by_initials || "—"}`}
                                 >
                                   {row.created_by_initials || "—"}
