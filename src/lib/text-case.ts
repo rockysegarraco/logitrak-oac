@@ -33,5 +33,5 @@ export function avatarTone(initials: string): string {
   for (let i = 0; i < key.length; i += 1) {
     hash = (hash * 31 + key.charCodeAt(i)) % 100000;
   }
-  return AVATAR_TONES[hash % AVATAR_TONES.length];
+  return AVATAR_TONES[hash % AVATAR_TONES.length] as string;
 }
