@@ -16,3 +16,22 @@ export function applyValueCase(value: string, mode: ValueCase): string {
 export function normalizeValue(value: string): string {
   return value.replace(/\s+/g, " ").trim().toUpperCase();
 }
+
+/** Deterministic avatar palette class for a set of initials. */
+const AVATAR_TONES = [
+  "bg-avatar-1 text-avatar-1-foreground",
+  "bg-avatar-2 text-avatar-2-foreground",
+  "bg-avatar-3 text-avatar-3-foreground",
+  "bg-avatar-4 text-avatar-4-foreground",
+  "bg-avatar-5 text-avatar-5-foreground",
+  "bg-avatar-6 text-avatar-6-foreground",
+];
+
+export function avatarTone(initials: string): string {
+  const key = (initials || "?").trim().toUpperCase();
+  let hash = 0;
+  for (let i = 0; i < key.length; i += 1) {
+    hash = (hash * 31 + key.charCodeAt(i)) % 100000;
+  }
+  return AVATAR_TONES[hash % AVATAR_TONES.length];
+}
