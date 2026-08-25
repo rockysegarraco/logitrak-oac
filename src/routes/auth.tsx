@@ -26,8 +26,14 @@ export const Route = createFileRoute("/auth")({
     ],
   }),
   beforeLoad: async () => {
-    const { data } = await supabase.auth.getUser();
-    if (data.user) throw redirect({ to: "/" });
+    try {
+      const { data } = await supabase.auth.getUser();
+      if (data.user) throw redirect({ to: "/" });
+    } catch (error) {
+      if (error instanceof Error && error.message.toLowerCase().includes("jwt issued at future")) {
+        await supabase.auth.signOut({ scope: "local" });
+      }
+    }
   },
   component: AuthPage,
 });
