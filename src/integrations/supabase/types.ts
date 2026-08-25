@@ -47,6 +47,33 @@ export type Database = {
         }
         Relationships: []
       }
+      exhibitor_directory: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          created_by_initials: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          created_by_initials?: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          created_by_initials?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       exhibitors: {
         Row: {
           actual_costs: string
