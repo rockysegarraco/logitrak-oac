@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
+import { listDirectory } from "@/lib/exhibitor-directory.functions";
 import type { ExhibitorInput } from "@/lib/exhibitors.functions";
 import { normalizeValue } from "@/lib/text-case";
 import { cn } from "@/lib/utils";
