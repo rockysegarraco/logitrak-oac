@@ -137,7 +137,20 @@
   --sheet-teal: oklch(0.38 0.07 210);
   --sheet-teal-foreground: oklch(1 0 0);
   --sheet-row: oklch(0.95 0.02 230);
+  --avatar-1: oklch(0.88 0.15 92);
+  --avatar-1-foreground: oklch(0.25 0.04 265);
+  --avatar-2: oklch(0.82 0.12 200);
+  --avatar-2-foreground: oklch(0.25 0.04 265);
+  --avatar-3: oklch(0.84 0.13 150);
+  --avatar-3-foreground: oklch(0.25 0.04 265);
+  --avatar-4: oklch(0.83 0.12 25);
+  --avatar-4-foreground: oklch(0.25 0.04 265);
+  --avatar-5: oklch(0.82 0.11 300);
+  --avatar-5-foreground: oklch(0.25 0.04 265);
+  --avatar-6: oklch(0.85 0.1 250);
+  --avatar-6-foreground: oklch(0.25 0.04 265);
 }
+
 
 
 .dark {
