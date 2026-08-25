@@ -84,6 +84,12 @@ export function SiteHeader({
           >
             Tracker
           </Link>
+          <Link
+            to="/exhibitors"
+            className="text-sm font-semibold text-foreground/80 transition-colors hover:text-foreground"
+          >
+            Exhibitors
+          </Link>
         </nav>
 
         <div className="ml-auto flex items-center gap-3">
