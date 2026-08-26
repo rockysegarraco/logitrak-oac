@@ -137,9 +137,9 @@ function TrackerSkeleton() {
 }
 
 export const Route = createFileRoute("/_authenticated/")({
-  validateSearch: (search: Record<string, unknown>): { exhibitor?: string } => {
-    const value = search['exhibitor'];
-    return typeof value === "string" && value ? { exhibitor: value } : {};
+  validateSearch: (search: Record<string, unknown>): { show?: string } => {
+    const value = search['show'];
+    return typeof value === "string" && value ? { show: value } : {};
   },
 
   head: () => ({
@@ -196,13 +196,13 @@ function TrackerPage() {
 
 
   const navigate = useNavigate();
-  const { exhibitor: exhibitorParam } = Route.useSearch();
+  const { show: showParam } = Route.useSearch();
   const [search, setSearch] = useState("");
-  const [exhibitorFilter, setExhibitorFilter] = useState(exhibitorParam ?? "all");
+  const [exhibitorFilter, setExhibitorFilter] = useState(showParam ?? "all");
 
   useEffect(() => {
-    setExhibitorFilter(exhibitorParam ?? "all");
-  }, [exhibitorParam]);
+    setExhibitorFilter(showParam ?? "all");
+  }, [showParam]);
   const [userFilter, setUserFilter] = useState("all");
   const [sort, setSort] = useState<{ key: FieldKey; dir: "asc" | "desc" } | null>(null);
   const [headerMode, setHeaderMode] = useState<"short" | "full">("short");
@@ -262,7 +262,7 @@ function TrackerPage() {
   const exhibitorOptions = useMemo(() => {
     const names = new Set<string>();
     for (const row of exhibitors) {
-      const name = (row.exhibitor_name ?? "").trim();
+      const name = (row.show_name ?? "").trim();
       if (name) names.add(name);
     }
     return Array.from(names).sort((a, b) => a.localeCompare(b));
@@ -278,7 +278,7 @@ function TrackerPage() {
       }
       if (
         exhibitorFilter !== "all" &&
-        (row.exhibitor_name ?? "").trim().toLowerCase() !== exhibitorFilter.trim().toLowerCase()
+        (row.show_name ?? "").trim().toLowerCase() !== exhibitorFilter.trim().toLowerCase()
       ) {
         return false;
       }
@@ -340,7 +340,7 @@ function TrackerPage() {
     setSearch("");
     setUserFilter("all");
     setExhibitorFilter("all");
-    if (exhibitorParam) {
+    if (showParam) {
       navigate({ to: "/", search: {}, replace: true });
     }
   };
@@ -384,6 +384,10 @@ function TrackerPage() {
     const trimmed = Object.fromEntries(
       Object.entries(draft).map(([k, v]) => [k, normalizeValue(v ?? "")]),
     ) as ExhibitorInput;
+    if (!trimmed.show_name) {
+      toast.error("Show is required.");
+      return;
+    }
     if (!trimmed.exhibitor_name) {
       toast.error("Exhibitor name is required.");
       return;
@@ -413,7 +417,7 @@ function TrackerPage() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <label htmlFor="filter-exhibitor" className="sr-only">
-              Filter by exhibitor
+              Filter by show
             </label>
             <div className="relative">
               <select
@@ -422,7 +426,7 @@ function TrackerPage() {
                 onChange={(event) => setExhibitorFilter(event.target.value)}
                 className="block max-w-56 appearance-none truncate rounded-full bg-card py-1.5 pr-9 pl-4 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
               >
-                <option value="all">All exhibitors</option>
+                <option value="all">All shows</option>
                 {exhibitorOptions.map((name) => (
                   <option key={name} value={name}>
                     {name}

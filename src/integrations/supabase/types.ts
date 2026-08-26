@@ -91,6 +91,7 @@ export type Database = {
           invoice_number: string
           pro_number: string
           shipping_date: string
+          show_name: string
           state: string
           status: string
           updated_at: string
@@ -105,12 +106,13 @@ export type Database = {
           created_by_initials?: string
           delivery_date?: string
           estimated_weight?: string
-          exhibitor_name: string
+          exhibitor_name?: string
           final_invoice?: string
           id?: string
           invoice_number?: string
           pro_number?: string
           shipping_date?: string
+          show_name?: string
           state?: string
           status?: string
           updated_at?: string
@@ -131,6 +133,7 @@ export type Database = {
           invoice_number?: string
           pro_number?: string
           shipping_date?: string
+          show_name?: string
           state?: string
           status?: string
           updated_at?: string

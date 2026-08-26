@@ -4,6 +4,7 @@ import { z } from "zod";
 
 const exhibitorInput = z.object({
   booth_number: z.string().trim().max(50).default(""),
+  show_name: z.string().trim().min(1, "Show is required").max(200),
   exhibitor_name: z.string().trim().min(1, "Exhibitor name is required").max(200),
   pro_number: z.string().trim().max(100).default(""),
   invoice_number: z.string().trim().max(100).default(""),
@@ -27,7 +28,7 @@ export type Exhibitor = ExhibitorInput & {
 };
 
 const COLUMNS =
-  "id, booth_number, exhibitor_name, pro_number, invoice_number, city, state, estimated_weight, shipping_date, delivery_date, actual_costs, final_invoice, actual_revenue, created_by_initials, created_at, updated_at";
+  "id, booth_number, show_name, exhibitor_name, pro_number, invoice_number, city, state, estimated_weight, shipping_date, delivery_date, actual_costs, final_invoice, actual_revenue, created_by_initials, created_at, updated_at";
 
 export const listExhibitors = createServerFn({ method: "GET" })
   .middleware([requireAppAuth])

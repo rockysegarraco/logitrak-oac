@@ -26,7 +26,7 @@ export const createDirectoryEntry = createServerFn({ method: "POST" })
   .middleware([requireAppAuth])
   .inputValidator((input: unknown) =>
     z
-      .object({ name: z.string().trim().min(1, "Exhibitor name is required").max(200) })
+      .object({ name: z.string().trim().min(1, "Show name is required").max(200) })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
@@ -46,7 +46,7 @@ export const createDirectoryEntry = createServerFn({ method: "POST" })
       .single();
     if (error) {
       throw new Error(
-        error.code === "23505" ? "That exhibitor is already on the list" : error.message,
+        error.code === "23505" ? "That show is already on the list" : error.message,
       );
     }
     return row as DirectoryEntry;

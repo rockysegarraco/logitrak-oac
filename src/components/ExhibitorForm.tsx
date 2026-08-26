@@ -18,7 +18,7 @@ type Props = {
   deletePending?: boolean;
 };
 
-const REQUIRED_FIELDS: (keyof ExhibitorInput)[] = ["exhibitor_name"];
+const REQUIRED_FIELDS: (keyof ExhibitorInput)[] = ["show_name", "exhibitor_name"];
 
 export function ExhibitorForm({
   initialValues,
@@ -42,7 +42,7 @@ export function ExhibitorForm({
     queryFn: () => listDirectory(),
   });
   const options = directory ?? [];
-  const picked = (values.exhibitor_name ?? "").trim().length > 0;
+  const picked = (values.show_name ?? "").trim().length > 0;
 
 
   const set = (key: keyof ExhibitorInput, value: string) => {
@@ -91,27 +91,27 @@ export function ExhibitorForm({
     >
       <div className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6">
       <div className="mb-6">
-        <TwLabel htmlFor="exhibitor_name">
-          Exhibitor Name
+        <TwLabel htmlFor="show_name">
+          Show
           <span className="ml-1 text-destructive">*</span>
         </TwLabel>
         <div className="mt-2">
           <select
-            id="exhibitor_name"
-            value={values.exhibitor_name ?? ""}
-            aria-invalid={errors.exhibitor_name ? true : undefined}
-            onChange={(event) => set("exhibitor_name", event.target.value)}
+            id="show_name"
+            value={values.show_name ?? ""}
+            aria-invalid={errors.show_name ? true : undefined}
+            onChange={(event) => set("show_name", event.target.value)}
             className={cn(
               "block w-full cursor-pointer rounded-md bg-card px-3 py-1.5 text-base uppercase text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6",
-              errors.exhibitor_name && "outline-destructive focus:outline-destructive",
+              errors.show_name && "outline-destructive focus:outline-destructive",
             )}
           >
             <option value="">
               {directoryLoading
-                ? "Loading exhibitors..."
+                ? "Loading shows..."
                 : options.length === 0
-                  ? "No exhibitors added yet"
-                  : "Select an exhibitor..."}
+  ? "No shows added yet"
+                  : "Select a show..."}
             </option>
             {options.map((entry) => (
               <option key={entry.id} value={entry.name}>
@@ -120,13 +120,13 @@ export function ExhibitorForm({
             ))}
           </select>
         </div>
-        {errors.exhibitor_name ? (
-          <p className="mt-1 text-sm text-destructive">{errors.exhibitor_name}</p>
+        {errors.show_name ? (
+          <p className="mt-1 text-sm text-destructive">{errors.show_name}</p>
         ) : null}
         <p className="mt-2 text-sm text-muted-foreground">
-          Pick an exhibitor to fill in the rest.{" "}
-          <Link to="/exhibitors" className="font-semibold text-foreground underline">
-            Manage exhibitor list
+          Pick a show to fill in the rest.{" "}
+          <Link to="/shows" className="font-semibold text-foreground underline">
+            Manage show list
           </Link>
         </p>
       </div>
@@ -138,7 +138,7 @@ export function ExhibitorForm({
           !picked && "pointer-events-none opacity-50",
         )}
       >
-        {EXHIBITOR_FIELDS.filter((field) => field.key !== "exhibitor_name").map((field) => {
+        {EXHIBITOR_FIELDS.filter((field) => field.key !== "show_name").map((field) => {
           const error = errors[field.key];
           const required = REQUIRED_FIELDS.includes(field.key);
           return (

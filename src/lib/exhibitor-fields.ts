@@ -20,11 +20,19 @@ export const EXHIBITOR_FIELDS: ExhibitorField[] = [
     placeholder: "312",
   },
   {
+    key: "show_name",
+    label: "Show",
+    short: "SHOW",
+    tone: "gold",
+    placeholder: "Skyline",
+    wide: true,
+  },
+  {
     key: "exhibitor_name",
     label: "Exhibitor Name",
     short: "EXHIBITOR",
     tone: "gold",
-    placeholder: "Skyline",
+    placeholder: "Acme Displays",
     wide: true,
   },
   {
@@ -101,6 +109,7 @@ export const EXHIBITOR_FIELDS: ExhibitorField[] = [
 
 export const EMPTY_EXHIBITOR: ExhibitorInput = {
   booth_number: "",
+  show_name: "",
   exhibitor_name: "",
   pro_number: "",
   invoice_number: "",

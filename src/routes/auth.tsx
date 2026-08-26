@@ -28,7 +28,7 @@ export const Route = createFileRoute("/auth")({
   beforeLoad: async () => {
     try {
       const { data } = await supabase.auth.getUser();
-      if (data.user) throw redirect({ to: "/exhibitors" });
+      if (data.user) throw redirect({ to: "/shows" });
     } catch (error) {
       if (error instanceof Error && error.message.toLowerCase().includes("jwt issued at future")) {
         await supabase.auth.signOut({ scope: "local" });
@@ -74,7 +74,7 @@ function AuthPage() {
       setError("Incorrect username or password.");
       return;
     }
-    await navigate({ to: "/exhibitors", replace: true });
+    await navigate({ to: "/shows", replace: true });
   }
 
   return (
