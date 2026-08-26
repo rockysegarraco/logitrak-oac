@@ -56,6 +56,7 @@ function ExhibitorsPage() {
   const remove = useServerFn(deleteDirectoryEntry);
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string } | null>(null);
 
   const addMutation = useMutation({
     mutationFn: () => add({ data: { name } }),
