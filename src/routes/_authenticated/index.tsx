@@ -294,7 +294,7 @@ function TrackerPage() {
       if (!bv) return -1;
       return av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" }) * factor;
     });
-  }, [exhibitors, term, activeUserFilter, sort]);
+  }, [exhibitors, term, exhibitorFilter, activeUserFilter, sort]);
 
   const totals = useMemo(() => {
     const acc: Record<string, number> = {};
