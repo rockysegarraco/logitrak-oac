@@ -167,6 +167,36 @@ function ExhibitorsPage() {
           )}
         </div>
       </div>
+
+      <AlertDialog
+        open={pendingDelete !== null}
+        onOpenChange={(open) => {
+          if (!open) setPendingDelete(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove exhibitor?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {pendingDelete?.name} will be removed from the exhibitor list and will no longer
+              appear in the Create New dropdown.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="cursor-pointer bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={removeMutation.isPending}
+              onClick={(event) => {
+                event.preventDefault();
+                if (pendingDelete) removeMutation.mutate(pendingDelete.id);
+              }}
+            >
+              {removeMutation.isPending ? "Removing..." : "Remove"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </main>
   );
 }
