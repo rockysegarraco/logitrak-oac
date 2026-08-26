@@ -157,11 +157,7 @@ function ExhibitorsPage() {
                     aria-label={`Remove ${entry.name}`}
                     className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-destructive"
                     disabled={removeMutation.isPending}
-                    onClick={() => {
-                      if (confirm(`Remove ${entry.name} from the exhibitor list?`)) {
-                        removeMutation.mutate(entry.id);
-                      }
-                    }}
+                    onClick={() => setPendingDelete({ id: entry.id, name: entry.name })}
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
