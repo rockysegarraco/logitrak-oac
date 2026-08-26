@@ -196,10 +196,11 @@ function TrackerPage() {
 
 
   const { exhibitor: exhibitorParam } = Route.useSearch();
-  const [search, setSearch] = useState(exhibitorParam ?? "");
+  const [search, setSearch] = useState("");
+  const [exhibitorFilter, setExhibitorFilter] = useState(exhibitorParam ?? "all");
 
   useEffect(() => {
-    setSearch(exhibitorParam ?? "");
+    setExhibitorFilter(exhibitorParam ?? "all");
   }, [exhibitorParam]);
   const [userFilter, setUserFilter] = useState("all");
   const [sort, setSort] = useState<{ key: FieldKey; dir: "asc" | "desc" } | null>(null);
