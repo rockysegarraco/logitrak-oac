@@ -466,19 +466,33 @@ function TrackerPage() {
                 Clear
               </TwButton>
             ) : null}
-            <TwButton
-              variant="secondary"
-              onClick={hardRefresh}
-              disabled={refreshing}
-              aria-label="Refresh data"
-            >
-              <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
-              {refreshing ? "Refreshing…" : "Refresh"}
-            </TwButton>
-            <TwButton variant="secondary" onClick={exportCsv}>
-              <Download className="h-4 w-4" />
-              Export CSV
-            </TwButton>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <TwButton
+                  variant="secondary"
+                  onClick={hardRefresh}
+                  disabled={refreshing}
+                  aria-label="Refresh data"
+                  className="h-9 w-9 justify-center rounded-full p-0"
+                >
+                  <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
+                </TwButton>
+              </TooltipTrigger>
+              <TooltipContent>{refreshing ? "Refreshing…" : "Refresh"}</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <TwButton
+                  variant="secondary"
+                  onClick={exportCsv}
+                  aria-label="Export CSV"
+                  className="h-9 w-9 justify-center rounded-full p-0"
+                >
+                  <Download className="h-4 w-4" />
+                </TwButton>
+              </TooltipTrigger>
+              <TooltipContent>Export CSV</TooltipContent>
+            </Tooltip>
 
 
           </div>
