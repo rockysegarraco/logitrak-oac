@@ -20,11 +20,19 @@ export const EXHIBITOR_FIELDS: ExhibitorField[] = [
     placeholder: "312",
   },
   {
+    key: "show_name",
+    label: "Show",
+    short: "SHOW",
+    tone: "gold",
+    placeholder: "Skyline",
+    wide: true,
+  },
+  {
     key: "exhibitor_name",
     label: "Exhibitor Name",
     short: "EXHIBITOR",
     tone: "gold",
-    placeholder: "Skyline",
+    placeholder: "Acme Displays",
     wide: true,
   },
   {
