@@ -1,9 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Trash2 } from "lucide-react";
+import { ChevronRight, Trash2 } from "lucide-react";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
 import { Num } from "@/components/Num";
 import {
@@ -73,7 +73,7 @@ function ExhibitorsPage() {
         <h1 className="text-2xl font-bold tracking-tight text-foreground">Exhibitors</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Add exhibitors here first. They then show up in the dropdown when you create a new
-          shipment record.
+          shipment record. Click an exhibitor to see its shipment records.
         </p>
 
         <form
@@ -128,10 +128,16 @@ function ExhibitorsPage() {
                   key={entry.id}
                   className={`flex items-center gap-3 px-4 py-3 ${index % 2 === 1 ? "bg-muted/40" : ""}`}
                 >
-                  <span className="text-sm font-semibold uppercase text-foreground">
+                  <Link
+                    to="/"
+                    search={{ exhibitor: entry.name }}
+                    className="group flex min-w-0 flex-1 items-center gap-2 text-sm font-semibold uppercase text-foreground hover:underline"
+                    title={`View ${entry.name} records`}
+                  >
                     <Num caseMode="upper">{entry.name}</Num>
-                  </span>
-                  <span className="ml-auto text-xs font-semibold text-muted-foreground">
+                    <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                  </Link>
+                  <span className="text-xs font-semibold text-muted-foreground">
                     {entry.created_by_initials}
                   </span>
                   <button
