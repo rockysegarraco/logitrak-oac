@@ -7,6 +7,16 @@ import { ChevronRight, Trash2 } from "lucide-react";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
 import { Num } from "@/components/Num";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   createDirectoryEntry,
   deleteDirectoryEntry,
   listDirectory,
@@ -46,6 +56,7 @@ function ExhibitorsPage() {
   const remove = useServerFn(deleteDirectoryEntry);
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string } | null>(null);
 
   const addMutation = useMutation({
     mutationFn: () => add({ data: { name } }),
@@ -63,6 +74,7 @@ function ExhibitorsPage() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["exhibitor-directory"] });
       toast.success("Exhibitor removed from the list");
+      setPendingDelete(null);
     },
     onError: (err: Error) => toast.error(err.message),
   });
@@ -145,11 +157,7 @@ function ExhibitorsPage() {
                     aria-label={`Remove ${entry.name}`}
                     className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-destructive"
                     disabled={removeMutation.isPending}
-                    onClick={() => {
-                      if (confirm(`Remove ${entry.name} from the exhibitor list?`)) {
-                        removeMutation.mutate(entry.id);
-                      }
-                    }}
+                    onClick={() => setPendingDelete({ id: entry.id, name: entry.name })}
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -159,6 +167,36 @@ function ExhibitorsPage() {
           )}
         </div>
       </div>
+
+      <AlertDialog
+        open={pendingDelete !== null}
+        onOpenChange={(open) => {
+          if (!open) setPendingDelete(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove exhibitor?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {pendingDelete?.name} will be removed from the exhibitor list and will no longer
+              appear in the Create New dropdown.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="cursor-pointer bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={removeMutation.isPending}
+              onClick={(event) => {
+                event.preventDefault();
+                if (pendingDelete) removeMutation.mutate(pendingDelete.id);
+              }}
+            >
+              {removeMutation.isPending ? "Removing..." : "Remove"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </main>
   );
 }
