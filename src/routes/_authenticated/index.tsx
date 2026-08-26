@@ -137,6 +137,9 @@ function TrackerSkeleton() {
 }
 
 export const Route = createFileRoute("/_authenticated/")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    exhibitor: typeof search.exhibitor === "string" ? search.exhibitor : undefined,
+  }),
 
   head: () => ({
     meta: [
@@ -191,7 +194,12 @@ function TrackerPage() {
   const remove = useServerFn(deleteExhibitor);
 
 
-  const [search, setSearch] = useState("");
+  const { exhibitor: exhibitorParam } = Route.useSearch();
+  const [search, setSearch] = useState(exhibitorParam ?? "");
+
+  useEffect(() => {
+    setSearch(exhibitorParam ?? "");
+  }, [exhibitorParam]);
   const [userFilter, setUserFilter] = useState("all");
   const [sort, setSort] = useState<{ key: FieldKey; dir: "asc" | "desc" } | null>(null);
   const [headerMode, setHeaderMode] = useState<"short" | "full">("short");
