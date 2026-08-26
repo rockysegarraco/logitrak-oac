@@ -283,6 +283,12 @@ function TrackerPage() {
       ) {
         return false;
       }
+      if (dateFrom || dateTo) {
+        const value = toIsoDate(row.shipping_date);
+        if (!value) return false;
+        if (dateFrom && value < dateFrom) return false;
+        if (dateTo && value > dateTo) return false;
+      }
       return activeUserFilter === "all" || row.created_by_initials === activeUserFilter;
     });
 
@@ -296,7 +302,7 @@ function TrackerPage() {
       if (!bv) return -1;
       return av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" }) * factor;
     });
-  }, [exhibitors, term, exhibitorFilter, activeUserFilter, sort]);
+  }, [exhibitors, term, exhibitorFilter, activeUserFilter, dateFrom, dateTo, sort]);
 
   const totals = useMemo(() => {
     const acc: Record<string, number> = {};
