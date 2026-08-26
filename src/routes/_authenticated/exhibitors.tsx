@@ -74,6 +74,7 @@ function ExhibitorsPage() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["exhibitor-directory"] });
       toast.success("Exhibitor removed from the list");
+      setPendingDelete(null);
     },
     onError: (err: Error) => toast.error(err.message),
   });
