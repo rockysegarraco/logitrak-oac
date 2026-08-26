@@ -7,6 +7,16 @@ import { ChevronRight, Trash2 } from "lucide-react";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
 import { Num } from "@/components/Num";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   createDirectoryEntry,
   deleteDirectoryEntry,
   listDirectory,
