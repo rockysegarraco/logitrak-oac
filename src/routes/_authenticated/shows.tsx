@@ -25,17 +25,17 @@ import {
 export const Route = createFileRoute("/_authenticated/shows")({
   head: () => ({
     meta: [
-      { title: "Exhibitor List | FreightTRAK" },
+      { title: "Show List | FreightTRAK" },
       {
         name: "description",
         content:
-          "Maintain the master list of exhibitors available when creating a new shipment record.",
+          "Maintain the master list of shows available when creating a new shipment record.",
       },
-      { property: "og:title", content: "Exhibitor List | FreightTRAK" },
+      { property: "og:title", content: "Show List | FreightTRAK" },
       {
         property: "og:description",
         content:
-          "Maintain the master list of exhibitors available when creating a new shipment record.",
+          "Maintain the master list of shows available when creating a new shipment record.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -62,7 +62,7 @@ function ExhibitorsPage() {
     mutationFn: () => add({ data: { name } }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["exhibitor-directory"] });
-      toast.success("Exhibitor added to the list");
+      toast.success("Show added to the list");
       setName("");
       setError(null);
     },
@@ -73,7 +73,7 @@ function ExhibitorsPage() {
     mutationFn: (id: string) => remove({ data: { id } }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["exhibitor-directory"] });
-      toast.success("Exhibitor removed from the list");
+      toast.success("Show removed from the list");
       setPendingDelete(null);
     },
     onError: (err: Error) => toast.error(err.message),
@@ -82,10 +82,10 @@ function ExhibitorsPage() {
   return (
     <main className="px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-3xl">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Exhibitors</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Shows</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Add exhibitors here first. They then show up in the dropdown when you create a new
-          shipment record. Click an exhibitor to see its shipment records.
+          Add shows here first. They then show up in the dropdown when you create a new
+          shipment record. Click a show to see its shipment records.
         </p>
 
         <form
@@ -93,19 +93,19 @@ function ExhibitorsPage() {
           onSubmit={(event) => {
             event.preventDefault();
             if (!name.trim()) {
-              setError("Enter an exhibitor name.");
+              setError("Enter a show name.");
               return;
             }
             addMutation.mutate();
           }}
         >
           <div className="flex-1">
-            <TwLabel htmlFor="new-exhibitor">Exhibitor name</TwLabel>
+            <TwLabel htmlFor="new-exhibitor">Show name</TwLabel>
             <div className="mt-2">
               <TwInput
                 id="new-exhibitor"
                 value={name}
-                placeholder="SKYLINE EXHIBITS"
+                placeholder="EXPO WEST 2026"
                 maxLength={200}
                 className="uppercase"
                 aria-invalid={error ? true : undefined}
@@ -117,7 +117,7 @@ function ExhibitorsPage() {
             </div>
           </div>
           <TwButton type="submit" variant="primary" disabled={addMutation.isPending}>
-            {addMutation.isPending ? "Adding..." : "Add exhibitor"}
+            {addMutation.isPending ? "Adding..." : "Add show"}
           </TwButton>
         </form>
         {error ? (
@@ -128,10 +128,10 @@ function ExhibitorsPage() {
 
         <div className="mt-8 overflow-hidden rounded-lg border border-border bg-card">
           {isLoading ? (
-            <p className="p-6 text-sm text-muted-foreground">Loading exhibitors...</p>
+            <p className="p-6 text-sm text-muted-foreground">Loading shows...</p>
           ) : (entries ?? []).length === 0 ? (
             <p className="p-6 text-sm text-muted-foreground">
-              No exhibitors yet. Add your first one above.
+              No shows yet. Add your first one above.
             </p>
           ) : (
             <ul className="divide-y divide-border">
@@ -142,7 +142,7 @@ function ExhibitorsPage() {
                 >
                   <Link
                     to="/"
-                    search={{ exhibitor: entry.name }}
+                    search={{ show: entry.name }}
                     className="group flex min-w-0 flex-1 items-center gap-2 text-sm font-semibold uppercase text-foreground hover:underline"
                     title={`View ${entry.name} records`}
                   >
@@ -176,9 +176,9 @@ function ExhibitorsPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove exhibitor?</AlertDialogTitle>
+            <AlertDialogTitle>Remove show?</AlertDialogTitle>
             <AlertDialogDescription>
-              {pendingDelete?.name} will be removed from the exhibitor list and will no longer
+              {pendingDelete?.name} will be removed from the show list and will no longer
               appear in the Create New dropdown.
             </AlertDialogDescription>
           </AlertDialogHeader>
