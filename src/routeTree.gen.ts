@@ -14,7 +14,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as NewRouteImport } from './routes/new'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
-import { Route as AuthenticatedExhibitorsRouteImport } from './routes/_authenticated/exhibitors'
+import { Route as AuthenticatedShowsRouteImport } from './routes/_authenticated/shows'
 import { Route as AuthenticatedUsersRouteImport } from './routes/_authenticated/users'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -41,9 +41,9 @@ const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedExhibitorsRoute = AuthenticatedExhibitorsRouteImport.update({
-  id: '/exhibitors',
-  path: '/exhibitors',
+const AuthenticatedShowsRoute = AuthenticatedShowsRouteImport.update({
+  id: '/shows',
+  path: '/shows',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedUsersRoute = AuthenticatedUsersRouteImport.update({
@@ -57,14 +57,14 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/new': typeof NewRoute
   '/account': typeof AuthenticatedAccountRoute
-  '/exhibitors': typeof AuthenticatedExhibitorsRoute
+  '/shows': typeof AuthenticatedShowsRoute
   '/users': typeof AuthenticatedUsersRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/new': typeof NewRoute
   '/account': typeof AuthenticatedAccountRoute
-  '/exhibitors': typeof AuthenticatedExhibitorsRoute
+  '/shows': typeof AuthenticatedShowsRoute
   '/users': typeof AuthenticatedUsersRoute
   '/': typeof AuthenticatedIndexRoute
 }
@@ -74,22 +74,22 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/new': typeof NewRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
-  '/_authenticated/exhibitors': typeof AuthenticatedExhibitorsRoute
+  '/_authenticated/shows': typeof AuthenticatedShowsRoute
   '/_authenticated/users': typeof AuthenticatedUsersRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/new' | '/account' | '/exhibitors' | '/users'
+  fullPaths: '/' | '/auth' | '/new' | '/account' | '/shows' | '/users'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/new' | '/account' | '/exhibitors' | '/users' | '/'
+  to: '/auth' | '/new' | '/account' | '/shows' | '/users' | '/'
   id:
     | '__root__'
     | '/_authenticated'
     | '/auth'
     | '/new'
     | '/_authenticated/account'
-    | '/_authenticated/exhibitors'
+    | '/_authenticated/shows'
     | '/_authenticated/users'
     | '/_authenticated/'
   fileRoutesById: FileRoutesById
@@ -137,11 +137,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/exhibitors': {
-      id: '/_authenticated/exhibitors'
-      path: '/exhibitors'
-      fullPath: '/exhibitors'
-      preLoaderRoute: typeof AuthenticatedExhibitorsRouteImport
+    '/_authenticated/shows': {
+      id: '/_authenticated/shows'
+      path: '/shows'
+      fullPath: '/shows'
+      preLoaderRoute: typeof AuthenticatedShowsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/users': {
@@ -156,14 +156,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
-  AuthenticatedExhibitorsRoute: typeof AuthenticatedExhibitorsRoute
+  AuthenticatedShowsRoute: typeof AuthenticatedShowsRoute
   AuthenticatedUsersRoute: typeof AuthenticatedUsersRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
-  AuthenticatedExhibitorsRoute: AuthenticatedExhibitorsRoute,
+  AuthenticatedShowsRoute: AuthenticatedShowsRoute,
   AuthenticatedUsersRoute: AuthenticatedUsersRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }

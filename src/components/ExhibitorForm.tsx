@@ -125,7 +125,7 @@ export function ExhibitorForm({
         ) : null}
         <p className="mt-2 text-sm text-muted-foreground">
           Pick an exhibitor to fill in the rest.{" "}
-          <Link to="/exhibitors" className="font-semibold text-foreground underline">
+          <Link to="/shows" className="font-semibold text-foreground underline">
             Manage exhibitor list
           </Link>
         </p>

@@ -22,7 +22,7 @@ import {
   listDirectory,
 } from "@/lib/exhibitor-directory.functions";
 
-export const Route = createFileRoute("/_authenticated/exhibitors")({
+export const Route = createFileRoute("/_authenticated/shows")({
   head: () => ({
     meta: [
       { title: "Exhibitor List | FreightTRAK" },

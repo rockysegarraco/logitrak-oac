@@ -126,9 +126,9 @@ export function SiteHeader({
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="cursor-pointer">
-                  <Link to="/exhibitors">
+                  <Link to="/shows">
                     <Building2 className="mr-2 h-4 w-4" />
-                    Exhibitors
+                    Shows
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
