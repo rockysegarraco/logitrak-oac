@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { LogOut, Plus, Shield, User, Users } from "lucide-react";
+import { Building2, ChevronDown, LayoutGrid, LogOut, Plus, Shield, User, Users } from "lucide-react";
 import oacMark from "@/assets/oac-mark.svg";
 import {
   DropdownMenu,
@@ -77,21 +77,6 @@ export function SiteHeader({
           FreightTRAK
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex">
-          <Link
-            to="/"
-            className="text-sm font-semibold text-foreground/80 transition-colors hover:text-foreground"
-          >
-            Tracker
-          </Link>
-          <Link
-            to="/exhibitors"
-            className="text-sm font-semibold text-foreground/80 transition-colors hover:text-foreground"
-          >
-            Exhibitors
-          </Link>
-        </nav>
-
         <div className="ml-auto flex items-center gap-3">
           {onTracker && me ? (
             <button
@@ -111,11 +96,17 @@ export function SiteHeader({
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  aria-label="Account menu"
-                  className="relative inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-muted text-sm font-semibold text-foreground ring-1 ring-border transition-colors hover:bg-muted/70"
+                  aria-label="Open menu"
+                  className="group inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border py-1 pr-3 pl-1 transition-colors hover:bg-muted"
                 >
-                  {me.isAdmin ? <Shield className="h-4 w-4" /> : me.profile.initials}
-                  <span className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-card" />
+                  <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full bg-muted text-sm font-semibold text-foreground">
+                    {me.isAdmin ? <Shield className="h-4 w-4" /> : me.profile.initials}
+                    <span className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-card" />
+                  </span>
+                  <ChevronDown
+                    aria-hidden
+                    className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180"
+                  />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
@@ -127,6 +118,19 @@ export function SiteHeader({
                     {me.profile.username}
                   </span>
                 </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to="/">
+                    <LayoutGrid className="mr-2 h-4 w-4" />
+                    Tracker
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to="/exhibitors">
+                    <Building2 className="mr-2 h-4 w-4" />
+                    Exhibitors
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild className="cursor-pointer">
                   <Link to="/account">
