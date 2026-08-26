@@ -757,6 +757,8 @@ function TrackerPage() {
                                 onClick={() => {
                                   setSearch("");
                                   setUserFilter("all");
+                                  setExhibitorFilter("all");
+
 
                                 }}
                               >
