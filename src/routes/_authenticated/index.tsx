@@ -99,12 +99,12 @@ function csvCell(value: string) {
 
 type FieldKey = (typeof EXHIBITOR_FIELDS)[number]["key"];
 
-function SkeletonRows({ rows }: { rows: number }) {
+function SkeletonRows({ rows, columns }: { rows: number; columns: number }) {
   return (
     <>
       {Array.from({ length: rows }).map((_, index) => (
         <tr key={`skeleton-${index}`} className="divide-x divide-border">
-          {Array.from({ length: EXHIBITOR_FIELDS.length + 2 }).map((__, cell) => (
+          {Array.from({ length: columns }).map((__, cell) => (
             <td key={cell} className="px-3 py-3">
               <Skeleton className="h-4 w-full min-w-12" />
             </td>
@@ -614,7 +614,7 @@ function TrackerPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border bg-card">
-                    {refreshing ? <SkeletonRows rows={Math.max(pageRows.length, 5)} /> : null}
+                    {refreshing ? <SkeletonRows rows={Math.max(pageRows.length, 5)} columns={EXHIBITOR_FIELDS.length + (isAdmin ? 2 : 1)} /> : null}
                     {!refreshing && pageRows.map((row, rowIndex) => {
                       const editing = editingId === row.id;
                       return (
