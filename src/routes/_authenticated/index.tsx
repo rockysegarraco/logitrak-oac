@@ -330,7 +330,8 @@ function TrackerPage() {
     toast.success(`Exported ${rows.length} row${rows.length === 1 ? "" : "s"}`);
   };
 
-  const hasFilters = activeUserFilter !== "all" || term.length > 0;
+  const hasFilters =
+    activeUserFilter !== "all" || exhibitorFilter !== "all" || term.length > 0;
 
   const pageRows = rows;
 
