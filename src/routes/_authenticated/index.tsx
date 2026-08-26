@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   queryOptions,
   useMutation,
@@ -208,6 +208,7 @@ function TrackerPage() {
   const remove = useServerFn(deleteExhibitor);
 
 
+  const navigate = useNavigate();
   const { exhibitor: exhibitorParam } = Route.useSearch();
   const [search, setSearch] = useState("");
   const [exhibitorFilter, setExhibitorFilter] = useState(exhibitorParam ?? "all");
@@ -790,13 +791,7 @@ function TrackerPage() {
                                 variant="secondary"
                                 className="mt-5"
                                 disabled={!hasFilters}
-                                onClick={() => {
-                                  setSearch("");
-                                  setUserFilter("all");
-                                  setExhibitorFilter("all");
-
-
-                                }}
+                                onClick={clearFilters}
                               >
                                 <X className="-ml-0.5 h-4 w-4" />
                                 Clear search and filters
