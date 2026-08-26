@@ -207,9 +207,6 @@ function ExhibitorsPage() {
                         <Num caseMode="upper">{entry.name}</Num>
                         <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
                       </Link>
-                      <span className="text-xs font-semibold text-muted-foreground">
-                        {entry.created_by_initials}
-                      </span>
                       <button
                         type="button"
                         aria-label={`Rename ${entry.name}`}
