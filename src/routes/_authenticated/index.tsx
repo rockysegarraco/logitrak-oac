@@ -91,7 +91,9 @@ function toIsoDate(value: string | null | undefined) {
   if (iso) return raw;
   const parts = raw.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})$/);
   if (!parts) return "";
-  const [, m, d, y] = parts;
+  const m = parts[1] ?? "";
+  const d = parts[2] ?? "";
+  const y = parts[3] ?? "";
   const year = y.length === 2 ? 2000 + Number(y) : Number(y);
   return `${year}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
 }
