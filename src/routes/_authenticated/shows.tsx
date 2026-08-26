@@ -140,27 +140,81 @@ function ExhibitorsPage() {
                   key={entry.id}
                   className={`flex items-center gap-3 px-4 py-3 ${index % 2 === 1 ? "bg-muted/40" : ""}`}
                 >
-                  <Link
-                    to="/"
-                    search={{ show: entry.name }}
-                    className="group flex min-w-0 flex-1 items-center gap-2 text-sm font-semibold uppercase text-foreground hover:underline"
-                    title={`View ${entry.name} records`}
-                  >
-                    <Num caseMode="upper">{entry.name}</Num>
-                    <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
-                  </Link>
-                  <span className="text-xs font-semibold text-muted-foreground">
-                    {entry.created_by_initials}
-                  </span>
-                  <button
-                    type="button"
-                    aria-label={`Remove ${entry.name}`}
-                    className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-destructive"
-                    disabled={removeMutation.isPending}
-                    onClick={() => setPendingDelete({ id: entry.id, name: entry.name })}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+                  {editing?.id === entry.id ? (
+                    <form
+                      className="flex min-w-0 flex-1 items-center gap-2"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        if (!editing.name.trim()) {
+                          toast.error("Enter a show name.");
+                          return;
+                        }
+                        renameMutation.mutate();
+                      }}
+                    >
+                      <TwInput
+                        autoFocus
+                        value={editing.name}
+                        maxLength={200}
+                        aria-label={`Rename ${entry.name}`}
+                        className="uppercase"
+                        onChange={(event) =>
+                          setEditing({ id: entry.id, name: event.target.value.toUpperCase() })
+                        }
+                        onKeyDown={(event) => {
+                          if (event.key === "Escape") setEditing(null);
+                        }}
+                      />
+                      <button
+                        type="submit"
+                        aria-label="Save name"
+                        disabled={renameMutation.isPending}
+                        className="inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                      >
+                        <Check className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="Cancel rename"
+                        onClick={() => setEditing(null)}
+                        className="inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </form>
+                  ) : (
+                    <>
+                      <Link
+                        to="/"
+                        search={{ show: entry.name }}
+                        className="group flex min-w-0 flex-1 items-center gap-2 text-sm font-semibold uppercase text-foreground hover:underline"
+                        title={`View ${entry.name} records`}
+                      >
+                        <Num caseMode="upper">{entry.name}</Num>
+                        <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                      </Link>
+                      <span className="text-xs font-semibold text-muted-foreground">
+                        {entry.created_by_initials}
+                      </span>
+                      <button
+                        type="button"
+                        aria-label={`Rename ${entry.name}`}
+                        className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                        onClick={() => setEditing({ id: entry.id, name: entry.name })}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label={`Remove ${entry.name}`}
+                        className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-destructive"
+                        disabled={removeMutation.isPending}
+                        onClick={() => setPendingDelete({ id: entry.id, name: entry.name })}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </>
+                  )}
                 </li>
               ))}
             </ul>
