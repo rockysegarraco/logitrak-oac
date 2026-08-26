@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   queryOptions,
   useMutation,
@@ -81,6 +81,21 @@ function parseMoney(value: string | null | undefined) {
 
 function formatMoney(value: number) {
   return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
+}
+
+/** Normalizes stored date text (m/d/yy, mm/dd/yyyy, yyyy-mm-dd) to yyyy-mm-dd. */
+function toIsoDate(value: string | null | undefined) {
+  const raw = String(value ?? "").trim();
+  if (!raw) return "";
+  const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (iso) return raw;
+  const parts = raw.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})$/);
+  if (!parts) return "";
+  const m = parts[1] ?? "";
+  const d = parts[2] ?? "";
+  const y = parts[3] ?? "";
+  const year = y.length === 2 ? 2000 + Number(y) : Number(y);
+  return `${year}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
 }
 
 const exhibitorsQuery = queryOptions({
@@ -195,6 +210,7 @@ function TrackerPage() {
   const remove = useServerFn(deleteExhibitor);
 
 
+  const navigate = useNavigate();
   const { exhibitor: exhibitorParam } = Route.useSearch();
   const [search, setSearch] = useState("");
   const [exhibitorFilter, setExhibitorFilter] = useState(exhibitorParam ?? "all");
@@ -203,6 +219,8 @@ function TrackerPage() {
     setExhibitorFilter(exhibitorParam ?? "all");
   }, [exhibitorParam]);
   const [userFilter, setUserFilter] = useState("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [sort, setSort] = useState<{ key: FieldKey; dir: "asc" | "desc" } | null>(null);
   const [headerMode, setHeaderMode] = useState<"short" | "full">("short");
   const [valueCase, setValueCase] = useState<ValueCase>("upper");
@@ -281,6 +299,12 @@ function TrackerPage() {
       ) {
         return false;
       }
+      if (dateFrom || dateTo) {
+        const value = toIsoDate(row.shipping_date);
+        if (!value) return false;
+        if (dateFrom && value < dateFrom) return false;
+        if (dateTo && value > dateTo) return false;
+      }
       return activeUserFilter === "all" || row.created_by_initials === activeUserFilter;
     });
 
@@ -294,7 +318,7 @@ function TrackerPage() {
       if (!bv) return -1;
       return av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" }) * factor;
     });
-  }, [exhibitors, term, exhibitorFilter, activeUserFilter, sort]);
+  }, [exhibitors, term, exhibitorFilter, activeUserFilter, dateFrom, dateTo, sort]);
 
   const totals = useMemo(() => {
     const acc: Record<string, number> = {};
@@ -331,7 +355,22 @@ function TrackerPage() {
   };
 
   const hasFilters =
-    activeUserFilter !== "all" || exhibitorFilter !== "all" || term.length > 0;
+    activeUserFilter !== "all" ||
+    exhibitorFilter !== "all" ||
+    term.length > 0 ||
+    dateFrom !== "" ||
+    dateTo !== "";
+
+  const clearFilters = () => {
+    setSearch("");
+    setUserFilter("all");
+    setExhibitorFilter("all");
+    setDateFrom("");
+    setDateTo("");
+    if (exhibitorParam) {
+      navigate({ to: "/", search: {}, replace: true });
+    }
+  };
 
   const pageRows = rows;
 
@@ -447,6 +486,38 @@ function TrackerPage() {
                   />
                 </div>
               </>
+            ) : null}
+            <div className="flex items-center gap-2 rounded-full bg-card py-1 pr-3 pl-4 text-sm outline-1 -outline-offset-1 outline-border">
+              <label htmlFor="filter-date-from" className="text-xs text-muted-foreground">
+                Ship
+              </label>
+              <input
+                id="filter-date-from"
+                type="date"
+                value={dateFrom}
+                max={dateTo || undefined}
+                onChange={(event) => setDateFrom(event.target.value)}
+                aria-label="Shipping date from"
+                className="bg-transparent text-sm text-foreground outline-none"
+              />
+              <span aria-hidden className="text-muted-foreground">
+                –
+              </span>
+              <input
+                id="filter-date-to"
+                type="date"
+                value={dateTo}
+                min={dateFrom || undefined}
+                onChange={(event) => setDateTo(event.target.value)}
+                aria-label="Shipping date to"
+                className="bg-transparent text-sm text-foreground outline-none"
+              />
+            </div>
+            {hasFilters ? (
+              <TwButton variant="secondary" onClick={clearFilters} aria-label="Clear filters">
+                <X className="h-4 w-4" />
+                Clear
+              </TwButton>
             ) : null}
             <TwButton
               variant="secondary"
@@ -754,13 +825,7 @@ function TrackerPage() {
                                 variant="secondary"
                                 className="mt-5"
                                 disabled={!hasFilters}
-                                onClick={() => {
-                                  setSearch("");
-                                  setUserFilter("all");
-                                  setExhibitorFilter("all");
-
-
-                                }}
+                                onClick={clearFilters}
                               >
                                 <X className="-ml-0.5 h-4 w-4" />
                                 Clear search and filters
