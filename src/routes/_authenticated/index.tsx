@@ -258,11 +258,26 @@ function TrackerPage() {
 
   const activeUserFilter = isAdmin ? userFilter : "all";
 
+  const exhibitorOptions = useMemo(() => {
+    const names = new Set<string>();
+    for (const row of exhibitors) {
+      const name = (row.exhibitor_name ?? "").trim();
+      if (name) names.add(name);
+    }
+    return Array.from(names).sort((a, b) => a.localeCompare(b));
+  }, [exhibitors]);
+
   const rows = useMemo(() => {
     const filtered = exhibitors.filter((row) => {
       if (
         term &&
         !EXHIBITOR_FIELDS.some((field) => (row[field.key] ?? "").toLowerCase().includes(term))
+      ) {
+        return false;
+      }
+      if (
+        exhibitorFilter !== "all" &&
+        (row.exhibitor_name ?? "").trim().toLowerCase() !== exhibitorFilter.trim().toLowerCase()
       ) {
         return false;
       }
