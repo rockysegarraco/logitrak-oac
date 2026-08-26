@@ -196,10 +196,11 @@ function TrackerPage() {
 
 
   const { exhibitor: exhibitorParam } = Route.useSearch();
-  const [search, setSearch] = useState(exhibitorParam ?? "");
+  const [search, setSearch] = useState("");
+  const [exhibitorFilter, setExhibitorFilter] = useState(exhibitorParam ?? "all");
 
   useEffect(() => {
-    setSearch(exhibitorParam ?? "");
+    setExhibitorFilter(exhibitorParam ?? "all");
   }, [exhibitorParam]);
   const [userFilter, setUserFilter] = useState("all");
   const [sort, setSort] = useState<{ key: FieldKey; dir: "asc" | "desc" } | null>(null);
@@ -257,11 +258,26 @@ function TrackerPage() {
 
   const activeUserFilter = isAdmin ? userFilter : "all";
 
+  const exhibitorOptions = useMemo(() => {
+    const names = new Set<string>();
+    for (const row of exhibitors) {
+      const name = (row.exhibitor_name ?? "").trim();
+      if (name) names.add(name);
+    }
+    return Array.from(names).sort((a, b) => a.localeCompare(b));
+  }, [exhibitors]);
+
   const rows = useMemo(() => {
     const filtered = exhibitors.filter((row) => {
       if (
         term &&
         !EXHIBITOR_FIELDS.some((field) => (row[field.key] ?? "").toLowerCase().includes(term))
+      ) {
+        return false;
+      }
+      if (
+        exhibitorFilter !== "all" &&
+        (row.exhibitor_name ?? "").trim().toLowerCase() !== exhibitorFilter.trim().toLowerCase()
       ) {
         return false;
       }
@@ -278,7 +294,7 @@ function TrackerPage() {
       if (!bv) return -1;
       return av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" }) * factor;
     });
-  }, [exhibitors, term, activeUserFilter, sort]);
+  }, [exhibitors, term, exhibitorFilter, activeUserFilter, sort]);
 
   const totals = useMemo(() => {
     const acc: Record<string, number> = {};
@@ -314,7 +330,8 @@ function TrackerPage() {
     toast.success(`Exported ${rows.length} row${rows.length === 1 ? "" : "s"}`);
   };
 
-  const hasFilters = activeUserFilter !== "all" || term.length > 0;
+  const hasFilters =
+    activeUserFilter !== "all" || exhibitorFilter !== "all" || term.length > 0;
 
   const pageRows = rows;
 
@@ -383,6 +400,28 @@ function TrackerPage() {
             />
           </div>
           <div className="flex flex-wrap items-center gap-3">
+            <label htmlFor="filter-exhibitor" className="sr-only">
+              Filter by exhibitor
+            </label>
+            <div className="relative">
+              <select
+                id="filter-exhibitor"
+                value={exhibitorFilter}
+                onChange={(event) => setExhibitorFilter(event.target.value)}
+                className="block max-w-56 appearance-none truncate rounded-full bg-card py-1.5 pr-9 pl-4 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
+              >
+                <option value="all">All exhibitors</option>
+                {exhibitorOptions.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                aria-hidden
+                className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+              />
+            </div>
             {isAdmin ? (
               <>
                 <label htmlFor="filter-user" className="sr-only">
@@ -718,6 +757,8 @@ function TrackerPage() {
                                 onClick={() => {
                                   setSearch("");
                                   setUserFilter("all");
+                                  setExhibitorFilter("all");
+
 
                                 }}
                               >
