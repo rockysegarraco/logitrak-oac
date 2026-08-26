@@ -109,6 +109,7 @@ export const EXHIBITOR_FIELDS: ExhibitorField[] = [
 
 export const EMPTY_EXHIBITOR: ExhibitorInput = {
   booth_number: "",
+  show_name: "",
   exhibitor_name: "",
   pro_number: "",
   invoice_number: "",
