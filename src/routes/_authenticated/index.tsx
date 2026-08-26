@@ -352,7 +352,22 @@ function TrackerPage() {
   };
 
   const hasFilters =
-    activeUserFilter !== "all" || exhibitorFilter !== "all" || term.length > 0;
+    activeUserFilter !== "all" ||
+    exhibitorFilter !== "all" ||
+    term.length > 0 ||
+    dateFrom !== "" ||
+    dateTo !== "";
+
+  const clearFilters = () => {
+    setSearch("");
+    setUserFilter("all");
+    setExhibitorFilter("all");
+    setDateFrom("");
+    setDateTo("");
+    if (exhibitorParam) {
+      navigate({ to: "/", search: {}, replace: true });
+    }
+  };
 
   const pageRows = rows;
 
