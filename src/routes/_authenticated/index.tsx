@@ -506,12 +506,14 @@ function TrackerPage() {
                 <table className="w-full min-w-[1100px] table-auto divide-y divide-border md:min-w-0">
                   <thead>
                     <tr className="divide-x divide-border">
-                      <th
-                        scope="col"
-                        className="sticky top-0 z-10 w-[64px] min-w-[64px] bg-muted px-3 py-3.5 text-center text-xs font-semibold whitespace-nowrap text-foreground"
-                      >
-                        <span className="sr-only">User</span>
-                      </th>
+                      {isAdmin ? (
+                        <th
+                          scope="col"
+                          className="sticky top-0 z-10 w-[64px] min-w-[64px] bg-muted px-3 py-3.5 text-center text-xs font-semibold whitespace-nowrap text-foreground"
+                        >
+                          <span className="sr-only">User</span>
+                        </th>
+                      ) : null}
                       {EXHIBITOR_FIELDS.map((field, index) => {
 
                         const active = sort?.key === field.key;
@@ -624,24 +626,26 @@ function TrackerPage() {
                             !editing && "hover:bg-muted/60",
                           )}
                         >
-                          <td className="w-[64px] min-w-[64px] px-3 py-2 text-center text-sm whitespace-nowrap">
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <span
-                                  className={cn(
-                                    "inline-flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold",
-                                    avatarTone(row.created_by_initials || "?"),
-                                  )}
-                                  aria-label={`Created by ${row.created_by_initials || "—"}`}
-                                >
-                                  {row.created_by_initials || "—"}
-                                </span>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                Created by {row.created_by_initials || "unknown"}
-                              </TooltipContent>
-                            </Tooltip>
-                          </td>
+                          {isAdmin ? (
+                            <td className="w-[64px] min-w-[64px] px-3 py-2 text-center text-sm whitespace-nowrap">
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span
+                                    className={cn(
+                                      "inline-flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold",
+                                      avatarTone(row.created_by_initials || "?"),
+                                    )}
+                                    aria-label={`Created by ${row.created_by_initials || "—"}`}
+                                  >
+                                    {row.created_by_initials || "—"}
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  Created by {row.created_by_initials || "unknown"}
+                                </TooltipContent>
+                              </Tooltip>
+                            </td>
+                          ) : null}
                           {EXHIBITOR_FIELDS.map((field, index) => (
 
                             <td
@@ -748,7 +752,7 @@ function TrackerPage() {
                     {!refreshing && pageRows.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={EXHIBITOR_FIELDS.length + 2}
+                          colSpan={EXHIBITOR_FIELDS.length + (isAdmin ? 2 : 1)}
                           className="px-6 py-16 text-center"
                         >
                           {exhibitors.length === 0 ? (
@@ -800,7 +804,7 @@ function TrackerPage() {
                   {rows.length > 0 ? (
                     <tfoot className="border-t-2 border-border bg-muted/60 font-semibold">
                       <tr className="divide-x divide-border">
-                        <td className="px-3 py-2.5 text-xs uppercase text-muted-foreground" colSpan={2}>
+                        <td className="px-3 py-2.5 text-xs uppercase text-muted-foreground" colSpan={isAdmin ? 2 : 1}>
                           Total
                         </td>
                         {EXHIBITOR_FIELDS.slice(1).map((field) => (
