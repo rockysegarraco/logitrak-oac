@@ -83,6 +83,19 @@ function formatMoney(value: number) {
   return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
 }
 
+/** Normalizes stored date text (m/d/yy, mm/dd/yyyy, yyyy-mm-dd) to yyyy-mm-dd. */
+function toIsoDate(value: string | null | undefined) {
+  const raw = String(value ?? "").trim();
+  if (!raw) return "";
+  const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (iso) return raw;
+  const parts = raw.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})$/);
+  if (!parts) return "";
+  const [, m, d, y] = parts;
+  const year = y.length === 2 ? 2000 + Number(y) : Number(y);
+  return `${year}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+}
+
 const exhibitorsQuery = queryOptions({
   queryKey: ["exhibitors"],
   queryFn: () => listExhibitors(),
