@@ -3,7 +3,7 @@ import { queryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/r
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ChevronRight, Trash2 } from "lucide-react";
+import { Check, ChevronRight, Pencil, Trash2, X } from "lucide-react";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
 import { Num } from "@/components/Num";
 import {
@@ -20,6 +20,7 @@ import {
   createDirectoryEntry,
   deleteDirectoryEntry,
   listDirectory,
+  updateDirectoryEntry,
 } from "@/lib/exhibitor-directory.functions";
 
 export const Route = createFileRoute("/_authenticated/shows")({
@@ -54,9 +55,11 @@ function ExhibitorsPage() {
   const { data: entries, isLoading } = useQuery(directoryQuery);
   const add = useServerFn(createDirectoryEntry);
   const remove = useServerFn(deleteDirectoryEntry);
+  const rename = useServerFn(updateDirectoryEntry);
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string } | null>(null);
+  const [editing, setEditing] = useState<{ id: string; name: string } | null>(null);
 
   const addMutation = useMutation({
     mutationFn: () => add({ data: { name } }),
@@ -67,6 +70,17 @@ function ExhibitorsPage() {
       setError(null);
     },
     onError: (err: Error) => setError(err.message),
+  });
+
+  const renameMutation = useMutation({
+    mutationFn: () => rename({ data: { id: editing!.id, name: editing!.name } }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["exhibitor-directory"] });
+      await queryClient.invalidateQueries({ queryKey: ["exhibitors"] });
+      toast.success("Show renamed");
+      setEditing(null);
+    },
+    onError: (err: Error) => toast.error(err.message),
   });
 
   const removeMutation = useMutation({
