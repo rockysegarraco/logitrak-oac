@@ -485,6 +485,38 @@ function TrackerPage() {
                 </div>
               </>
             ) : null}
+            <div className="flex items-center gap-2 rounded-full bg-card py-1 pr-3 pl-4 text-sm outline-1 -outline-offset-1 outline-border">
+              <label htmlFor="filter-date-from" className="text-xs text-muted-foreground">
+                Ship
+              </label>
+              <input
+                id="filter-date-from"
+                type="date"
+                value={dateFrom}
+                max={dateTo || undefined}
+                onChange={(event) => setDateFrom(event.target.value)}
+                aria-label="Shipping date from"
+                className="bg-transparent text-sm text-foreground outline-none"
+              />
+              <span aria-hidden className="text-muted-foreground">
+                –
+              </span>
+              <input
+                id="filter-date-to"
+                type="date"
+                value={dateTo}
+                min={dateFrom || undefined}
+                onChange={(event) => setDateTo(event.target.value)}
+                aria-label="Shipping date to"
+                className="bg-transparent text-sm text-foreground outline-none"
+              />
+            </div>
+            {hasFilters ? (
+              <TwButton variant="secondary" onClick={clearFilters} aria-label="Clear filters">
+                <X className="h-4 w-4" />
+                Clear
+              </TwButton>
+            ) : null}
             <TwButton
               variant="secondary"
               onClick={hardRefresh}
