@@ -63,3 +63,43 @@ export const deleteDirectoryEntry = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const updateDirectoryEntry = createServerFn({ method: "POST" })
+  .middleware([requireAppAuth])
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        id: z.string().uuid(),
+        name: z.string().trim().min(1, "Show name is required").max(200),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: current } = await context.supabase
+      .from("exhibitor_directory")
+      .select("name")
+      .eq("id", data.id)
+      .maybeSingle();
+
+    const name = data.name.toUpperCase();
+    const { data: row, error } = await context.supabase
+      .from("exhibitor_directory")
+      .update({ name })
+      .eq("id", data.id)
+      .select(COLUMNS)
+      .single();
+    if (error) {
+      throw new Error(
+        error.code === "23505" ? "That show is already on the list" : error.message,
+      );
+    }
+
+    if (current?.name && current.name !== name) {
+      await context.supabase
+        .from("exhibitors")
+        .update({ show_name: name })
+        .eq("show_name", current.name);
+    }
+
+    return row as DirectoryEntry;
+  });
