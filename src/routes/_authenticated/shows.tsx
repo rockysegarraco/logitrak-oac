@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Check, ChevronRight, Pencil, Trash2, X } from "lucide-react";
+import { Check, ChevronRight, Pencil, Search, Trash2, X } from "lucide-react";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
 import { Num } from "@/components/Num";
 import {
@@ -22,6 +22,7 @@ import {
   listDirectory,
   updateDirectoryEntry,
 } from "@/lib/exhibitor-directory.functions";
+import { listExhibitors } from "@/lib/exhibitors.functions";
 
 export const Route = createFileRoute("/_authenticated/shows")({
   head: () => ({
@@ -60,6 +61,33 @@ function ExhibitorsPage() {
   const [error, setError] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string } | null>(null);
   const [editing, setEditing] = useState<{ id: string; name: string } | null>(null);
+  const [search, setSearch] = useState("");
+  const { data: records } = useQuery({
+    queryKey: ["exhibitors"],
+    queryFn: () => listExhibitors(),
+  });
+
+  const term = search.trim().toLowerCase();
+  const showsWithMatchingExhibitor = useMemo(() => {
+    const set = new Set<string>();
+    if (!term) return set;
+    for (const row of records ?? []) {
+      if ((row.exhibitor_name ?? "").toLowerCase().includes(term)) {
+        set.add((row.show_name ?? "").trim().toLowerCase());
+      }
+    }
+    return set;
+  }, [records, term]);
+
+  const visibleEntries = useMemo(() => {
+    const list = entries ?? [];
+    if (!term) return list;
+    return list.filter(
+      (entry) =>
+        entry.name.toLowerCase().includes(term) ||
+        showsWithMatchingExhibitor.has(entry.name.trim().toLowerCase()),
+    );
+  }, [entries, term, showsWithMatchingExhibitor]);
 
   const addMutation = useMutation({
     mutationFn: () => add({ data: { name } }),
@@ -140,16 +168,31 @@ function ExhibitorsPage() {
           </p>
         ) : null}
 
-        <div className="mt-8 overflow-hidden rounded-lg border border-border bg-card">
+        <div className="relative mt-8">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <TwInput
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search shows or exhibitor names"
+            aria-label="Search shows"
+            className="w-full pl-9"
+          />
+        </div>
+
+        <div className="mt-4 overflow-hidden rounded-lg border border-border bg-card">
           {isLoading ? (
             <p className="p-6 text-sm text-muted-foreground">Loading shows...</p>
           ) : (entries ?? []).length === 0 ? (
             <p className="p-6 text-sm text-muted-foreground">
               No shows yet. Add your first one above.
             </p>
+          ) : visibleEntries.length === 0 ? (
+            <p className="p-6 text-sm text-muted-foreground">
+              No shows match "{search.trim()}".
+            </p>
           ) : (
             <ul className="divide-y divide-border">
-              {(entries ?? []).map((entry, index) => (
+              {visibleEntries.map((entry, index) => (
                 <li
                   key={entry.id}
                   className={`flex items-center gap-3 px-4 py-3 ${index % 2 === 1 ? "bg-muted/40" : ""}`}
