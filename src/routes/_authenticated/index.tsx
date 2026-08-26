@@ -137,9 +137,10 @@ function TrackerSkeleton() {
 }
 
 export const Route = createFileRoute("/_authenticated/")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    exhibitor: typeof search.exhibitor === "string" ? search.exhibitor : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): { exhibitor?: string } => {
+    const value = search['exhibitor'];
+    return typeof value === "string" && value ? { exhibitor: value } : {};
+  },
 
   head: () => ({
     meta: [
