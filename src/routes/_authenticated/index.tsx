@@ -499,8 +499,9 @@ function TrackerPage() {
         <div className="mt-8 flow-root">
           <div className="block min-w-full align-middle">
             <div className="rounded-t-lg rounded-b-none bg-card shadow-sm ring-1 ring-border">
-              <div className="max-h-[70vh] overflow-x-auto overflow-y-auto rounded-t-lg md:overflow-x-hidden">
-                <table className="w-full min-w-[1100px] table-auto divide-y divide-border md:min-w-0">
+              <div className="max-h-[70vh] overflow-x-auto overflow-y-auto rounded-t-lg">
+                <table className="w-full min-w-[1100px] table-auto divide-y divide-border">
+
                   <thead>
                     <tr className="divide-x divide-border">
                       {isAdmin ? (
@@ -647,7 +648,7 @@ function TrackerPage() {
                             <td
                               key={field.key}
                               className={cn(
-                                "px-3 py-2 text-sm break-normal [overflow-wrap:normal] hyphens-none text-muted-foreground",
+                                "px-3 py-2 text-sm whitespace-nowrap text-muted-foreground",
                                 index === 0 && "font-medium text-foreground",
                               )}
                             >
