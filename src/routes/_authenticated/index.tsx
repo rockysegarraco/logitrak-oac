@@ -419,12 +419,12 @@ function TrackerPage() {
             <label htmlFor="filter-exhibitor" className="sr-only">
               Filter by show
             </label>
-            <div className="relative">
+            <div className="relative min-w-0 flex-1 sm:flex-none">
               <select
                 id="filter-exhibitor"
                 value={exhibitorFilter}
                 onChange={(event) => setExhibitorFilter(event.target.value)}
-                className="block max-w-56 appearance-none truncate rounded-full bg-card py-1.5 pr-9 pl-4 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
+                className="block w-full max-w-full appearance-none truncate rounded-full bg-card py-1.5 pr-9 pl-4 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:max-w-56"
               >
                 <option value="all">All shows</option>
                 {exhibitorOptions.map((name) => (
