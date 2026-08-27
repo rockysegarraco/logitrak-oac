@@ -140,39 +140,6 @@ function TrackerSkeleton() {
           </div>
         </div>
       </div>
-      <Sheet
-        open={editingId !== null}
-        onOpenChange={(open) => {
-          if (!open) cancelEdit();
-        }}
-      >
-        <SheetContent
-          side="right"
-          className="flex w-full flex-col gap-0 p-0 sm:max-w-xl [&>button]:right-4 [&>button]:top-8 [&>button]:-translate-y-1/2 [&>button>svg]:h-6 [&>button>svg]:w-6"
-        >
-          <SheetHeader className="flex h-16 shrink-0 flex-row items-center border-b border-border bg-card px-4 py-0 sm:px-6">
-            <SheetTitle className="text-base font-semibold">Edit exhibitor</SheetTitle>
-            <SheetDescription className="sr-only">Update this exhibitor record.</SheetDescription>
-          </SheetHeader>
-          <div className="flex min-h-0 flex-1 flex-col">
-            {draft ? (
-              <ExhibitorForm
-                initialValues={draft}
-                submitLabel="Save Changes"
-                pending={saveMutation.isPending}
-                onSubmit={(values) => {
-                  if (!editingId) return;
-                  const trimmed = Object.fromEntries(
-                    Object.entries(values).map(([k, v]) => [k, normalizeValue(v ?? "")]),
-                  ) as ExhibitorInput;
-                  saveMutation.mutate({ ...trimmed, id: editingId });
-                }}
-                onCancel={cancelEdit}
-              />
-            ) : null}
-          </div>
-        </SheetContent>
-      </Sheet>
     </main>
   );
 }
@@ -837,6 +804,39 @@ function TrackerPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <Sheet
+        open={editingId !== null}
+        onOpenChange={(open) => {
+          if (!open) cancelEdit();
+        }}
+      >
+        <SheetContent
+          side="right"
+          className="flex w-full flex-col gap-0 p-0 sm:max-w-xl [&>button]:right-4 [&>button]:top-8 [&>button]:-translate-y-1/2 [&>button>svg]:h-6 [&>button>svg]:w-6"
+        >
+          <SheetHeader className="flex h-16 shrink-0 flex-row items-center border-b border-border bg-card px-4 py-0 sm:px-6">
+            <SheetTitle className="text-base font-semibold">Edit exhibitor</SheetTitle>
+            <SheetDescription className="sr-only">Update this exhibitor record.</SheetDescription>
+          </SheetHeader>
+          <div className="flex min-h-0 flex-1 flex-col">
+            {draft ? (
+              <ExhibitorForm
+                initialValues={draft}
+                submitLabel="Save Changes"
+                pending={saveMutation.isPending}
+                onSubmit={(values) => {
+                  if (!editingId) return;
+                  const trimmed = Object.fromEntries(
+                    Object.entries(values).map(([k, v]) => [k, normalizeValue(v ?? "")]),
+                  ) as ExhibitorInput;
+                  saveMutation.mutate({ ...trimmed, id: editingId });
+                }}
+                onCancel={cancelEdit}
+              />
+            ) : null}
+          </div>
+        </SheetContent>
+      </Sheet>
     </main>
     </TooltipProvider>
 
