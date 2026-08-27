@@ -87,11 +87,14 @@ export const updateDirectoryEntry = createServerFn({ method: "POST" })
       .update({ name })
       .eq("id", data.id)
       .select(COLUMNS)
-      .single();
+      .maybeSingle();
     if (error) {
       throw new Error(
         error.code === "23505" ? "That show is already on the list" : error.message,
       );
+    }
+    if (!row) {
+      throw new Error("You can only rename shows you added.");
     }
 
     if (current?.name && current.name !== name) {
