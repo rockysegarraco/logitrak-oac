@@ -403,9 +403,9 @@ function TrackerPage() {
   return (
     <TooltipProvider delayDuration={150}>
     <main className="min-h-screen bg-background">
-      <div className="w-full px-4 py-10 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-          <div className="relative min-w-0 flex-1">
+      <div className="w-full px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
+        <div className="flex flex-col items-stretch gap-3 rounded-xl border border-border bg-card p-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 sm:p-4">
+          <div className="relative min-w-0 flex-1 sm:min-w-[240px]">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <TwInput
               value={search}
@@ -415,7 +415,7 @@ function TrackerPage() {
               aria-label="Search exhibitors"
             />
           </div>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:flex-1 sm:gap-3">
             <label htmlFor="filter-exhibitor" className="sr-only">
               Filter by show
             </label>
@@ -470,6 +470,7 @@ function TrackerPage() {
                 Clear
               </TwButton>
             ) : null}
+            <div className="ml-auto flex items-center gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
                 <TwButton
@@ -497,8 +498,7 @@ function TrackerPage() {
               </TooltipTrigger>
               <TooltipContent>Export CSV</TooltipContent>
             </Tooltip>
-
-
+            </div>
           </div>
 
         </div>
