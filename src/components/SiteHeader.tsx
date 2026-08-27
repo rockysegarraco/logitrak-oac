@@ -85,10 +85,11 @@ export function SiteHeader({
               aria-haspopup="dialog"
               aria-expanded={createOpen}
               aria-controls="create-exhibitor-panel"
-              className="inline-flex items-center gap-1.5 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted cursor-pointer"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted cursor-pointer sm:px-5 sm:py-2.5"
             >
               <Plus className="h-4 w-4" />
-              Create New
+              <span className="hidden sm:inline">Create New</span>
+              <span className="sr-only sm:hidden">Create New</span>
             </button>
           ) : null}
           {me?.profile ? (
