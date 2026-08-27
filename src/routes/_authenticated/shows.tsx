@@ -226,7 +226,7 @@ function ExhibitorsPage() {
                         type="submit"
                         aria-label="Save name"
                         disabled={renameMutation.isPending}
-                        className="inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                        className="inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50 focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
                       >
                         <Check className="h-4 w-4" />
                       </button>
@@ -234,7 +234,7 @@ function ExhibitorsPage() {
                         type="button"
                         aria-label="Cancel rename"
                         onClick={() => setEditing(null)}
-                        className="inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                        className="inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full border border-border bg-card text-foreground transition-colors hover:bg-muted focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
                       >
                         <X className="h-4 w-4" />
                       </button>
