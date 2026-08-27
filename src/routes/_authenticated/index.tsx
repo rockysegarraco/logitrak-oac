@@ -68,6 +68,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { avatarTone, normalizeValue, type ValueCase } from "@/lib/text-case";
 import { useOpenExhibitorCreate } from "@/lib/exhibitor-create-context";
 import { cn } from "@/lib/utils";
+import { ExhibitorForm } from "@/components/ExhibitorForm";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 
 
@@ -659,21 +667,7 @@ function TrackerPage() {
                                 index === 0 && "font-medium text-foreground",
                               )}
                             >
-                              {editing && draft ? (
-                                <TwInput
-                                  value={draft[field.key]}
-                                  aria-label={field.label}
-                                  maxLength={500}
-                                  onChange={(event) =>
-                                    setDraft({ ...draft, [field.key]: event.target.value })
-                                  }
-                                  onKeyDown={(event) => {
-                                    if (event.key === "Enter") saveEdit();
-                                    if (event.key === "Escape") cancelEdit();
-                                  }}
-                                  className="min-w-32 py-1 md:min-w-0"
-                                />
-                              ) : row[field.key] ? (
+                              {row[field.key] ? (
                                 <Num caseMode={valueCase} highlight={search}>
                                   {row[field.key]}
                                 </Num>
@@ -683,39 +677,7 @@ function TrackerPage() {
                             </td>
                           ))}
                           <td className="w-14 min-w-14 px-1 py-2 text-center text-sm whitespace-nowrap">
-                            {editing ? (
-                              <div className="flex justify-center gap-1">
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <button
-                                      type="button"
-                                      onClick={saveEdit}
-                                      disabled={saveMutation.isPending}
-                                      className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50 focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
-                                      aria-label="Save changes"
-                                    >
-                                      <Check className="h-4 w-4" />
-                                    </button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Save</TooltipContent>
-                                </Tooltip>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <button
-                                      type="button"
-                                      onClick={cancelEdit}
-                                      className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-border bg-card text-foreground transition-colors hover:bg-muted focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
-                                      aria-label="Cancel editing"
-                                    >
-                                      <X className="h-4 w-4" />
-                                    </button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Cancel</TooltipContent>
-                                </Tooltip>
-                              </div>
-
-
-                            ) : (
+                            {(
                               <div className="flex justify-center">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
