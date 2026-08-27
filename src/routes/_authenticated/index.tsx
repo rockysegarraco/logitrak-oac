@@ -68,6 +68,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { avatarTone, normalizeValue, type ValueCase } from "@/lib/text-case";
 import { useOpenExhibitorCreate } from "@/lib/exhibitor-create-context";
 import { cn } from "@/lib/utils";
+import { ExhibitorForm } from "@/components/ExhibitorForm";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 
 
@@ -379,21 +387,6 @@ function TrackerPage() {
     setDraft(null);
   };
 
-  const saveEdit = () => {
-    if (!editingId || !draft) return;
-    const trimmed = Object.fromEntries(
-      Object.entries(draft).map(([k, v]) => [k, normalizeValue(v ?? "")]),
-    ) as ExhibitorInput;
-    if (!trimmed.show_name) {
-      toast.error("Show is required.");
-      return;
-    }
-    if (!trimmed.exhibitor_name) {
-      toast.error("Exhibitor name is required.");
-      return;
-    }
-    saveMutation.mutate({ ...trimmed, id: editingId });
-  };
 
   const toggleSort = (key: FieldKey) =>
     setSort((prev) =>
@@ -620,14 +613,13 @@ function TrackerPage() {
                   <tbody className="divide-y divide-border bg-card">
                     {refreshing ? <SkeletonRows rows={Math.max(pageRows.length, 5)} columns={EXHIBITOR_FIELDS.length + (isAdmin ? 2 : 1)} /> : null}
                     {!refreshing && pageRows.map((row, rowIndex) => {
-                      const editing = editingId === row.id;
                       return (
                         <tr
                           key={row.id}
                           className={cn(
                             "divide-x divide-border",
                             rowIndex % 2 === 1 && "bg-muted/40",
-                            !editing && "hover:bg-muted/60",
+                            "hover:bg-muted/60",
                           )}
                         >
                           {isAdmin ? (
@@ -659,21 +651,7 @@ function TrackerPage() {
                                 index === 0 && "font-medium text-foreground",
                               )}
                             >
-                              {editing && draft ? (
-                                <TwInput
-                                  value={draft[field.key]}
-                                  aria-label={field.label}
-                                  maxLength={500}
-                                  onChange={(event) =>
-                                    setDraft({ ...draft, [field.key]: event.target.value })
-                                  }
-                                  onKeyDown={(event) => {
-                                    if (event.key === "Enter") saveEdit();
-                                    if (event.key === "Escape") cancelEdit();
-                                  }}
-                                  className="min-w-32 py-1 md:min-w-0"
-                                />
-                              ) : row[field.key] ? (
+                              {row[field.key] ? (
                                 <Num caseMode={valueCase} highlight={search}>
                                   {row[field.key]}
                                 </Num>
@@ -683,39 +661,7 @@ function TrackerPage() {
                             </td>
                           ))}
                           <td className="w-14 min-w-14 px-1 py-2 text-center text-sm whitespace-nowrap">
-                            {editing ? (
-                              <div className="flex justify-center gap-1">
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <button
-                                      type="button"
-                                      onClick={saveEdit}
-                                      disabled={saveMutation.isPending}
-                                      className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50 focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
-                                      aria-label="Save changes"
-                                    >
-                                      <Check className="h-4 w-4" />
-                                    </button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Save</TooltipContent>
-                                </Tooltip>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <button
-                                      type="button"
-                                      onClick={cancelEdit}
-                                      className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-border bg-card text-foreground transition-colors hover:bg-muted focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
-                                      aria-label="Cancel editing"
-                                    >
-                                      <X className="h-4 w-4" />
-                                    </button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Cancel</TooltipContent>
-                                </Tooltip>
-                              </div>
-
-
-                            ) : (
+                            {(
                               <div className="flex justify-center">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
@@ -858,6 +804,39 @@ function TrackerPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <Sheet
+        open={editingId !== null}
+        onOpenChange={(open) => {
+          if (!open) cancelEdit();
+        }}
+      >
+        <SheetContent
+          side="right"
+          className="flex w-full flex-col gap-0 p-0 sm:max-w-xl [&>button]:right-4 [&>button]:top-8 [&>button]:-translate-y-1/2 [&>button>svg]:h-6 [&>button>svg]:w-6"
+        >
+          <SheetHeader className="flex h-16 shrink-0 flex-row items-center border-b border-border bg-card px-4 py-0 sm:px-6">
+            <SheetTitle className="text-base font-semibold">Edit exhibitor</SheetTitle>
+            <SheetDescription className="sr-only">Update this exhibitor record.</SheetDescription>
+          </SheetHeader>
+          <div className="flex min-h-0 flex-1 flex-col">
+            {draft ? (
+              <ExhibitorForm
+                initialValues={draft}
+                submitLabel="Save Changes"
+                pending={saveMutation.isPending}
+                onSubmit={(values) => {
+                  if (!editingId) return;
+                  const trimmed = Object.fromEntries(
+                    Object.entries(values).map(([k, v]) => [k, normalizeValue(v ?? "")]),
+                  ) as ExhibitorInput;
+                  saveMutation.mutate({ ...trimmed, id: editingId });
+                }}
+                onCancel={cancelEdit}
+              />
+            ) : null}
+          </div>
+        </SheetContent>
+      </Sheet>
     </main>
     </TooltipProvider>
 
