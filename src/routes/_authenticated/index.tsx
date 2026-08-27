@@ -415,7 +415,7 @@ function TrackerPage() {
               aria-label="Search exhibitors"
             />
           </div>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:flex-1 sm:gap-3">
             <label htmlFor="filter-exhibitor" className="sr-only">
               Filter by show
             </label>
