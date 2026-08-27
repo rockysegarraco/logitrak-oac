@@ -71,13 +71,13 @@ export function SiteHeader({
       data-site-header
       className="sticky top-0 z-30 border-b border-border bg-card print:hidden"
     >
-      <div className="flex h-16 w-full items-center gap-8 px-4 sm:px-6 lg:px-8">
-        <Link to="/" className="flex items-center gap-2.5 text-xl font-bold tracking-tight text-foreground">
-          <img src={oacMark} alt="" className="size-8" />
-          FreightTRAK
+      <div className="flex h-16 w-full items-center gap-3 px-4 sm:gap-8 sm:px-6 lg:px-8">
+        <Link to="/" className="flex min-w-0 items-center gap-2 text-base font-bold tracking-tight text-foreground sm:gap-2.5 sm:text-xl">
+          <img src={oacMark} alt="" className="size-7 shrink-0 sm:size-8" />
+          <span className="truncate">FreightTRAK</span>
         </Link>
 
-        <div className="ml-auto flex items-center gap-3">
+        <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
           {onTracker && me ? (
             <button
               type="button"
