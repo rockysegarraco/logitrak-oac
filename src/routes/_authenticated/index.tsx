@@ -404,7 +404,7 @@ function TrackerPage() {
     <TooltipProvider delayDuration={150}>
     <main className="min-h-screen bg-background">
       <div className="w-full px-4 py-10 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <div className="relative min-w-0 flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <TwInput
@@ -415,16 +415,16 @@ function TrackerPage() {
               aria-label="Search exhibitors"
             />
           </div>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <label htmlFor="filter-exhibitor" className="sr-only">
               Filter by show
             </label>
-            <div className="relative">
+            <div className="relative min-w-0 flex-1 sm:flex-none">
               <select
                 id="filter-exhibitor"
                 value={exhibitorFilter}
                 onChange={(event) => setExhibitorFilter(event.target.value)}
-                className="block max-w-56 appearance-none truncate rounded-full bg-card py-1.5 pr-9 pl-4 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary"
+                className="block w-full max-w-full appearance-none truncate rounded-full bg-card py-1.5 pr-9 pl-4 text-sm text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:max-w-56"
               >
                 <option value="all">All shows</option>
                 {exhibitorOptions.map((name) => (
