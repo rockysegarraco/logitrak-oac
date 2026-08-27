@@ -470,6 +470,7 @@ function TrackerPage() {
                 Clear
               </TwButton>
             ) : null}
+            <div className="ml-auto flex items-center gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
                 <TwButton
