@@ -88,11 +88,9 @@ function AuthPage() {
 
       <main className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto px-4 py-10 sm:px-10">
         <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm sm:p-10">
-          <h1 className="text-center text-3xl font-bold tracking-tight text-foreground">
-            Log in to FreightTRAK
-          </h1>
+          <h1 className="sr-only">Log in</h1>
 
-          <form className="mt-8 space-y-4" onSubmit={onSubmit} noValidate>
+          <form className="space-y-4" onSubmit={onSubmit} noValidate>
             <div>
               <TwLabel htmlFor="username" className="sr-only">
                 Username
