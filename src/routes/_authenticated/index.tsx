@@ -857,7 +857,7 @@ function TrackerPage() {
         </SheetContent>
       </Sheet>
     </main>
-    </TooltipProvider>
+
 
   );
 }
