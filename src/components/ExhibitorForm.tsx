@@ -19,7 +19,10 @@ type Props = {
   deletePending?: boolean;
 };
 
-const REQUIRED_FIELDS: (keyof ExhibitorInput)[] = ["show_name", "exhibitor_name"];
+const REQUIRED_FIELDS: (keyof ExhibitorInput)[] = EXHIBITOR_FIELDS.map(
+  (field) => field.key,
+) as (keyof ExhibitorInput)[];
+
 
 export function ExhibitorForm({
   initialValues,
