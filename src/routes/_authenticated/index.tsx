@@ -20,7 +20,6 @@ import {
   MoreHorizontal,
   Pencil,
   Plus,
-  Info,
   Inbox,
   RefreshCw,
   Search,
@@ -245,7 +244,6 @@ function TrackerPage() {
     }
   }
 
-  const [openTip, setOpenTip] = useState<FieldKey | null>(null);
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<Exhibitor | null>(null);
