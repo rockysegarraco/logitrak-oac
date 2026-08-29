@@ -392,12 +392,19 @@ function TrackerPage() {
   const hasFilters =
     activeUserFilter !== "all" ||
     exhibitorFilter !== "all" ||
+    stateFilter !== "all" ||
+    dateFrom !== "" ||
+    dateTo !== "" ||
     term.length > 0;
 
   const clearFilters = () => {
     setSearch("");
     setUserFilter("all");
     setExhibitorFilter("all");
+    setStateFilter("all");
+    setDateFrom("");
+    setDateTo("");
+
     if (showParam) {
       navigate({ to: "/", search: {}, replace: true });
     }
