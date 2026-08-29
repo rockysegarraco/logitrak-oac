@@ -41,11 +41,13 @@ export function ExhibitorForm({
   initialValues,
   submitLabel,
   pending,
+  currentId,
   onSubmit,
   onCancel,
   onDelete,
   deletePending,
 }: Props) {
+
   const [values, setValues] = useState<ExhibitorInput>(() =>
     Object.fromEntries(
       Object.entries(initialValues).map(([k, v]) => [k, normalizeValue(v ?? "")]),
