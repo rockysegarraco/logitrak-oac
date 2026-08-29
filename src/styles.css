@@ -251,3 +251,33 @@
     background: #fff;
   }
 }
+
+/* Tracker table: scale down to always fit the viewport, never scroll sideways */
+.fluid-table {
+  font-size: clamp(8px, 0.78vw, 13px);
+  table-layout: auto;
+  width: 100%;
+}
+
+.fluid-table th,
+.fluid-table td {
+  padding-left: 0.5em !important;
+  padding-right: 0.5em !important;
+  font-size: inherit !important;
+  overflow-wrap: anywhere;
+}
+
+.fluid-table :where(span, button, div, input, select, a) {
+  font-size: inherit !important;
+}
+
+@media (max-width: 640px) {
+  .fluid-table {
+    font-size: clamp(7px, 2.05vw, 11px);
+  }
+  .fluid-table th,
+  .fluid-table td {
+    padding-left: 0.3em !important;
+    padding-right: 0.3em !important;
+  }
+}
