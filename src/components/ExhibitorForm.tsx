@@ -269,7 +269,7 @@ export function ExhibitorForm({
         <TwButton type="submit" variant="primary" disabled={pending || !picked}>
           {pending ? "Saving..." : submitLabel}
         </TwButton>
-        <TwButton variant="ghost" onClick={onCancel}>
+        <TwButton variant="ghost" onClick={requestCancel}>
           Cancel
         </TwButton>
         {onDelete ? (
@@ -285,6 +285,30 @@ export function ExhibitorForm({
           </TwButton>
         ) : null}
       </div>
+
+      <AlertDialog open={confirmLeave} onOpenChange={setConfirmLeave}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Discard unsaved changes?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes on this form. Leaving now will discard them.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Keep editing</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setConfirmLeave(false);
+                setDirty(false);
+                onCancel();
+              }}
+            >
+              Discard changes
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </form>
+
   );
 }
