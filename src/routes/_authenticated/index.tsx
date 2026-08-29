@@ -25,6 +25,8 @@ import {
   RefreshCw,
   Search,
   SearchX,
+  Tag,
+  Users,
   Trash2,
   X,
 } from "lucide-react";
@@ -63,6 +65,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
+import { FilterDropdown } from "@/components/FilterDropdown";
 
 
 import { avatarTone, normalizeValue, type ValueCase } from "@/lib/text-case";
