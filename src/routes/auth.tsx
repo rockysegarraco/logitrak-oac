@@ -79,9 +79,8 @@ function AuthPage() {
 
   return (
     <div className="flex h-[100dvh] max-h-[100dvh] flex-col overflow-hidden bg-background">
-      <header className="flex shrink-0 items-center gap-3 border-b border-border px-6 py-5 sm:px-10">
-        <img src={oacMark} alt="Ortiz&Co" className="size-9" />
-        <span className="text-2xl font-semibold tracking-tight text-foreground">FreightTRAK</span>
+      <header className="flex shrink-0 items-center border-b border-border px-6 py-5 sm:px-10">
+        <img src={freightLogo} alt="FreightTRAK" className="h-9 w-auto" />
       </header>
 
       <main className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto px-4 py-10 sm:px-10">
