@@ -98,7 +98,10 @@ export const updateDirectoryEntry = createServerFn({ method: "POST" })
     }
 
     if (current?.name && current.name !== name) {
-      await context.supabase
+      // Shows are shared across users, so rename every matching shipment row,
+      // not just the ones the caller owns.
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      await supabaseAdmin
         .from("exhibitors")
         .update({ show_name: name })
         .eq("show_name", current.name);
