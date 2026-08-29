@@ -1,3 +1,4 @@
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -95,16 +96,18 @@ export function ExhibitorForm({
           Show
           <span className="ml-1 text-destructive">*</span>
         </TwLabel>
-        <div className="mt-2">
+        <div className="relative mt-2">
+
           <select
             id="show_name"
             value={values.show_name ?? ""}
             aria-invalid={errors.show_name ? true : undefined}
             onChange={(event) => set("show_name", event.target.value)}
             className={cn(
-              "block w-full cursor-pointer rounded-md bg-card px-3 py-1.5 text-base uppercase text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6",
-              errors.show_name && "outline-destructive focus:outline-destructive",
+              "block h-10 w-full cursor-pointer appearance-none rounded-full border border-input bg-card px-4 pr-10 text-sm uppercase text-foreground shadow-sm transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30",
+              errors.show_name && "border-destructive focus:border-destructive focus:ring-destructive/30",
             )}
+
           >
             <option value="">
               {directoryLoading
@@ -119,7 +122,9 @@ export function ExhibitorForm({
               </option>
             ))}
           </select>
+          <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         </div>
+
         {errors.show_name ? (
           <p className="mt-1 text-sm text-destructive">{errors.show_name}</p>
         ) : null}
