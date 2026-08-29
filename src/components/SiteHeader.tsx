@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Building2, ChevronDown, LayoutGrid, LogOut, Plus, Shield, User, Users } from "lucide-react";
+import oacMark from "@/assets/oac-mark.svg";
 import freightLogo from "@/assets/freighttrak-logo.svg";
 import {
   DropdownMenu,
@@ -72,8 +73,10 @@ export function SiteHeader({
       className="sticky top-0 z-30 border-b border-border bg-card print:hidden"
     >
       <div className="flex h-16 w-full items-center gap-3 px-4 sm:gap-8 sm:px-6 lg:px-8">
-        <Link to="/" className="flex min-w-0 items-center" aria-label="FreightTRAK home">
-          <img src={freightLogo} alt="FreightTRAK" className="h-7 w-auto shrink-0 sm:h-8" />
+        <Link to="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="FreightTRAK home">
+          <img src={oacMark} alt="" className="size-7 shrink-0 sm:size-8" />
+          <span aria-hidden className="h-6 w-px shrink-0 bg-border sm:h-7" />
+          <img src={freightLogo} alt="FreightTRAK" className="h-4 w-auto shrink-0 sm:h-5" />
         </Link>
 
         <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
