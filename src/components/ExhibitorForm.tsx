@@ -95,7 +95,8 @@ export function ExhibitorForm({
           Show
           <span className="ml-1 text-destructive">*</span>
         </TwLabel>
-        <div className="mt-2">
+        <div className="relative mt-2">
+
           <select
             id="show_name"
             value={values.show_name ?? ""}
