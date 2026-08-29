@@ -122,7 +122,7 @@ function ExhibitorsPage() {
   });
 
   return (
-    <main className="px-4 py-8 sm:px-6 lg:px-8">
+    <main className="px-4 pt-8 pb-20 sm:px-6 sm:pb-28 lg:px-8">
       <div className="mx-auto w-full max-w-3xl">
         <h1 className="text-2xl font-bold tracking-tight text-foreground">Shows</h1>
         <p className="mt-1 text-sm text-muted-foreground">
