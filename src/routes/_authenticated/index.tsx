@@ -88,6 +88,22 @@ function formatMoney(value: number) {
   return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
 }
 
+/** Parse loose row dates like "5/19/26" or "2026-05-19" into a timestamp. */
+function parseRowDate(value: string | null | undefined) {
+  const raw = String(value ?? "").trim();
+  if (!raw) return null;
+  const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (iso) return Date.UTC(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]));
+  const us = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if (us) {
+    const year = Number(us[3]);
+    return Date.UTC(year < 100 ? 2000 + year : year, Number(us[1]) - 1, Number(us[2]));
+  }
+  const parsed = Date.parse(raw);
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
+
 const exhibitorsQuery = queryOptions({
   queryKey: ["exhibitors"],
   queryFn: () => listExhibitors(),
