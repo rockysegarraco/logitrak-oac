@@ -407,7 +407,7 @@ function TrackerPage() {
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Search all columns"
-              className="w-full pl-9"
+              className="w-full rounded-full pl-9"
               aria-label="Search exhibitors"
             />
           </div>
