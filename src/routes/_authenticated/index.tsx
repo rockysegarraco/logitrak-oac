@@ -292,6 +292,18 @@ function TrackerPage() {
     return Array.from(names).sort((a, b) => a.localeCompare(b));
   }, [exhibitors]);
 
+  const stateOptions = useMemo(() => {
+    const codes = new Set<string>();
+    for (const row of exhibitors) {
+      const code = (row.state ?? "").trim();
+      if (code) codes.add(code.toUpperCase());
+    }
+    return Array.from(codes).sort((a, b) => a.localeCompare(b));
+  }, [exhibitors]);
+
+  const fromTime = dateFrom ? parseRowDate(dateFrom) : null;
+  const toTime = dateTo ? parseRowDate(dateTo) : null;
+
   const rows = useMemo(() => {
     const filtered = exhibitors.filter((row) => {
       if (
@@ -306,6 +318,18 @@ function TrackerPage() {
       ) {
         return false;
       }
+      if (
+        stateFilter !== "all" &&
+        (row.state ?? "").trim().toUpperCase() !== stateFilter.toUpperCase()
+      ) {
+        return false;
+      }
+      if (fromTime !== null || toTime !== null) {
+        const shipped = parseRowDate(row.shipping_date);
+        if (shipped === null) return false;
+        if (fromTime !== null && shipped < fromTime) return false;
+        if (toTime !== null && shipped > toTime) return false;
+      }
       return activeUserFilter === "all" || row.created_by_initials === activeUserFilter;
     });
 
@@ -319,7 +343,17 @@ function TrackerPage() {
       if (!bv) return -1;
       return av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" }) * factor;
     });
-  }, [exhibitors, term, exhibitorFilter, activeUserFilter, sort]);
+  }, [
+    exhibitors,
+    term,
+    exhibitorFilter,
+    stateFilter,
+    fromTime,
+    toTime,
+    activeUserFilter,
+    sort,
+  ]);
+
 
   const totals = useMemo(() => {
     const acc: Record<string, number> = {};
