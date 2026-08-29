@@ -585,7 +585,7 @@ function TrackerPage() {
                                 : "none"
                             }
                             className={cn(
-                              "sticky top-0 z-10 bg-muted px-3 py-3.5 text-left text-xs font-semibold whitespace-nowrap text-foreground md:whitespace-normal",
+                              "sticky top-0 z-10 bg-muted px-3 py-3.5 text-left text-xs font-semibold whitespace-nowrap text-foreground",
                             )}
                           >
                             <div className="inline-flex items-center gap-1">
