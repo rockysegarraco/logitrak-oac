@@ -88,8 +88,9 @@ export const updateExhibitor = createServerFn({ method: "POST" })
       .update(fields)
       .eq("id", id)
       .select(COLUMNS)
-      .single();
+      .maybeSingle();
     if (error) throw new Error(error.message);
+    if (!row) throw new Error("You can only edit records you created.");
     return row as Exhibitor;
   });
 
