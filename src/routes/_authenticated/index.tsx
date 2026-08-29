@@ -451,21 +451,42 @@ function TrackerPage() {
     );
 
   return (
-    <TooltipProvider delayDuration={150}>
     <main className="min-h-screen bg-background">
       <div className="w-full px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
-        <div className="flex flex-col items-stretch gap-3 rounded-xl border border-border bg-card p-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 sm:p-4">
-          <div className="relative order-2 min-w-0 flex-1 sm:order-1 sm:min-w-[240px]">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <TwInput
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search all columns"
-              className="w-full rounded-full pl-9"
-              aria-label="Search exhibitors"
-            />
+        <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-3 sm:p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="relative order-2 min-w-0 flex-1 sm:order-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <TwInput
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search exhibitors, shows, booths…"
+                className="w-full rounded-full pl-9"
+                aria-label="Search exhibitors"
+              />
+            </div>
+            <div className="order-1 flex items-center gap-2 sm:order-2 sm:ml-auto">
+              <TwButton
+                variant="secondary"
+                onClick={hardRefresh}
+                disabled={refreshing}
+                aria-label="Refresh data"
+                className="h-9 w-9 shrink-0 justify-center rounded-full p-0"
+              >
+                <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
+              </TwButton>
+              <TwButton
+                variant="secondary"
+                onClick={exportCsv}
+                aria-label="Export CSV"
+                className="h-9 w-9 shrink-0 justify-center rounded-full p-0"
+              >
+                <Download className="h-4 w-4" />
+              </TwButton>
+            </div>
           </div>
-          <div className="order-1 flex w-full flex-wrap sm:order-2 items-center gap-2 sm:w-auto sm:flex-1 sm:gap-3">
+
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <FilterDropdown
               icon={Store}
               ariaLabel="Filter by show"
@@ -477,54 +498,58 @@ function TrackerPage() {
                 ...exhibitorOptions.map((name) => ({ value: name, label: name })),
               ]}
             />
+            <FilterDropdown
+              icon={MapPin}
+              ariaLabel="Filter by state"
+              value={stateFilter}
+              onChange={setStateFilter}
+              className="min-w-0 flex-1 sm:max-w-44 sm:flex-none"
+              options={[
+                { value: "all", label: "All states" },
+                ...stateOptions.map((code) => ({ value: code, label: code })),
+              ]}
+            />
             {isAdmin ? (
               <FilterDropdown
                 icon={Users}
                 ariaLabel="Filter by user"
                 value={userFilter}
                 onChange={setUserFilter}
+                className="min-w-0 flex-1 sm:max-w-52 sm:flex-none"
                 options={[{ value: "all", label: "All users" }, ...userOptions]}
               />
             ) : null}
-
+            <div className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
+              <TwInput
+                type="date"
+                value={dateFrom}
+                onChange={(event) => setDateFrom(event.target.value)}
+                aria-label="Shipping date from"
+                className="h-9 min-w-0 flex-1 rounded-full text-sm sm:w-40 sm:flex-none"
+              />
+              <span className="shrink-0 text-xs text-muted-foreground">to</span>
+              <TwInput
+                type="date"
+                value={dateTo}
+                onChange={(event) => setDateTo(event.target.value)}
+                aria-label="Shipping date to"
+                className="h-9 min-w-0 flex-1 rounded-full text-sm sm:w-40 sm:flex-none"
+              />
+            </div>
             {hasFilters ? (
-              <TwButton variant="secondary" onClick={clearFilters} aria-label="Clear filters">
+              <TwButton
+                variant="secondary"
+                onClick={clearFilters}
+                aria-label="Clear filters"
+                className="shrink-0"
+              >
                 <X className="h-4 w-4" />
                 Clear
               </TwButton>
             ) : null}
-            <div className="ml-auto flex items-center gap-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TwButton
-                  variant="secondary"
-                  onClick={hardRefresh}
-                  disabled={refreshing}
-                  aria-label="Refresh data"
-                  className="h-9 w-9 justify-center rounded-full p-0"
-                >
-                  <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
-                </TwButton>
-              </TooltipTrigger>
-              <TooltipContent>{refreshing ? "Refreshing…" : "Refresh"}</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TwButton
-                  variant="secondary"
-                  onClick={exportCsv}
-                  aria-label="Export CSV"
-                  className="h-9 w-9 justify-center rounded-full p-0"
-                >
-                  <Download className="h-4 w-4" />
-                </TwButton>
-              </TooltipTrigger>
-              <TooltipContent>Export CSV</TooltipContent>
-            </Tooltip>
-            </div>
           </div>
-
         </div>
+
 
         <div className="mt-8 flow-root">
           <div className="block min-w-full align-middle">
