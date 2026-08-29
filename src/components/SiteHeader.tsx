@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Building2, ChevronDown, LayoutGrid, LogOut, Plus, Shield, User, Users } from "lucide-react";
+import oacMark from "@/assets/oac-mark.svg";
 import freightLogo from "@/assets/freighttrak-logo.svg";
 import {
   DropdownMenu,
