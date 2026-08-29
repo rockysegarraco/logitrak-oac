@@ -2,6 +2,7 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
+import oacMark from "@/assets/oac-mark.svg";
 import freightLogo from "@/assets/freighttrak-logo.svg";
 import { supabase } from "@/integrations/supabase/client";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
