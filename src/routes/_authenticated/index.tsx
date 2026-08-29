@@ -225,6 +225,10 @@ function TrackerPage() {
     setExhibitorFilter(showParam ?? "all");
   }, [showParam]);
   const [userFilter, setUserFilter] = useState("all");
+  const [stateFilter, setStateFilter] = useState("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+
   const [sort, setSort] = useState<{ key: FieldKey; dir: "asc" | "desc" } | null>(null);
   const [headerMode, setHeaderMode] = useState<"short" | "full">("short");
   const [valueCase, setValueCase] = useState<ValueCase>("upper");
