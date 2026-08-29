@@ -1,11 +1,22 @@
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { listDirectory } from "@/lib/exhibitor-directory.functions";
-import type { ExhibitorInput } from "@/lib/exhibitors.functions";
+import { listExhibitors, type ExhibitorInput } from "@/lib/exhibitors.functions";
 import { normalizeValue } from "@/lib/text-case";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +24,7 @@ type Props = {
   initialValues: ExhibitorInput;
   submitLabel: string;
   pending?: boolean;
+  currentId?: string;
   onSubmit: (values: ExhibitorInput) => void;
   onCancel: () => void;
   onDelete?: () => void;
@@ -22,6 +34,7 @@ type Props = {
 const REQUIRED_FIELDS: (keyof ExhibitorInput)[] = EXHIBITOR_FIELDS.map(
   (field) => field.key,
 ) as (keyof ExhibitorInput)[];
+
 
 
 export function ExhibitorForm({
