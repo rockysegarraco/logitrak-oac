@@ -233,7 +233,18 @@ export function ExhibitorForm({
                     error && "outline-destructive focus:outline-destructive",
                   )}
                   onChange={(event) => set(field.key, event.target.value.toUpperCase())}
-                  onBlur={(event) => set(field.key, normalizeValue(event.target.value))}
+                  onBlur={(event) => {
+                    const clean = normalizeValue(event.target.value);
+                    set(field.key, clean);
+                    const message = fieldError(field.key, clean);
+                    setErrors((prev) => {
+                      const next = { ...prev };
+                      if (message) next[field.key] = message;
+                      else delete next[field.key];
+                      return next;
+                    });
+                  }}
+
                 />
               </div>
               {error ? (
