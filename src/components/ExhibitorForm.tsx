@@ -24,7 +24,7 @@ type Props = {
   initialValues: ExhibitorInput;
   submitLabel: string;
   pending?: boolean;
-  currentId?: string;
+  currentId?: string | undefined;
   onSubmit: (values: ExhibitorInput) => void;
   onCancel: () => void;
   onDelete?: () => void;
