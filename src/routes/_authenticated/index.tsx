@@ -556,8 +556,9 @@ function TrackerPage() {
         <div className="mt-8 flow-root">
           <div className="block min-w-full align-middle">
             <div className="rounded-t-lg rounded-b-none bg-card shadow-sm ring-1 ring-border">
-              <div className="max-h-[70vh] overflow-x-hidden overflow-y-auto rounded-t-lg">
-                <table className="fluid-table w-full table-auto divide-y divide-border">
+              <div className="max-h-[70vh] overflow-x-auto overflow-y-auto rounded-t-lg sm:overflow-x-hidden">
+                <table className="fluid-table w-full min-w-[1100px] table-auto divide-y divide-border sm:min-w-0">
+
 
 
                   <thead>
