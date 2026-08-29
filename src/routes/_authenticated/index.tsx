@@ -25,7 +25,7 @@ import {
   RefreshCw,
   Search,
   SearchX,
-  Tag,
+  Store,
   Users,
   Trash2,
   X,
@@ -413,7 +413,7 @@ function TrackerPage() {
           </div>
           <div className="order-1 flex w-full flex-wrap sm:order-2 items-center gap-2 sm:w-auto sm:flex-1 sm:gap-3">
             <FilterDropdown
-              icon={Tag}
+              icon={Store}
               ariaLabel="Filter by show"
               value={exhibitorFilter}
               onChange={setExhibitorFilter}
