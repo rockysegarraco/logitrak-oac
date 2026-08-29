@@ -648,22 +648,16 @@ function TrackerPage() {
                         >
                           {isAdmin ? (
                             <td className="w-[64px] min-w-[64px] px-3 py-2 text-center text-sm whitespace-nowrap">
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <span
-                                    className={cn(
-                                      "inline-flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold",
-                                      avatarTone(row.created_by_initials || "?"),
-                                    )}
-                                    aria-label={`Created by ${row.created_by_initials || "—"}`}
-                                  >
-                                    {row.created_by_initials || "—"}
-                                  </span>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  Created by {row.created_by_initials || "unknown"}
-                                </TooltipContent>
-                              </Tooltip>
+                              <span
+                                className={cn(
+                                  "inline-flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold",
+                                  avatarTone(row.created_by_initials || "?"),
+                                )}
+                                aria-label={`Created by ${row.created_by_initials || "—"}`}
+                              >
+                                {row.created_by_initials || "—"}
+                              </span>
+
                             </td>
                           ) : null}
                           {EXHIBITOR_FIELDS.map((field, index) => (
