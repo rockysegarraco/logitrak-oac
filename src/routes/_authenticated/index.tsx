@@ -800,6 +800,7 @@ function TrackerPage() {
               <ExhibitorForm
                 initialValues={draft}
                 submitLabel="Save Changes"
+                currentId={editingId ?? undefined}
                 pending={saveMutation.isPending}
                 onSubmit={(values) => {
                   if (!editingId) return;
