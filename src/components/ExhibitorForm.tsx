@@ -40,16 +40,32 @@ export function ExhibitorForm({
   );
   const [errors, setErrors] = useState<Partial<Record<keyof ExhibitorInput, string>>>({});
   const [formError, setFormError] = useState<string | null>(null);
+  const [dirty, setDirty] = useState(false);
+  const [confirmLeave, setConfirmLeave] = useState(false);
 
   const { data: directory, isLoading: directoryLoading } = useQuery({
     queryKey: ["exhibitor-directory"],
     queryFn: () => listDirectory(),
   });
+  const { data: existing } = useQuery({
+    queryKey: ["exhibitors"],
+    queryFn: () => listExhibitors(),
+  });
   const options = directory ?? [];
   const picked = (values.show_name ?? "").trim().length > 0;
 
+  useEffect(() => {
+    if (!dirty) return;
+    const handler = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [dirty]);
 
   const set = (key: keyof ExhibitorInput, value: string) => {
+    setDirty(true);
     setValues((prev) => ({ ...prev, [key]: value }));
     setErrors((prev) => {
       if (!prev[key]) return prev;
@@ -59,18 +75,43 @@ export function ExhibitorForm({
     });
   };
 
+  const fieldError = (key: keyof ExhibitorInput, raw: string) => {
+    const trimmed = raw.trim();
+    const label = EXHIBITOR_FIELDS.find((f) => f.key === key)?.label ?? "This field";
+    if (!trimmed) return `${label} is required.`;
+    if (raw.length > 0 && !trimmed) return `${label} can't be only spaces.`;
+    return null;
+  };
+
   const validate = () => {
     const next: Partial<Record<keyof ExhibitorInput, string>> = {};
     for (const field of EXHIBITOR_FIELDS) {
-      const raw = values[field.key] ?? "";
-      const trimmed = raw.trim();
-      if (!trimmed && REQUIRED_FIELDS.includes(field.key)) {
-        next[field.key] = `${field.label} is required.`;
-      } else if (raw.length > 0 && !trimmed) {
-        next[field.key] = `${field.label} can't be only spaces.`;
+      const message = fieldError(field.key, values[field.key] ?? "");
+      if (message) next[field.key] = message;
+    }
+    if (!next.exhibitor_name && !next.show_name && !next.booth_number) {
+      const key = (v: string) => v.trim().toLowerCase();
+      const duplicate = (existing ?? []).find(
+        (row) =>
+          row.id !== currentId &&
+          key(row.show_name ?? "") === key(values.show_name ?? "") &&
+          key(row.exhibitor_name ?? "") === key(values.exhibitor_name ?? "") &&
+          key(row.booth_number ?? "") === key(values.booth_number ?? ""),
+      );
+      if (duplicate) {
+        next.exhibitor_name =
+          "This exhibitor already exists for that show and booth.";
       }
     }
     return next;
+  };
+
+  const requestCancel = () => {
+    if (dirty) {
+      setConfirmLeave(true);
+      return;
+    }
+    onCancel();
   };
 
   return (
@@ -83,6 +124,11 @@ export function ExhibitorForm({
         if (Object.keys(found).length > 0) {
           setErrors(found);
           setFormError("Please fix the highlighted fields before saving.");
+          toast.error(
+            found.exhibitor_name?.startsWith("This exhibitor already exists")
+              ? found.exhibitor_name
+              : "Please complete all required fields.",
+          );
           return;
         }
         const trimmed = Object.fromEntries(
@@ -90,9 +136,11 @@ export function ExhibitorForm({
         ) as ExhibitorInput;
         setErrors({});
         setFormError(null);
+        setDirty(false);
         onSubmit(trimmed);
       }}
     >
+
       <div className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6">
       <div className="mb-6">
         <TwLabel htmlFor="show_name">
