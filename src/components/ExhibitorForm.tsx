@@ -102,9 +102,10 @@ export function ExhibitorForm({
             aria-invalid={errors.show_name ? true : undefined}
             onChange={(event) => set("show_name", event.target.value)}
             className={cn(
-              "block w-full cursor-pointer rounded-md bg-card px-3 py-1.5 text-base uppercase text-foreground outline-1 -outline-offset-1 outline-border focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6",
-              errors.show_name && "outline-destructive focus:outline-destructive",
+              "block h-10 w-full cursor-pointer appearance-none rounded-full border border-input bg-card px-4 pr-10 text-sm uppercase text-foreground shadow-sm transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30",
+              errors.show_name && "border-destructive focus:border-destructive focus:ring-destructive/30",
             )}
+
           >
             <option value="">
               {directoryLoading
