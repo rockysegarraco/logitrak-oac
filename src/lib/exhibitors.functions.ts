@@ -91,7 +91,7 @@ export const updateExhibitor = createServerFn({ method: "POST" })
       .select(COLUMNS)
       .maybeSingle();
     if (error) throw new Error(error.message);
-    if (!row) throw new Error("You can only edit records you created.");
+    if (!row) throw new Error("That record no longer exists. Please refresh and try again.");
     return row as Exhibitor;
   });
 
