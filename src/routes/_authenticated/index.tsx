@@ -541,39 +541,6 @@ function TrackerPage() {
                                   )}
                                 </span>
                               </button>
-                              {headerMode === "short" ? (
-                                <Tooltip
-                                  open={openTip === field.key}
-                                  onOpenChange={(open) =>
-                                    setOpenTip(open ? field.key : null)
-                                  }
-                                >
-                                  <TooltipTrigger asChild>
-                                    <button
-                                      type="button"
-                                      aria-label={`What is ${field.short}? ${field.label}`}
-                                      onClick={(event) => {
-                                        event.stopPropagation();
-                                        setOpenTip((prev) =>
-                                          prev === field.key ? null : field.key,
-                                        );
-                                      }}
-                                      className="inline-flex items-center justify-center rounded p-0.5 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                                    >
-                                      <Info className="h-3 w-3" aria-hidden="true" />
-                                    </button>
-                                  </TooltipTrigger>
-
-                                  <TooltipContent
-                                    side="bottom"
-                                    align="start"
-                                    collisionPadding={12}
-                                    className="max-w-[min(16rem,calc(100vw-2rem))] whitespace-normal break-words text-wrap"
-                                  >
-                                    {field.label}
-                                  </TooltipContent>
-                                </Tooltip>
-                              ) : null}
                             </div>
                           </th>
                         );
