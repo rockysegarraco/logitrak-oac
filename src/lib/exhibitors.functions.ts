@@ -71,8 +71,9 @@ export const createExhibitor = createServerFn({ method: "POST" })
         created_by: context.userId,
       })
       .select(COLUMNS)
-      .single();
+      .maybeSingle();
     if (error) throw new Error(error.message);
+    if (!row) throw new Error("The shipment could not be created. Please refresh and try again.");
     return row as Exhibitor;
   });
 
