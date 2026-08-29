@@ -22,7 +22,9 @@ import {
   Plus,
   Inbox,
   RefreshCw,
+  MapPin,
   Search,
+
   SearchX,
   Store,
   Users,
@@ -30,12 +32,7 @@ import {
   X,
 } from "lucide-react";
 import { TwButton, TwInput, twButtonClass } from "@/components/ui/tw";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -92,6 +89,22 @@ function parseMoney(value: string | null | undefined) {
 function formatMoney(value: number) {
   return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
 }
+
+/** Parse loose row dates like "5/19/26" or "2026-05-19" into a timestamp. */
+function parseRowDate(value: string | null | undefined) {
+  const raw = String(value ?? "").trim();
+  if (!raw) return null;
+  const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (iso) return Date.UTC(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]));
+  const us = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if (us) {
+    const year = Number(us[3]);
+    return Date.UTC(year < 100 ? 2000 + year : year, Number(us[1]) - 1, Number(us[2]));
+  }
+  const parsed = Date.parse(raw);
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
 
 const exhibitorsQuery = queryOptions({
   queryKey: ["exhibitors"],
@@ -214,6 +227,10 @@ function TrackerPage() {
     setExhibitorFilter(showParam ?? "all");
   }, [showParam]);
   const [userFilter, setUserFilter] = useState("all");
+  const [stateFilter, setStateFilter] = useState("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+
   const [sort, setSort] = useState<{ key: FieldKey; dir: "asc" | "desc" } | null>(null);
   const [headerMode, setHeaderMode] = useState<"short" | "full">("short");
   const [valueCase, setValueCase] = useState<ValueCase>("upper");
@@ -277,6 +294,18 @@ function TrackerPage() {
     return Array.from(names).sort((a, b) => a.localeCompare(b));
   }, [exhibitors]);
 
+  const stateOptions = useMemo(() => {
+    const codes = new Set<string>();
+    for (const row of exhibitors) {
+      const code = (row.state ?? "").trim();
+      if (code) codes.add(code.toUpperCase());
+    }
+    return Array.from(codes).sort((a, b) => a.localeCompare(b));
+  }, [exhibitors]);
+
+  const fromTime = dateFrom ? parseRowDate(dateFrom) : null;
+  const toTime = dateTo ? parseRowDate(dateTo) : null;
+
   const rows = useMemo(() => {
     const filtered = exhibitors.filter((row) => {
       if (
@@ -291,6 +320,18 @@ function TrackerPage() {
       ) {
         return false;
       }
+      if (
+        stateFilter !== "all" &&
+        (row.state ?? "").trim().toUpperCase() !== stateFilter.toUpperCase()
+      ) {
+        return false;
+      }
+      if (fromTime !== null || toTime !== null) {
+        const shipped = parseRowDate(row.shipping_date);
+        if (shipped === null) return false;
+        if (fromTime !== null && shipped < fromTime) return false;
+        if (toTime !== null && shipped > toTime) return false;
+      }
       return activeUserFilter === "all" || row.created_by_initials === activeUserFilter;
     });
 
@@ -304,7 +345,17 @@ function TrackerPage() {
       if (!bv) return -1;
       return av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" }) * factor;
     });
-  }, [exhibitors, term, exhibitorFilter, activeUserFilter, sort]);
+  }, [
+    exhibitors,
+    term,
+    exhibitorFilter,
+    stateFilter,
+    fromTime,
+    toTime,
+    activeUserFilter,
+    sort,
+  ]);
+
 
   const totals = useMemo(() => {
     const acc: Record<string, number> = {};
@@ -343,12 +394,19 @@ function TrackerPage() {
   const hasFilters =
     activeUserFilter !== "all" ||
     exhibitorFilter !== "all" ||
+    stateFilter !== "all" ||
+    dateFrom !== "" ||
+    dateTo !== "" ||
     term.length > 0;
 
   const clearFilters = () => {
     setSearch("");
     setUserFilter("all");
     setExhibitorFilter("all");
+    setStateFilter("all");
+    setDateFrom("");
+    setDateTo("");
+
     if (showParam) {
       navigate({ to: "/", search: {}, replace: true });
     }
@@ -395,21 +453,42 @@ function TrackerPage() {
     );
 
   return (
-    <TooltipProvider delayDuration={150}>
     <main className="min-h-screen bg-background">
       <div className="w-full px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
-        <div className="flex flex-col items-stretch gap-3 rounded-xl border border-border bg-card p-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 sm:p-4">
-          <div className="relative order-2 min-w-0 flex-1 sm:order-1 sm:min-w-[240px]">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <TwInput
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search all columns"
-              className="w-full rounded-full pl-9"
-              aria-label="Search exhibitors"
-            />
+        <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-3 sm:p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="relative order-2 min-w-0 flex-1 sm:order-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <TwInput
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search exhibitors, shows, booths…"
+                className="w-full rounded-full pl-9"
+                aria-label="Search exhibitors"
+              />
+            </div>
+            <div className="order-1 flex items-center gap-2 sm:order-2 sm:ml-auto">
+              <TwButton
+                variant="secondary"
+                onClick={hardRefresh}
+                disabled={refreshing}
+                aria-label="Refresh data"
+                className="h-9 w-9 shrink-0 justify-center rounded-full p-0"
+              >
+                <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
+              </TwButton>
+              <TwButton
+                variant="secondary"
+                onClick={exportCsv}
+                aria-label="Export CSV"
+                className="h-9 w-9 shrink-0 justify-center rounded-full p-0"
+              >
+                <Download className="h-4 w-4" />
+              </TwButton>
+            </div>
           </div>
-          <div className="order-1 flex w-full flex-wrap sm:order-2 items-center gap-2 sm:w-auto sm:flex-1 sm:gap-3">
+
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <FilterDropdown
               icon={Store}
               ariaLabel="Filter by show"
@@ -421,54 +500,58 @@ function TrackerPage() {
                 ...exhibitorOptions.map((name) => ({ value: name, label: name })),
               ]}
             />
+            <FilterDropdown
+              icon={MapPin}
+              ariaLabel="Filter by state"
+              value={stateFilter}
+              onChange={setStateFilter}
+              className="min-w-0 flex-1 sm:max-w-44 sm:flex-none"
+              options={[
+                { value: "all", label: "All states" },
+                ...stateOptions.map((code) => ({ value: code, label: code })),
+              ]}
+            />
             {isAdmin ? (
               <FilterDropdown
                 icon={Users}
                 ariaLabel="Filter by user"
                 value={userFilter}
                 onChange={setUserFilter}
+                className="min-w-0 flex-1 sm:max-w-52 sm:flex-none"
                 options={[{ value: "all", label: "All users" }, ...userOptions]}
               />
             ) : null}
-
+            <div className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
+              <TwInput
+                type="date"
+                value={dateFrom}
+                onChange={(event) => setDateFrom(event.target.value)}
+                aria-label="Shipping date from"
+                className="h-9 min-w-0 flex-1 rounded-full text-sm sm:w-40 sm:flex-none"
+              />
+              <span className="shrink-0 text-xs text-muted-foreground">to</span>
+              <TwInput
+                type="date"
+                value={dateTo}
+                onChange={(event) => setDateTo(event.target.value)}
+                aria-label="Shipping date to"
+                className="h-9 min-w-0 flex-1 rounded-full text-sm sm:w-40 sm:flex-none"
+              />
+            </div>
             {hasFilters ? (
-              <TwButton variant="secondary" onClick={clearFilters} aria-label="Clear filters">
+              <TwButton
+                variant="secondary"
+                onClick={clearFilters}
+                aria-label="Clear filters"
+                className="shrink-0"
+              >
                 <X className="h-4 w-4" />
                 Clear
               </TwButton>
             ) : null}
-            <div className="ml-auto flex items-center gap-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TwButton
-                  variant="secondary"
-                  onClick={hardRefresh}
-                  disabled={refreshing}
-                  aria-label="Refresh data"
-                  className="h-9 w-9 justify-center rounded-full p-0"
-                >
-                  <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
-                </TwButton>
-              </TooltipTrigger>
-              <TooltipContent>{refreshing ? "Refreshing…" : "Refresh"}</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TwButton
-                  variant="secondary"
-                  onClick={exportCsv}
-                  aria-label="Export CSV"
-                  className="h-9 w-9 justify-center rounded-full p-0"
-                >
-                  <Download className="h-4 w-4" />
-                </TwButton>
-              </TooltipTrigger>
-              <TooltipContent>Export CSV</TooltipContent>
-            </Tooltip>
-            </div>
           </div>
-
         </div>
+
 
         <div className="mt-8 flow-root">
           <div className="block min-w-full align-middle">
@@ -502,7 +585,7 @@ function TrackerPage() {
                                 : "none"
                             }
                             className={cn(
-                              "sticky top-0 z-10 bg-muted px-3 py-3.5 text-left text-xs font-semibold whitespace-nowrap text-foreground md:whitespace-normal",
+                              "sticky top-0 z-10 bg-muted px-3 py-3.5 text-left text-xs font-semibold whitespace-nowrap text-foreground",
                             )}
                           >
                             <div className="inline-flex items-center gap-1">
@@ -567,22 +650,16 @@ function TrackerPage() {
                         >
                           {isAdmin ? (
                             <td className="w-[64px] min-w-[64px] px-3 py-2 text-center text-sm whitespace-nowrap">
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <span
-                                    className={cn(
-                                      "inline-flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold",
-                                      avatarTone(row.created_by_initials || "?"),
-                                    )}
-                                    aria-label={`Created by ${row.created_by_initials || "—"}`}
-                                  >
-                                    {row.created_by_initials || "—"}
-                                  </span>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  Created by {row.created_by_initials || "unknown"}
-                                </TooltipContent>
-                              </Tooltip>
+                              <span
+                                className={cn(
+                                  "inline-flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold",
+                                  avatarTone(row.created_by_initials || "?"),
+                                )}
+                                aria-label={`Created by ${row.created_by_initials || "—"}`}
+                              >
+                                {row.created_by_initials || "—"}
+                              </span>
+
                             </td>
                           ) : null}
                           {EXHIBITOR_FIELDS.map((field, index) => (
@@ -782,7 +859,7 @@ function TrackerPage() {
         </SheetContent>
       </Sheet>
     </main>
-    </TooltipProvider>
+
 
   );
 }
