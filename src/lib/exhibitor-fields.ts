@@ -123,6 +123,25 @@ export const EMPTY_EXHIBITOR: ExhibitorInput = {
   actual_revenue: "",
 };
 
+function fmt(date: Date) {
+  return `${date.getMonth() + 1}/${date.getDate()}/${String(date.getFullYear()).slice(-2)}`;
+}
+
+/** Sensible starting values so users only fill in what is unique to the row. */
+export function makeDefaultExhibitor(): ExhibitorInput {
+  const today = new Date();
+  const delivery = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+  return {
+    ...EMPTY_EXHIBITOR,
+    shipping_date: fmt(today),
+    delivery_date: fmt(delivery),
+    estimated_weight: "0",
+    actual_costs: "$0.00",
+    final_invoice: "$0.00",
+    actual_revenue: "$0.00",
+  };
+}
+
 export const TONE_HEADER: Record<FieldTone, string> = {
   gold: "bg-sheet-gold text-sheet-gold-foreground",
   slate: "bg-sheet-slate text-sheet-slate-foreground",
