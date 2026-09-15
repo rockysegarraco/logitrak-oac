@@ -240,7 +240,7 @@ function UsersPage() {
                 <th className="px-4 py-3">Username</th>
                 <th className="px-4 py-3">Role</th>
                 <th className="px-4 py-3">Access</th>
-                <th className="w-28 px-4 py-3" />
+                <th className="w-40 px-4 py-3" />
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -262,10 +262,11 @@ function UsersPage() {
                       {user.is_active ? "Active" : "No access"}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-right whitespace-nowrap">
                     {me?.profile?.id === user.id ? null : (
                       <TwButton
                         variant="secondary"
+                        className="whitespace-nowrap"
                         disabled={accessMutation.isPending}
                         aria-label={
                           user.is_active
