@@ -42,7 +42,7 @@ function UsersPage() {
   const { data: users } = useQuery(usersQuery);
   const { data: me } = useQuery(meQuery);
   const create = useServerFn(createAppUser);
-  const remove = useServerFn(deleteAppUser);
+  const setActive = useServerFn(setUserActive);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
