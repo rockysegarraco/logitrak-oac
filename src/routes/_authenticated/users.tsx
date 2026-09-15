@@ -304,7 +304,8 @@ function UsersPage() {
                       >
                         {user.is_active ? "Remove access" : "Restore"}
                       </TwButton>
-                    )}
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
