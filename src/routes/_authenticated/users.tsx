@@ -44,6 +44,8 @@ function UsersPage() {
   const create = useServerFn(createAppUser);
   const setActive = useServerFn(setUserActive);
   const [shown, setShown] = useState<Record<string, boolean>>({});
+  const [draft, setDraft] = useState<Record<string, string>>({});
+  const savePassword = useServerFn(saveUserPassword);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
