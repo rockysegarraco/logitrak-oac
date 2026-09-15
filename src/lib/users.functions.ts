@@ -138,6 +138,32 @@ export const createAppUser = createServerFn({ method: "POST" })
   });
 
 
+// Records the password an admin already knows for an account so it can be
+// viewed later. It does not change the login itself.
+export const saveUserPassword = createServerFn({ method: "POST" })
+  .middleware([requireAppAuth])
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        id: z.string().uuid(),
+        password: z.string().min(1).max(72),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (!isAdmin) throw new Error("Only admins can save passwords");
+
+    const { error } = await context.supabase
+      .from("user_credentials")
+      .upsert({ user_id: data.id, password: data.password });
+    if (error) throw new Error(error.message);
+    return { id: data.id };
+  });
+
 export const setUserActive = createServerFn({ method: "POST" })
   .middleware([requireAppAuth])
   .inputValidator((input: unknown) =>
