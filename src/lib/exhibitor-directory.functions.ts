@@ -98,13 +98,13 @@ export const updateDirectoryEntry = createServerFn({ method: "POST" })
     }
 
     if (current?.name && current.name !== name) {
-      // Shows are shared across users, so rename every matching shipment row,
-      // not just the ones the caller owns.
-      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      await supabaseAdmin
+      // Shows are shared across users; RLS lets any signed-in user update
+      // shipment rows, so the caller's own client can do the bulk rename.
+      const { error: renameError } = await context.supabase
         .from("exhibitors")
         .update({ show_name: name })
         .eq("show_name", current.name);
+      if (renameError) throw new Error(renameError.message);
     }
 
     return row as DirectoryEntry;
