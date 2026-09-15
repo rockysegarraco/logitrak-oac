@@ -12,6 +12,7 @@ export type AppUser = {
   role: "admin" | "user";
   is_active: boolean;
   created_at: string;
+  password: string | null;
 };
 
 const newUserInput = z.object({
