@@ -293,7 +293,30 @@ function UsersPage() {
                         </button>
                       </div>
                     ) : (
-                      <span className="text-muted-foreground">—</span>
+                      <div className="flex items-center gap-2">
+                        <TwInput
+                          className="h-8 w-36"
+                          placeholder="Enter password"
+                          aria-label={`Password for ${user.username}`}
+                          value={draft[user.id] ?? ""}
+                          onChange={(event) =>
+                            setDraft((prev) => ({ ...prev, [user.id]: event.target.value }))
+                          }
+                        />
+                        <TwButton
+                          variant="secondary"
+                          className="whitespace-nowrap"
+                          disabled={saveMutation.isPending || !(draft[user.id] ?? "").trim()}
+                          onClick={() =>
+                            saveMutation.mutate({
+                              id: user.id,
+                              password: (draft[user.id] ?? "").trim(),
+                            })
+                          }
+                        >
+                          Save
+                        </TwButton>
+                      </div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground capitalize">{user.role}</td>
