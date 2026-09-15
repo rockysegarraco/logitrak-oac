@@ -12,6 +12,7 @@ export type AppUser = {
   role: "admin" | "user";
   is_active: boolean;
   created_at: string;
+  password: string | null;
 };
 
 const newUserInput = z.object({
@@ -52,9 +53,15 @@ export const listUsers = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     const { data: roles } = await context.supabase.from("user_roles").select("user_id, role");
     const roleFor = new Map((roles ?? []).map((r) => [r.user_id, r.role]));
+    // Only admins can read this table (enforced by access rules); others get nothing.
+    const { data: creds } = await context.supabase
+      .from("user_credentials")
+      .select("user_id, password");
+    const passwordFor = new Map((creds ?? []).map((c) => [c.user_id, c.password]));
     return (profiles ?? []).map((p) => ({
       ...p,
       role: (roleFor.get(p.id) ?? "user") as "admin" | "user",
+      password: passwordFor.get(p.id) ?? null,
     })) as AppUser[];
   });
 
@@ -123,6 +130,9 @@ export const createAppUser = createServerFn({ method: "POST" })
     await context.supabase
       .from("user_roles")
       .insert({ user_id: created.user.id, role: data.role });
+    await context.supabase
+      .from("user_credentials")
+      .upsert({ user_id: created.user.id, password: data.password });
 
     return { id: created.user.id, username, initials };
   });
@@ -156,6 +166,10 @@ export const resetUserPassword = createServerFn({ method: "POST" })
       password: data.password,
     });
     if (error) throw new Error(error.message);
+
+    await context.supabase
+      .from("user_credentials")
+      .upsert({ user_id: data.id, password: data.password });
 
     return { username: profile.username };
   });

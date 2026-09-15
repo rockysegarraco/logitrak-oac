@@ -3,7 +3,7 @@ import { queryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/r
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ChevronDown, Copy, KeyRound, RefreshCw } from "lucide-react";
+import { ChevronDown, Copy, Eye, EyeOff, KeyRound, RefreshCw } from "lucide-react";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
 import {
   createAppUser,
@@ -46,6 +46,7 @@ function UsersPage() {
   const setActive = useServerFn(setUserActive);
   const resetPassword = useServerFn(resetUserPassword);
   const [reset, setReset] = useState<{ username: string; password: string } | null>(null);
+  const [shown, setShown] = useState<Record<string, boolean>>({});
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -279,6 +280,7 @@ function UsersPage() {
               <tr className="text-left text-xs font-semibold text-muted-foreground uppercase">
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Username</th>
+                <th className="px-4 py-3">Password</th>
                 <th className="px-4 py-3">Role</th>
                 <th className="px-4 py-3">Access</th>
                 <th className="w-40 px-4 py-3" />
@@ -291,6 +293,48 @@ function UsersPage() {
                     {user.first_name} {user.last_name}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{user.username}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    {user.password ? (
+                      <div className="flex items-center gap-2">
+                        <span className="num text-foreground">
+                          {shown[user.id] ? user.password : "••••••••"}
+                        </span>
+                        <button
+                          type="button"
+                          className="text-muted-foreground hover:text-foreground"
+                          aria-label={
+                            shown[user.id]
+                              ? `Hide password for ${user.username}`
+                              : `Show password for ${user.username}`
+                          }
+                          onClick={() =>
+                            setShown((prev) => ({ ...prev, [user.id]: !prev[user.id] }))
+                          }
+                        >
+                          {shown[user.id] ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                        <button
+                          type="button"
+                          className="text-muted-foreground hover:text-foreground"
+                          aria-label={`Copy password for ${user.username}`}
+                          onClick={() => {
+                            navigator.clipboard
+                              .writeText(user.password ?? "")
+                              .then(() => toast.success("Copied"))
+                              .catch(() => toast.error("Couldn't copy"));
+                          }}
+                        >
+                          <Copy className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </td>
                   <td className="px-4 py-3 text-muted-foreground capitalize">{user.role}</td>
                   <td className="px-4 py-3">
                     <span
@@ -340,7 +384,7 @@ function UsersPage() {
               ))}
               {(users ?? []).length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
+                  <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
                     No users yet.
                   </td>
                 </tr>
