@@ -127,6 +127,39 @@ export const createAppUser = createServerFn({ method: "POST" })
     return { id: created.user.id, username, initials };
   });
 
+export const resetUserPassword = createServerFn({ method: "POST" })
+  .middleware([requireAppAuth])
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        id: z.string().uuid(),
+        password: z.string().min(8, "Password must be at least 8 characters").max(72),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (!isAdmin) throw new Error("Only admins can reset passwords");
+
+    const { data: profile } = await context.supabase
+      .from("profiles")
+      .select("username")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (!profile) throw new Error("That account no longer exists.");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(data.id, {
+      password: data.password,
+    });
+    if (error) throw new Error(error.message);
+
+    return { username: profile.username };
+  });
+
 export const setUserActive = createServerFn({ method: "POST" })
   .middleware([requireAppAuth])
   .inputValidator((input: unknown) =>

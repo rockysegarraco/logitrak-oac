@@ -3,12 +3,13 @@ import { queryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/r
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ChevronDown, Copy, RefreshCw } from "lucide-react";
+import { ChevronDown, Copy, KeyRound, RefreshCw } from "lucide-react";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
 import {
   createAppUser,
   getMe,
   listUsers,
+  resetUserPassword,
   setUserActive,
   type AppUser,
 } from "@/lib/users.functions";
@@ -43,6 +44,8 @@ function UsersPage() {
   const { data: me } = useQuery(meQuery);
   const create = useServerFn(createAppUser);
   const setActive = useServerFn(setUserActive);
+  const resetPassword = useServerFn(resetUserPassword);
+  const [reset, setReset] = useState<{ username: string; password: string } | null>(null);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -82,6 +85,15 @@ function UsersPage() {
     onSuccess: async (_result, vars) => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
       toast.success(vars.is_active ? "Access restored" : "Access removed");
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
+  const resetMutation = useMutation({
+    mutationFn: (vars: { id: string; password: string }) => resetPassword({ data: vars }),
+    onSuccess: (result, vars) => {
+      setReset({ username: result.username, password: vars.password });
+      toast.success("Password reset");
     },
     onError: (err: Error) => toast.error(err.message),
   });
@@ -232,6 +244,35 @@ function UsersPage() {
           ) : null}
         </form>
 
+        <div>
+        {reset ? (
+          <div className="mb-4 rounded-2xl bg-muted p-4 text-sm">
+            <p className="font-semibold text-foreground">New password set</p>
+            <p className="mt-1 text-muted-foreground">
+              Username: <span className="font-medium text-foreground">{reset.username}</span>
+            </p>
+            <p className="text-muted-foreground">
+              Password: <span className="num font-medium text-foreground">{reset.password}</span>
+            </p>
+            <div className="mt-3 flex items-center gap-2">
+              <TwButton
+                variant="secondary"
+                onClick={() => {
+                  navigator.clipboard
+                    .writeText(`${reset.username} / ${reset.password}`)
+                    .then(() => toast.success("Copied"))
+                    .catch(() => toast.error("Couldn't copy"));
+                }}
+              >
+                <Copy className="h-4 w-4" />
+                Copy
+              </TwButton>
+              <TwButton variant="secondary" onClick={() => setReset(null)}>
+                Done
+              </TwButton>
+            </div>
+          </div>
+        ) : null}
         <div className="overflow-hidden rounded-2xl bg-card shadow-sm ring-1 ring-border">
           <table className="w-full divide-y divide-border text-sm">
             <thead>
@@ -263,7 +304,20 @@ function UsersPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right whitespace-nowrap">
-                    {me?.profile?.id === user.id ? null : (
+                    <div className="flex items-center justify-end gap-2">
+                      <TwButton
+                        variant="secondary"
+                        className="whitespace-nowrap"
+                        disabled={resetMutation.isPending}
+                        aria-label={`Reset password for ${user.username}`}
+                        onClick={() =>
+                          resetMutation.mutate({ id: user.id, password: generatePassword() })
+                        }
+                      >
+                        <KeyRound className="h-4 w-4" />
+                        Reset password
+                      </TwButton>
+                      {me?.profile?.id === user.id ? null : (
                       <TwButton
                         variant="secondary"
                         className="whitespace-nowrap"
@@ -279,7 +333,8 @@ function UsersPage() {
                       >
                         {user.is_active ? "Remove access" : "Restore"}
                       </TwButton>
-                    )}
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -292,6 +347,7 @@ function UsersPage() {
               ) : null}
             </tbody>
           </table>
+        </div>
         </div>
       </div>
     </main>
