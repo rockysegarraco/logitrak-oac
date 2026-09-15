@@ -89,6 +89,15 @@ function UsersPage() {
     onError: (err: Error) => toast.error(err.message),
   });
 
+  const resetMutation = useMutation({
+    mutationFn: (vars: { id: string; password: string }) => resetPassword({ data: vars }),
+    onSuccess: (result, vars) => {
+      setReset({ username: result.username, password: vars.password });
+      toast.success("Password reset");
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
   if (me && !me.isAdmin) {
     return (
       <main className="px-4 py-16 text-center sm:px-6 lg:px-8">
