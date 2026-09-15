@@ -90,6 +90,15 @@ function UsersPage() {
     onError: (err: Error) => toast.error(err.message),
   });
 
+  const saveMutation = useMutation({
+    mutationFn: (vars: { id: string; password: string }) => savePassword({ data: vars }),
+    onSuccess: async (_result, vars) => {
+      setDraft((prev) => ({ ...prev, [vars.id]: "" }));
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success("Password saved");
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
 
   if (me && !me.isAdmin) {
     return (
