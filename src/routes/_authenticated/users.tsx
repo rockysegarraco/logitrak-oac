@@ -44,6 +44,8 @@ function UsersPage() {
   const { data: me } = useQuery(meQuery);
   const create = useServerFn(createAppUser);
   const setActive = useServerFn(setUserActive);
+  const resetPassword = useServerFn(resetUserPassword);
+  const [reset, setReset] = useState<{ username: string; password: string } | null>(null);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
