@@ -46,6 +46,7 @@ function UsersPage() {
   const setActive = useServerFn(setUserActive);
   const resetPassword = useServerFn(resetUserPassword);
   const [reset, setReset] = useState<{ username: string; password: string } | null>(null);
+  const [shown, setShown] = useState<Record<string, boolean>>({});
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
