@@ -53,9 +53,15 @@ export const listUsers = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     const { data: roles } = await context.supabase.from("user_roles").select("user_id, role");
     const roleFor = new Map((roles ?? []).map((r) => [r.user_id, r.role]));
+    // Only admins can read this table (enforced by access rules); others get nothing.
+    const { data: creds } = await context.supabase
+      .from("user_credentials")
+      .select("user_id, password");
+    const passwordFor = new Map((creds ?? []).map((c) => [c.user_id, c.password]));
     return (profiles ?? []).map((p) => ({
       ...p,
       role: (roleFor.get(p.id) ?? "user") as "admin" | "user",
+      password: passwordFor.get(p.id) ?? null,
     })) as AppUser[];
   });
 
