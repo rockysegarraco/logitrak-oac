@@ -313,18 +313,6 @@ function UsersPage() {
                   </td>
                   <td className="px-4 py-3 text-right whitespace-nowrap">
                     <div className="flex items-center justify-end gap-2">
-                      <TwButton
-                        variant="secondary"
-                        className="whitespace-nowrap"
-                        disabled={resetMutation.isPending}
-                        aria-label={`Reset password for ${user.username}`}
-                        onClick={() =>
-                          resetMutation.mutate({ id: user.id, password: generatePassword() })
-                        }
-                      >
-                        <KeyRound className="h-4 w-4" />
-                        Reset password
-                      </TwButton>
                       {me?.profile?.id === user.id ? null : (
                       <TwButton
                         variant="secondary"
