@@ -238,34 +238,6 @@ function UsersPage() {
         </form>
 
         <div>
-        {reset ? (
-          <div className="mb-4 rounded-2xl bg-muted p-4 text-sm">
-            <p className="font-semibold text-foreground">New password set</p>
-            <p className="mt-1 text-muted-foreground">
-              Username: <span className="font-medium text-foreground">{reset.username}</span>
-            </p>
-            <p className="text-muted-foreground">
-              Password: <span className="num font-medium text-foreground">{reset.password}</span>
-            </p>
-            <div className="mt-3 flex items-center gap-2">
-              <TwButton
-                variant="secondary"
-                onClick={() => {
-                  navigator.clipboard
-                    .writeText(`${reset.username} / ${reset.password}`)
-                    .then(() => toast.success("Copied"))
-                    .catch(() => toast.error("Couldn't copy"));
-                }}
-              >
-                <Copy className="h-4 w-4" />
-                Copy
-              </TwButton>
-              <TwButton variant="secondary" onClick={() => setReset(null)}>
-                Done
-              </TwButton>
-            </div>
-          </div>
-        ) : null}
         <div className="overflow-hidden rounded-2xl bg-card shadow-sm ring-1 ring-border">
           <table className="w-full divide-y divide-border text-sm">
             <thead>
