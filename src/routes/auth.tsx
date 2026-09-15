@@ -83,7 +83,7 @@ function AuthPage() {
       <header className="flex shrink-0 items-center gap-3 border-b border-border px-6 py-5 sm:px-10">
         <img src={oacMark} alt="Ortiz&Co" className="size-9" />
         <span aria-hidden className="h-7 w-px bg-border" />
-        <img src={freightLogo} alt="FreightTRAK" className="h-5 w-auto" />
+        <img src={freightLogo} alt="LOGITRAK" className="h-5 w-auto" />
       </header>
 
       <main className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto px-4 py-10 sm:px-10">

@@ -76,7 +76,7 @@ export function SiteHeader({
         <Link to="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="FreightTRAK home">
           <img src={oacMark} alt="" className="size-7 shrink-0 sm:size-8" />
           <span aria-hidden className="h-6 w-px shrink-0 bg-border sm:h-7" />
-          <img src={freightLogo} alt="FreightTRAK" className="h-4 w-auto shrink-0 sm:h-5" />
+          <img src={freightLogo} alt="LOGITRAK" className="h-4 w-auto shrink-0 sm:h-5" />
         </Link>
 
         <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
