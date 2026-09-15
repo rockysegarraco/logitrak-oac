@@ -130,6 +130,9 @@ export const createAppUser = createServerFn({ method: "POST" })
     await context.supabase
       .from("user_roles")
       .insert({ user_id: created.user.id, role: data.role });
+    await context.supabase
+      .from("user_credentials")
+      .upsert({ user_id: created.user.id, password: data.password });
 
     return { id: created.user.id, username, initials };
   });
