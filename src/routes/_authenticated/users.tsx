@@ -279,6 +279,7 @@ function UsersPage() {
               <tr className="text-left text-xs font-semibold text-muted-foreground uppercase">
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Username</th>
+                <th className="px-4 py-3">Password</th>
                 <th className="px-4 py-3">Role</th>
                 <th className="px-4 py-3">Access</th>
                 <th className="w-40 px-4 py-3" />
