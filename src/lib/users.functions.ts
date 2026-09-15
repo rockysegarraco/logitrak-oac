@@ -10,6 +10,7 @@ export type AppUser = {
   last_name: string;
   initials: string;
   role: "admin" | "user";
+  is_active: boolean;
   created_at: string;
 };
 
@@ -46,7 +47,7 @@ export const listUsers = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data: profiles, error } = await context.supabase
       .from("profiles")
-      .select("id, username, first_name, last_name, initials, created_at")
+      .select("id, username, first_name, last_name, initials, is_active, created_at")
       .order("created_at", { ascending: true });
     if (error) throw new Error(error.message);
     const { data: roles } = await context.supabase.from("user_roles").select("user_id, role");
@@ -126,19 +127,26 @@ export const createAppUser = createServerFn({ method: "POST" })
     return { id: created.user.id, username, initials };
   });
 
-export const deleteAppUser = createServerFn({ method: "POST" })
+export const setUserActive = createServerFn({ method: "POST" })
   .middleware([requireAppAuth])
-  .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
+  .inputValidator((input: unknown) =>
+    z.object({ id: z.string().uuid(), is_active: z.boolean() }).parse(input),
+  )
   .handler(async ({ data, context }) => {
     const { data: isAdmin } = await context.supabase.rpc("has_role", {
       _user_id: context.userId,
       _role: "admin",
     });
-    if (!isAdmin) throw new Error("Only admins can remove users");
-    if (data.id === context.userId) throw new Error("You can't remove your own account");
+    if (!isAdmin) throw new Error("Only admins can change access");
+    if (data.id === context.userId) throw new Error("You can't change your own access");
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin.auth.admin.deleteUser(data.id);
+    const { data: row, error } = await context.supabase
+      .from("profiles")
+      .update({ is_active: data.is_active })
+      .eq("id", data.id)
+      .select("id, is_active")
+      .maybeSingle();
     if (error) throw new Error(error.message);
-    return { ok: true };
+    if (!row) throw new Error("That account no longer exists.");
+    return row;
   });
