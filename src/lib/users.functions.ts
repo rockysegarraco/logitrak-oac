@@ -47,7 +47,7 @@ export const listUsers = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data: profiles, error } = await context.supabase
       .from("profiles")
-      .select("id, username, first_name, last_name, initials, created_at")
+      .select("id, username, first_name, last_name, initials, is_active, created_at")
       .order("created_at", { ascending: true });
     if (error) throw new Error(error.message);
     const { data: roles } = await context.supabase.from("user_roles").select("user_id, role");
