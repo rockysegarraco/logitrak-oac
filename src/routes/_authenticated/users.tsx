@@ -9,6 +9,7 @@ import {
   createAppUser,
   getMe,
   listUsers,
+  saveUserPassword,
   setUserActive,
   type AppUser,
 } from "@/lib/users.functions";
@@ -44,6 +45,8 @@ function UsersPage() {
   const create = useServerFn(createAppUser);
   const setActive = useServerFn(setUserActive);
   const [shown, setShown] = useState<Record<string, boolean>>({});
+  const [draft, setDraft] = useState<Record<string, string>>({});
+  const savePassword = useServerFn(saveUserPassword);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -87,6 +90,15 @@ function UsersPage() {
     onError: (err: Error) => toast.error(err.message),
   });
 
+  const saveMutation = useMutation({
+    mutationFn: (vars: { id: string; password: string }) => savePassword({ data: vars }),
+    onSuccess: async (_result, vars) => {
+      setDraft((prev) => ({ ...prev, [vars.id]: "" }));
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success("Password saved");
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
 
   if (me && !me.isAdmin) {
     return (
@@ -293,7 +305,30 @@ function UsersPage() {
                         </button>
                       </div>
                     ) : (
-                      <span className="text-muted-foreground">—</span>
+                      <div className="flex items-center gap-2">
+                        <TwInput
+                          className="h-8 w-36"
+                          placeholder="Enter password"
+                          aria-label={`Password for ${user.username}`}
+                          value={draft[user.id] ?? ""}
+                          onChange={(event) =>
+                            setDraft((prev) => ({ ...prev, [user.id]: event.target.value }))
+                          }
+                        />
+                        <TwButton
+                          variant="secondary"
+                          className="whitespace-nowrap"
+                          disabled={saveMutation.isPending || !(draft[user.id] ?? "").trim()}
+                          onClick={() =>
+                            saveMutation.mutate({
+                              id: user.id,
+                              password: (draft[user.id] ?? "").trim(),
+                            })
+                          }
+                        >
+                          Save
+                        </TwButton>
+                      </div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground capitalize">{user.role}</td>
