@@ -239,7 +239,8 @@ function UsersPage() {
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Username</th>
                 <th className="px-4 py-3">Role</th>
-                <th className="w-16 px-4 py-3" />
+                <th className="px-4 py-3">Access</th>
+                <th className="w-28 px-4 py-3" />
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -250,28 +251,40 @@ function UsersPage() {
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{user.username}</td>
                   <td className="px-4 py-3 text-muted-foreground capitalize">{user.role}</td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                        user.is_active
+                          ? "bg-muted text-foreground"
+                          : "bg-destructive/10 text-destructive"
+                      }`}
+                    >
+                      {user.is_active ? "Active" : "No access"}
+                    </span>
+                  </td>
                   <td className="px-4 py-3 text-right">
                     {me?.profile?.id === user.id ? null : (
-                      <button
-                        type="button"
-                        aria-label={`Remove ${user.username}`}
-                        className="text-muted-foreground transition-colors hover:text-destructive"
-                        disabled={deleteMutation.isPending}
-                        onClick={() => {
-                          if (confirm(`Remove ${user.username}? This cannot be undone.`)) {
-                            deleteMutation.mutate(user.id);
-                          }
-                        }}
+                      <TwButton
+                        variant="secondary"
+                        disabled={accessMutation.isPending}
+                        aria-label={
+                          user.is_active
+                            ? `Remove access for ${user.username}`
+                            : `Restore access for ${user.username}`
+                        }
+                        onClick={() =>
+                          accessMutation.mutate({ id: user.id, is_active: !user.is_active })
+                        }
                       >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                        {user.is_active ? "Remove access" : "Restore"}
+                      </TwButton>
                     )}
                   </td>
                 </tr>
               ))}
               {(users ?? []).length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">
+                  <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
                     No users yet.
                   </td>
                 </tr>
