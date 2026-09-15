@@ -9,6 +9,7 @@ import {
   createAppUser,
   getMe,
   listUsers,
+  saveUserPassword,
   setUserActive,
   type AppUser,
 } from "@/lib/users.functions";
