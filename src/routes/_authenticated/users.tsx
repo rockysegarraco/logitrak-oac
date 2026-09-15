@@ -3,12 +3,13 @@ import { queryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/r
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ChevronDown, Copy, RefreshCw } from "lucide-react";
+import { ChevronDown, Copy, KeyRound, RefreshCw } from "lucide-react";
 import { TwButton, TwInput, TwLabel } from "@/components/ui/tw";
 import {
   createAppUser,
   getMe,
   listUsers,
+  resetUserPassword,
   setUserActive,
   type AppUser,
 } from "@/lib/users.functions";
