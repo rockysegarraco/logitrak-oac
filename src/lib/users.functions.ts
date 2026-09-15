@@ -70,17 +70,44 @@ export const createAppUser = createServerFn({ method: "POST" })
     const username = normalizeUsername(data.username);
     if (username.length < 3) throw new Error("Username is not valid");
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
+    // Sign the account up with the public key so this works on any host,
+    // without needing the private service-role key.
+    const supabaseUrl = process.env["SUPABASE_URL"];
+    const publishableKey = process.env["SUPABASE_PUBLISHABLE_KEY"];
+    if (!supabaseUrl || !publishableKey) throw new Error("Backend is not configured.");
+
+    const { createClient } = await import("@supabase/supabase-js");
+    const signupClient = createClient(supabaseUrl, publishableKey, {
+      global: {
+        fetch: (input, init) => {
+          const headers = new Headers(init?.headers);
+          if (headers.get("Authorization") === `Bearer ${publishableKey}`) {
+            headers.delete("Authorization");
+          }
+          headers.set("apikey", publishableKey);
+          return fetch(input, { ...init, headers });
+        },
+      },
+      auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+    });
+
+    const { data: created, error } = await signupClient.auth.signUp({
       email: usernameToEmail(username),
       password: data.password,
-      email_confirm: true,
-      user_metadata: { username, first_name: data.first_name, last_name: data.last_name },
+      options: {
+        data: { username, first_name: data.first_name, last_name: data.last_name },
+      },
     });
-    if (error || !created.user) throw new Error(error?.message ?? "Could not create the account");
+    if (error || !created.user) {
+      throw new Error(
+        error?.message?.toLowerCase().includes("already")
+          ? "That username is already taken"
+          : (error?.message ?? "Could not create the account"),
+      );
+    }
 
     const initials = initialsFrom(data.first_name, data.last_name, username);
-    const { error: profileError } = await supabaseAdmin.from("profiles").insert({
+    const { error: profileError } = await context.supabase.from("profiles").insert({
       id: created.user.id,
       username,
       first_name: data.first_name,
@@ -88,12 +115,13 @@ export const createAppUser = createServerFn({ method: "POST" })
       initials,
     });
     if (profileError) {
-      await supabaseAdmin.auth.admin.deleteUser(created.user.id);
       throw new Error(
         profileError.code === "23505" ? "That username is already taken" : profileError.message,
       );
     }
-    await supabaseAdmin.from("user_roles").insert({ user_id: created.user.id, role: data.role });
+    await context.supabase
+      .from("user_roles")
+      .insert({ user_id: created.user.id, role: data.role });
 
     return { id: created.user.id, username, initials };
   });
