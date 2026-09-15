@@ -292,6 +292,48 @@ function UsersPage() {
                     {user.first_name} {user.last_name}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{user.username}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    {user.password ? (
+                      <div className="flex items-center gap-2">
+                        <span className="num text-foreground">
+                          {shown[user.id] ? user.password : "••••••••"}
+                        </span>
+                        <button
+                          type="button"
+                          className="text-muted-foreground hover:text-foreground"
+                          aria-label={
+                            shown[user.id]
+                              ? `Hide password for ${user.username}`
+                              : `Show password for ${user.username}`
+                          }
+                          onClick={() =>
+                            setShown((prev) => ({ ...prev, [user.id]: !prev[user.id] }))
+                          }
+                        >
+                          {shown[user.id] ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                        <button
+                          type="button"
+                          className="text-muted-foreground hover:text-foreground"
+                          aria-label={`Copy password for ${user.username}`}
+                          onClick={() => {
+                            navigator.clipboard
+                              .writeText(user.password ?? "")
+                              .then(() => toast.success("Copied"))
+                              .catch(() => toast.error("Couldn't copy"));
+                          }}
+                        >
+                          <Copy className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </td>
                   <td className="px-4 py-3 text-muted-foreground capitalize">{user.role}</td>
                   <td className="px-4 py-3">
                     <span
