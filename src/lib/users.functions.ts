@@ -126,19 +126,26 @@ export const createAppUser = createServerFn({ method: "POST" })
     return { id: created.user.id, username, initials };
   });
 
-export const deleteAppUser = createServerFn({ method: "POST" })
+export const setUserActive = createServerFn({ method: "POST" })
   .middleware([requireAppAuth])
-  .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
+  .inputValidator((input: unknown) =>
+    z.object({ id: z.string().uuid(), is_active: z.boolean() }).parse(input),
+  )
   .handler(async ({ data, context }) => {
     const { data: isAdmin } = await context.supabase.rpc("has_role", {
       _user_id: context.userId,
       _role: "admin",
     });
-    if (!isAdmin) throw new Error("Only admins can remove users");
-    if (data.id === context.userId) throw new Error("You can't remove your own account");
+    if (!isAdmin) throw new Error("Only admins can change access");
+    if (data.id === context.userId) throw new Error("You can't change your own access");
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin.auth.admin.deleteUser(data.id);
+    const { data: row, error } = await context.supabase
+      .from("profiles")
+      .update({ is_active: data.is_active })
+      .eq("id", data.id)
+      .select("id, is_active")
+      .maybeSingle();
     if (error) throw new Error(error.message);
-    return { ok: true };
+    if (!row) throw new Error("That account no longer exists.");
+    return row;
   });
