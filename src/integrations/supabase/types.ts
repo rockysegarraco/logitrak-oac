@@ -203,6 +203,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_app_member: { Args: never; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "user"
