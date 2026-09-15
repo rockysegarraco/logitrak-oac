@@ -10,6 +10,7 @@ export type AppUser = {
   last_name: string;
   initials: string;
   role: "admin" | "user";
+  is_active: boolean;
   created_at: string;
 };
 
