@@ -167,6 +167,10 @@ export const resetUserPassword = createServerFn({ method: "POST" })
     });
     if (error) throw new Error(error.message);
 
+    await context.supabase
+      .from("user_credentials")
+      .upsert({ user_id: data.id, password: data.password });
+
     return { username: profile.username };
   });
 
