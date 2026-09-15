@@ -77,11 +77,11 @@ function UsersPage() {
     onError: (err: Error) => setError(err.message),
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => remove({ data: { id } }),
-    onSuccess: async () => {
+  const accessMutation = useMutation({
+    mutationFn: (vars: { id: string; is_active: boolean }) => setActive({ data: vars }),
+    onSuccess: async (_result, vars) => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
-      toast.success("User removed");
+      toast.success(vars.is_active ? "Access restored" : "Access removed");
     },
     onError: (err: Error) => toast.error(err.message),
   });
