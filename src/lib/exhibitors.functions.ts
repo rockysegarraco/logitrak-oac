@@ -5,7 +5,7 @@ import { z } from "zod";
 const exhibitorInput = z.object({
   booth_number: z.string().trim().max(50).default(""),
   show_name: z.string().trim().min(1, "Show is required").max(200),
-  exhibitor_name: z.string().trim().min(1, "Exhibitor name is required").max(200),
+  exhibitor_name: z.string().trim().max(200).default(""),
   pro_number: z.string().trim().max(100).default(""),
   invoice_number: z.string().trim().max(100).default(""),
   city: z.string().trim().max(120).default(""),

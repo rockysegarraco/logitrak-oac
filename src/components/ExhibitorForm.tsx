@@ -31,10 +31,7 @@ type Props = {
   deletePending?: boolean;
 };
 
-const OPTIONAL_FIELDS: (keyof ExhibitorInput)[] = ["invoice_number", "delivery_date"];
-const REQUIRED_FIELDS: (keyof ExhibitorInput)[] = EXHIBITOR_FIELDS.map((field) => field.key).filter(
-  (key) => !OPTIONAL_FIELDS.includes(key),
-) as (keyof ExhibitorInput)[];
+const REQUIRED_FIELDS: (keyof ExhibitorInput)[] = ["show_name"];
 
 const US_STATES = ["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
 
@@ -108,7 +105,7 @@ export function ExhibitorForm({
       const message = fieldError(field.key, values[field.key] ?? "");
       if (message) next[field.key] = message;
     }
-    if (!next.exhibitor_name && !next.show_name && !next.booth_number) {
+    if (!next.show_name && (values.exhibitor_name ?? "").trim()) {
       const key = (v: string) => v.trim().toLowerCase();
       const duplicate = (existing ?? []).find(
         (row) =>
