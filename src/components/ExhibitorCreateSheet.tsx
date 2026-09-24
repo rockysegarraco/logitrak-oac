@@ -12,6 +12,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
+const DRAFT_KEY = "freighttrak:create-draft";
+
 export function ExhibitorCreateSheet({
   open,
   onOpenChange,
