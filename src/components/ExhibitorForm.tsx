@@ -22,6 +22,8 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   initialValues: ExhibitorInput;
+  /** When set, unsaved values are kept in sessionStorage under this key. */
+  draftKey?: string;
   submitLabel: string;
   pending?: boolean;
   currentId?: string | undefined;
@@ -46,6 +48,7 @@ export function ExhibitorForm({
   onCancel,
   onDelete,
   deletePending,
+  draftKey,
 }: Props) {
 
   const [values, setValues] = useState<ExhibitorInput>(() =>
@@ -68,6 +71,25 @@ export function ExhibitorForm({
   });
   const options = directory ?? [];
   const picked = (values.show_name ?? "").trim().length > 0;
+
+  // Restore an unsaved draft (e.g. after switching tabs or a page reload).
+  useEffect(() => {
+    if (!draftKey) return;
+    try {
+      const raw = window.sessionStorage.getItem(draftKey);
+      if (raw) {
+        setValues((prev) => ({ ...prev, ...(JSON.parse(raw) as ExhibitorInput) }));
+        setDirty(true);
+      }
+    } catch {
+      /* ignore bad draft */
+    }
+  }, [draftKey]);
+
+  useEffect(() => {
+    if (!draftKey || !dirty) return;
+    window.sessionStorage.setItem(draftKey, JSON.stringify(values));
+  }, [draftKey, dirty, values]);
 
   useEffect(() => {
     if (!dirty) return;
@@ -328,6 +350,7 @@ export function ExhibitorForm({
               onClick={() => {
                 setConfirmLeave(false);
                 setDirty(false);
+                if (draftKey) window.sessionStorage.removeItem(draftKey);
                 onCancel();
               }}
             >
