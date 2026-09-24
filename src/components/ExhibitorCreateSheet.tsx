@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -34,13 +35,31 @@ export function ExhibitorCreateSheet({
     },
     onError: (error: Error) => toast.error(error.message),
   });
+  const allowCloseRef = useRef(false);
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet
+      open={open}
+      onOpenChange={(next) => {
+        // Only close via Cancel, the X button, or a successful save —
+        // never from outside clicks/focus changes (Safari fires these).
+        if (next || allowCloseRef.current) {
+          allowCloseRef.current = false;
+          onOpenChange(next);
+        }
+      }}
+    >
       <SheetContent
         id="create-exhibitor-panel"
         side="right"
+        onPointerDownCapture={(e) => {
+          const target = e.target as HTMLElement;
+          const btn = target.closest("button");
+          if (btn && btn.parentElement === e.currentTarget) allowCloseRef.current = true;
+        }}
         onInteractOutside={(e) => e.preventDefault()}
+        onPointerDownOutside={(e) => e.preventDefault()}
+        onFocusOutside={(e) => e.preventDefault()}
         className="flex w-full flex-col gap-0 p-0 sm:max-w-xl [&>button]:right-4 [&>button]:top-8 [&>button]:-translate-y-1/2 [&>button>svg]:h-6 [&>button>svg]:w-6"
       >
         <SheetHeader className="flex h-16 shrink-0 flex-row items-center border-b border-border bg-card px-4 py-0 sm:px-6">
