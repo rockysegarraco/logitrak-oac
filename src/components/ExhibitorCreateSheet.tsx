@@ -12,6 +12,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
+const DRAFT_KEY = "freighttrak:create-draft";
+
 export function ExhibitorCreateSheet({
   open,
   onOpenChange,
@@ -25,6 +27,7 @@ export function ExhibitorCreateSheet({
   const mutation = useMutation({
     mutationFn: (values: typeof EMPTY_EXHIBITOR) => create({ data: values }),
     onSuccess: async () => {
+      window.sessionStorage.removeItem(DRAFT_KEY);
       await queryClient.invalidateQueries({ queryKey: ["exhibitors"] });
       toast.success("Exhibitor added");
       onOpenChange(false);
@@ -37,6 +40,7 @@ export function ExhibitorCreateSheet({
       <SheetContent
         id="create-exhibitor-panel"
         side="right"
+        onInteractOutside={(e) => e.preventDefault()}
         className="flex w-full flex-col gap-0 p-0 sm:max-w-xl [&>button]:right-4 [&>button]:top-8 [&>button]:-translate-y-1/2 [&>button>svg]:h-6 [&>button>svg]:w-6"
       >
         <SheetHeader className="flex h-16 shrink-0 flex-row items-center border-b border-border bg-card px-4 py-0 sm:px-6">
@@ -47,6 +51,7 @@ export function ExhibitorCreateSheet({
         </SheetHeader>
         <div className="flex min-h-0 flex-1 flex-col">
           <ExhibitorForm
+            draftKey={DRAFT_KEY}
             initialValues={makeDefaultExhibitor()}
             submitLabel="Add Exhibitor"
             pending={mutation.isPending}
