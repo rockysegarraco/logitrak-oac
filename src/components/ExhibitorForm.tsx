@@ -31,9 +31,12 @@ type Props = {
   deletePending?: boolean;
 };
 
-const REQUIRED_FIELDS: (keyof ExhibitorInput)[] = EXHIBITOR_FIELDS.map(
-  (field) => field.key,
+const OPTIONAL_FIELDS: (keyof ExhibitorInput)[] = ["invoice_number", "delivery_date"];
+const REQUIRED_FIELDS: (keyof ExhibitorInput)[] = EXHIBITOR_FIELDS.map((field) => field.key).filter(
+  (key) => !OPTIONAL_FIELDS.includes(key),
 ) as (keyof ExhibitorInput)[];
+
+const US_STATES = ["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
 
 
 
@@ -92,6 +95,7 @@ export function ExhibitorForm({
 
   const fieldError = (key: keyof ExhibitorInput, raw: string) => {
     const trimmed = raw.trim();
+    if (!REQUIRED_FIELDS.includes(key)) return null;
     const label = EXHIBITOR_FIELDS.find((f) => f.key === key)?.label ?? "This field";
     if (!trimmed) return `${label} is required.`;
     if (raw.length > 0 && !trimmed) return `${label} can't be only spaces.`;
@@ -221,7 +225,31 @@ export function ExhibitorForm({
                 {field.label}
                 {required ? <span className="ml-1 text-destructive">*</span> : null}
               </TwLabel>
-              <div className="mt-2">
+              <div className="relative mt-2">
+                {field.key === "state" ? (
+                  <>
+                    <select
+                      id="state"
+                      value={values.state ?? ""}
+                      disabled={!picked}
+                      aria-invalid={error ? true : undefined}
+                      onChange={(event) => set("state", event.target.value)}
+                      className={cn(
+                        "block h-10 w-full cursor-pointer appearance-none rounded-full border border-input bg-card px-4 pr-10 text-sm uppercase text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30",
+                        error && "border-destructive",
+                      )}
+                    >
+                      <option value="">Select a state...</option>
+                      {values.state && !US_STATES.includes(values.state) ? (
+                        <option value={values.state}>{values.state}</option>
+                      ) : null}
+                      {US_STATES.map((st) => (
+                        <option key={st} value={st}>{st}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  </>
+                ) : (
                 <TwInput
                   id={field.key}
                   value={values[field.key]}
@@ -248,6 +276,7 @@ export function ExhibitorForm({
                   }}
 
                 />
+                )}
               </div>
               {error ? (
                 <p id={`${field.key}-error`} className="mt-1 text-sm text-destructive">

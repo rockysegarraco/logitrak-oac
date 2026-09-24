@@ -30,6 +30,8 @@ export const Route = createFileRoute("/_authenticated/users")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:image", content: "https://logitrak-oac.lovable.app/og-image.png" },
+      { name: "twitter:image", content: "https://logitrak-oac.lovable.app/og-image.png" },
     ],
   }),
   component: UsersPage,
