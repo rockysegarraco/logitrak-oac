@@ -1,4 +1,4 @@
 # Roadmap
-- [ ] Link preview image: logo centered on white
-- [ ] Invoice # and Delivery Date optional
-- [ ] US state dropdown in form
+- [x] Link preview image: logo centered on white
+- [x] Invoice # and Delivery Date optional
+- [x] US state dropdown in form
