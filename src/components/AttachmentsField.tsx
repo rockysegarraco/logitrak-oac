@@ -1,18 +1,22 @@
-import { useRef, useState } from "react";
-import { Loader2, Paperclip, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ExternalLink, Loader2, Paperclip, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import type { Attachment } from "@/lib/exhibitors.functions";
 import { TwLabel } from "@/components/ui/tw";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 const BUCKET = "exhibitor-attachments";
 const MAX_BYTES = 20 * 1024 * 1024;
+const IMAGE_RE = /\.(png|jpe?g|gif|webp|bmp|svg|avif)$/i;
 
 function formatSize(bytes?: number) {
   if (!bytes) return "";
   if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
+
+const isImage = (a: Attachment) => IMAGE_RE.test(a.name) || IMAGE_RE.test(a.path);
 
 export function AttachmentsField({
   value,
@@ -25,6 +29,28 @@ export function AttachmentsField({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [urls, setUrls] = useState<Record<string, string>>({});
+  const [viewing, setViewing] = useState<Attachment | null>(null);
+
+  useEffect(() => {
+    const missing = value.filter((a) => !urls[a.path]).map((a) => a.path);
+    if (missing.length === 0) return;
+    let cancelled = false;
+    supabase.storage
+      .from(BUCKET)
+      .createSignedUrls(missing, 3600)
+      .then(({ data }) => {
+        if (cancelled || !data) return;
+        setUrls((prev) => {
+          const next = { ...prev };
+          for (const d of data) if (d.path && d.signedUrl) next[d.path] = d.signedUrl;
+          return next;
+        });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [value, urls]);
 
   const upload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -46,14 +72,20 @@ export function AttachmentsField({
     if (inputRef.current) inputRef.current.value = "";
   };
 
-  const open = async (item: Attachment) => {
-    const { data, error } = await supabase.storage.from(BUCKET).createSignedUrl(item.path, 300);
-    if (error || !data) {
-      toast.error("Couldn't open that file.");
+  const open = (item: Attachment) => {
+    if (isImage(item)) {
+      setViewing(item);
       return;
     }
-    window.open(data.signedUrl, "_blank", "noopener");
+    const url = urls[item.path];
+    if (!url) {
+      toast.error("Still loading that file, try again in a moment.");
+      return;
+    }
+    window.open(url, "_blank", "noopener");
   };
+
+  const viewingUrl = viewing ? urls[viewing.path] : undefined;
 
   return (
     <div>
@@ -78,32 +110,70 @@ export function AttachmentsField({
       </button>
       {value.length > 0 ? (
         <ul className="mt-3 space-y-2">
-          {value.map((item) => (
-            <li
-              key={item.path}
-              className="flex items-center gap-3 rounded-full border border-border bg-card px-4 py-2 text-sm"
-            >
-              <Paperclip className="h-4 w-4 shrink-0 text-muted-foreground" />
-              <button
-                type="button"
-                onClick={() => open(item)}
-                className="min-w-0 flex-1 truncate text-left text-foreground underline-offset-2 hover:underline"
+          {value.map((item) => {
+            const url = urls[item.path];
+            const img = isImage(item);
+            return (
+              <li
+                key={item.path}
+                className="flex items-center gap-3 rounded-2xl border border-border bg-card px-3 py-2 text-sm"
               >
-                {item.name}
-              </button>
-              <span className="shrink-0 text-xs text-muted-foreground">{formatSize(item.size)}</span>
-              <button
-                type="button"
-                aria-label={`Remove ${item.name}`}
-                onClick={() => onChange(value.filter((a) => a.path !== item.path))}
-                className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </li>
-          ))}
+                <button
+                  type="button"
+                  onClick={() => open(item)}
+                  aria-label={`View ${item.name}`}
+                  className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-muted"
+                >
+                  {img && url ? (
+                    <img src={url} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    <Paperclip className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => open(item)}
+                  className="min-w-0 flex-1 truncate text-left text-foreground underline-offset-2 hover:underline"
+                >
+                  {item.name}
+                </button>
+                <span className="shrink-0 text-xs text-muted-foreground">{formatSize(item.size)}</span>
+                <button
+                  type="button"
+                  aria-label={`Remove ${item.name}`}
+                  onClick={() => onChange(value.filter((a) => a.path !== item.path))}
+                  className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </li>
+            );
+          })}
         </ul>
       ) : null}
+
+      <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
+        <DialogContent className="max-w-4xl">
+          <DialogTitle className="truncate pr-8">{viewing?.name}</DialogTitle>
+          {viewingUrl ? (
+            <>
+              <img src={viewingUrl} alt={viewing?.name ?? ""} className="max-h-[75vh] w-full rounded-xl object-contain" />
+              <a
+                href={viewingUrl}
+                target="_blank"
+                rel="noopener"
+                className="inline-flex w-fit items-center gap-2 rounded-full border border-input px-4 py-2 text-sm font-medium text-foreground hover:bg-muted"
+              >
+                <ExternalLink className="h-4 w-4" /> Open full size
+              </a>
+            </>
+          ) : (
+            <div className="flex h-40 items-center justify-center">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
