@@ -58,6 +58,14 @@ export function ExhibitorCreateSheet({
           const btn = target.closest("button");
           if (btn && btn.parentElement === e.currentTarget) allowCloseRef.current = true;
         }}
+        onKeyDownCapture={(e) => {
+          if (e.key !== "Enter" && e.key !== " ") return;
+          const btn = (e.target as HTMLElement).closest("button");
+          if (btn && btn.parentElement === e.currentTarget) allowCloseRef.current = true;
+        }}
+        onEscapeKeyDown={() => {
+          allowCloseRef.current = true;
+        }}
         onInteractOutside={(e) => e.preventDefault()}
         onPointerDownOutside={(e) => e.preventDefault()}
         onFocusOutside={(e) => e.preventDefault()}
