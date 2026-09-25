@@ -22,10 +22,12 @@ export function AttachmentsField({
   value,
   onChange,
   disabled,
+  readOnly,
 }: {
   value: Attachment[];
-  onChange: (next: Attachment[]) => void;
+  onChange?: (next: Attachment[]) => void;
   disabled?: boolean;
+  readOnly?: boolean;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -68,7 +70,7 @@ export function AttachmentsField({
       else added.push({ path, name: file.name, size: file.size });
     }
     setUploading(false);
-    if (added.length) onChange([...value, ...added]);
+    if (added.length) onChange?.([...value, ...added]);
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -89,7 +91,8 @@ export function AttachmentsField({
 
   return (
     <div>
-      <TwLabel htmlFor="attachments">Attachments</TwLabel>
+      {!readOnly && <TwLabel htmlFor="attachments">Attachments</TwLabel>}
+      {!readOnly && (<>
       <input
         ref={inputRef}
         id="attachments"
@@ -108,8 +111,10 @@ export function AttachmentsField({
         {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Paperclip className="h-4 w-4" />}
         {uploading ? "Uploading..." : "Add attachment"}
       </button>
+      </>)}
+      {readOnly && value.length === 0 ? <p className="text-sm text-muted-foreground">No attachments on this record.</p> : null}
       {value.length > 0 ? (
-        <ul className="mt-3 space-y-2">
+        <ul className={readOnly ? "space-y-2" : "mt-3 space-y-2"}>
           {value.map((item) => {
             const url = urls[item.path];
             const img = isImage(item);
@@ -138,14 +143,14 @@ export function AttachmentsField({
                   {item.name}
                 </button>
                 <span className="shrink-0 text-xs text-muted-foreground">{formatSize(item.size)}</span>
-                <button
+                {!readOnly && <button
                   type="button"
                   aria-label={`Remove ${item.name}`}
-                  onClick={() => onChange(value.filter((a) => a.path !== item.path))}
+                  onClick={() => onChange?.(value.filter((a) => a.path !== item.path))}
                   className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
                 >
                   <X className="h-4 w-4" />
-                </button>
+                </button>}
               </li>
             );
           })}

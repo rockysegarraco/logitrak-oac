@@ -18,6 +18,7 @@ import {
   Download,
 
   MoreHorizontal,
+  Paperclip,
   Pencil,
   Plus,
   Inbox,
@@ -69,6 +70,8 @@ import { avatarTone, normalizeValue, type ValueCase } from "@/lib/text-case";
 import { useOpenExhibitorCreate } from "@/lib/exhibitor-create-context";
 import { cn } from "@/lib/utils";
 import { ExhibitorForm } from "@/components/ExhibitorForm";
+import { AttachmentsField } from "@/components/AttachmentsField";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import {
   Sheet,
   SheetContent,
@@ -266,6 +269,7 @@ function TrackerPage() {
 
 
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [viewingFiles, setViewingFiles] = useState<Exhibitor | null>(null);
   const [pendingDelete, setPendingDelete] = useState<Exhibitor | null>(null);
   const [draft, setDraft] = useState<ExhibitorInput | null>(null);
 
@@ -705,6 +709,13 @@ function TrackerPage() {
                                     >
                                       <Pencil className="mr-2 h-4 w-4" />
                                       Edit
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      className="cursor-pointer"
+                                      onSelect={() => setViewingFiles(row)}
+                                    >
+                                      <Paperclip className="mr-2 h-4 w-4" />
+                                      Files ({row.attachments?.length ?? 0})
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                       className="cursor-pointer text-destructive focus:text-destructive"
