@@ -685,13 +685,13 @@ function TrackerPage() {
 
                             </td>
                           ) : null}
-                          <td className="w-10 px-2 py-2 text-center text-sm whitespace-nowrap text-muted-foreground tabular-nums">
+                          <td className="w-14 px-2 py-2 text-center text-sm whitespace-nowrap text-muted-foreground tabular-nums">
                             <span className="inline-flex items-center gap-1">
                               {rowIndex + 1}
                               {(row.attachments?.length ?? 0) > 0 ? (
                                 <button
                                   type="button"
-                                  onClick={() => setViewingFilesId(row.id)}
+                                  onClick={() => setViewingFiles(row)}
                                   aria-label={`${row.attachments!.length} attachment${row.attachments!.length === 1 ? "" : "s"}`}
                                   className="text-foreground"
                                 >
