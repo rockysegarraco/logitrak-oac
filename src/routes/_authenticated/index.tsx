@@ -578,6 +578,7 @@ function TrackerPage() {
                           <span className="sr-only">User</span>
                         </th>
                       ) : null}
+                      <th scope="col" className="sticky top-0 z-10 w-10 bg-muted px-2 py-3.5 text-center text-xs font-semibold whitespace-nowrap text-foreground">#</th>
                       {EXHIBITOR_FIELDS.map((field, index) => {
 
                         const active = sort?.key === field.key;
@@ -645,7 +646,7 @@ function TrackerPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border bg-card">
-                    {refreshing ? <SkeletonRows rows={Math.max(pageRows.length, 5)} columns={EXHIBITOR_FIELDS.length + (isAdmin ? 2 : 1)} /> : null}
+                    {refreshing ? <SkeletonRows rows={Math.max(pageRows.length, 5)} columns={EXHIBITOR_FIELDS.length + (isAdmin ? 3 : 2)} /> : null}
                     {!refreshing && pageRows.map((row, rowIndex) => {
                       return (
                         <tr
@@ -670,6 +671,7 @@ function TrackerPage() {
 
                             </td>
                           ) : null}
+                          <td className="w-10 px-2 py-2 text-center text-sm whitespace-nowrap text-muted-foreground tabular-nums">{rowIndex + 1}</td>
                           {EXHIBITOR_FIELDS.map((field, index) => (
 
                             <td
@@ -737,7 +739,7 @@ function TrackerPage() {
                     {!refreshing && pageRows.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={EXHIBITOR_FIELDS.length + (isAdmin ? 2 : 1)}
+                          colSpan={EXHIBITOR_FIELDS.length + (isAdmin ? 3 : 2)}
                           className="px-6 py-16 text-center"
                         >
                           {exhibitors.length === 0 ? (
@@ -789,7 +791,7 @@ function TrackerPage() {
                   {rows.length > 0 ? (
                     <tfoot className="border-t-2 border-border bg-muted/60 font-semibold">
                       <tr className="divide-x divide-border">
-                        <td className="px-3 py-2.5 text-xs uppercase text-muted-foreground" colSpan={isAdmin ? 2 : 1}>
+                        <td className="px-3 py-2.5 text-xs uppercase text-muted-foreground" colSpan={isAdmin ? 3 : 2}>
                           Total
                         </td>
                         {EXHIBITOR_FIELDS.slice(1).map((field) => (
