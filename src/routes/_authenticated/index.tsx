@@ -839,6 +839,13 @@ function TrackerPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <Dialog open={!!viewingFiles} onOpenChange={(o) => !o && setViewingFiles(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogTitle>Files · {viewingFiles?.exhibitor_name || viewingFiles?.show_name}</DialogTitle>
+          <DialogDescription className="sr-only">Attachments on this record.</DialogDescription>
+          {viewingFiles ? <AttachmentsField value={viewingFiles.attachments ?? []} readOnly /> : null}
+        </DialogContent>
+      </Dialog>
       <Sheet
         open={editingId !== null}
         onOpenChange={(open) => {
