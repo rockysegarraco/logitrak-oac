@@ -49,6 +49,7 @@ import {
   updateExhibitor,
   deleteExhibitor,
   type Exhibitor,
+  type Attachment,
   type ExhibitorInput,
 } from "@/lib/exhibitors.functions";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
@@ -418,7 +419,7 @@ function TrackerPage() {
 
 
   const saveMutation = useMutation({
-    mutationFn: (values: ExhibitorInput & { id: string }) => update({ data: values }),
+    mutationFn: (values: ExhibitorInput & { id: string; attachments?: Attachment[] }) => update({ data: values }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["exhibitors"] });
       toast.success("Row updated");
@@ -845,15 +846,16 @@ function TrackerPage() {
             {draft ? (
               <ExhibitorForm
                 initialValues={draft}
+                initialAttachments={exhibitors.find((r) => r.id === editingId)?.attachments ?? []}
                 submitLabel="Save Changes"
                 currentId={editingId ?? undefined}
                 pending={saveMutation.isPending}
-                onSubmit={(values) => {
+                onSubmit={(values, attachments) => {
                   if (!editingId) return;
                   const trimmed = Object.fromEntries(
                     Object.entries(values).map(([k, v]) => [k, normalizeValue(v ?? "")]),
                   ) as ExhibitorInput;
-                  saveMutation.mutate({ ...trimmed, id: editingId });
+                  saveMutation.mutate({ ...trimmed, id: editingId, attachments });
                 }}
                 onCancel={cancelEdit}
               />
