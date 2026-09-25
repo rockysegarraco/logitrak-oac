@@ -673,6 +673,7 @@ function TrackerPage() {
                         >
                           {isAdmin ? (
                             <td className="w-[64px] min-w-[64px] px-3 py-2 text-center text-sm whitespace-nowrap">
+                              <span className="inline-flex items-center gap-1">
                               <span
                                 className={cn(
                                   "inline-flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold",
@@ -682,12 +683,6 @@ function TrackerPage() {
                               >
                                 {row.created_by_initials || "—"}
                               </span>
-
-                            </td>
-                          ) : null}
-                          <td className="w-14 px-2 py-2 text-center text-sm whitespace-nowrap text-muted-foreground tabular-nums">
-                            <span className="inline-flex items-center gap-1">
-                              {rowIndex + 1}
                               {(row.attachments?.length ?? 0) > 0 ? (
                                 <button
                                   type="button"
@@ -698,6 +693,23 @@ function TrackerPage() {
                                   <Paperclip className="h-3.5 w-3.5" />
                                 </button>
                               ) : null}
+                              </span>
+
+                            </td>
+                          ) : null}
+                          <td className="w-10 px-2 py-2 text-center text-sm whitespace-nowrap text-muted-foreground tabular-nums">
+                            <span className="inline-flex items-center gap-1">
+                              {rowIndex + 1}
+                              {!isAdmin ? ((row.attachments?.length ?? 0) > 0 ? (
+                                <button
+                                  type="button"
+                                  onClick={() => setViewingFiles(row)}
+                                  aria-label={`${row.attachments!.length} attachment${row.attachments!.length === 1 ? "" : "s"}`}
+                                  className="text-foreground"
+                                >
+                                  <Paperclip className="h-3.5 w-3.5" />
+                                </button>
+                              ) : null) : null}
                             </span>
                           </td>
                           {EXHIBITOR_FIELDS.map((field, index) => (
