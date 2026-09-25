@@ -96,7 +96,8 @@ export const updateExhibitor = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { id, ...fields } = data;
+    const { id, attachments, ...rest } = data;
+    const fields = attachments ? { ...rest, attachments } : rest;
     const { data: row, error } = await context.supabase
       .from("exhibitors")
       .update(fields)

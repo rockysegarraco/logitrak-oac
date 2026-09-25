@@ -37,9 +37,7 @@ export function AttachmentsField({
       }
       const safe = file.name.replace(/[^\w.\-]+/g, "_");
       const path = `${crypto.randomUUID()}/${safe}`;
-      const { error } = await supabase.storage.from(BUCKET).upload(path, file, {
-        contentType: file.type || undefined,
-      });
+      const { error } = await supabase.storage.from(BUCKET).upload(path, file, file.type ? { contentType: file.type } : {});
       if (error) toast.error(`Couldn't upload ${file.name}: ${error.message}`);
       else added.push({ path, name: file.name, size: file.size });
     }
@@ -50,7 +48,10 @@ export function AttachmentsField({
 
   const open = async (item: Attachment) => {
     const { data, error } = await supabase.storage.from(BUCKET).createSignedUrl(item.path, 300);
-    if (error || !data) return toast.error("Couldn't open that file.");
+    if (error || !data) {
+      toast.error("Couldn't open that file.");
+      return;
+    }
     window.open(data.signedUrl, "_blank", "noopener");
   };
 
