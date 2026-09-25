@@ -563,7 +563,21 @@ function TrackerPage() {
         <div className="mt-8 flow-root">
           <div className="block min-w-full align-middle">
             <div className="rounded-t-lg rounded-b-none bg-card shadow-sm ring-1 ring-border">
-              <div className="max-h-[70vh] overflow-x-auto overflow-y-auto rounded-t-lg sm:overflow-x-hidden">
+              <div
+                ref={(el) => {
+                  if (!el) return;
+                  const fit = () => {
+                    const head = el.querySelector("thead") as HTMLElement | null;
+                    const foot = el.querySelector("tfoot") as HTMLElement | null;
+                    const rows = Array.from(el.querySelectorAll("tbody > tr")).slice(0, 20) as HTMLElement[];
+                    if (rows.length < 20) { el.style.maxHeight = ""; return; }
+                    const h = (head?.offsetHeight ?? 0) + (foot?.offsetHeight ?? 0) + rows.reduce((s, r) => s + r.offsetHeight, 0) + 2;
+                    el.style.maxHeight = `${h}px`;
+                  };
+                  requestAnimationFrame(fit);
+                }}
+                className="overflow-x-auto overflow-y-auto rounded-t-lg sm:overflow-x-hidden"
+              >
                 <table className="fluid-table w-full min-w-[1100px] table-auto divide-y divide-border sm:min-w-0">
 
 
