@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { EXHIBITOR_FIELDS } from "@/lib/exhibitor-fields";
 import { listDirectory } from "@/lib/exhibitor-directory.functions";
-import { listExhibitors, type ExhibitorInput } from "@/lib/exhibitors.functions";
+import { listExhibitors, type Attachment, type ExhibitorInput } from "@/lib/exhibitors.functions";
+import { AttachmentsField } from "@/components/AttachmentsField";
 import { normalizeValue } from "@/lib/text-case";
 import { cn } from "@/lib/utils";
 
@@ -27,7 +28,8 @@ type Props = {
   submitLabel: string;
   pending?: boolean;
   currentId?: string | undefined;
-  onSubmit: (values: ExhibitorInput) => void;
+  initialAttachments?: Attachment[];
+  onSubmit: (values: ExhibitorInput, attachments: Attachment[]) => void;
   onCancel: () => void;
   onDelete?: () => void;
   deletePending?: boolean;
@@ -49,7 +51,9 @@ export function ExhibitorForm({
   onDelete,
   deletePending,
   draftKey,
+  initialAttachments,
 }: Props) {
+  const [attachments, setAttachments] = useState<Attachment[]>(initialAttachments ?? []);
 
   const [values, setValues] = useState<ExhibitorInput>(() =>
     Object.fromEntries(
@@ -175,7 +179,7 @@ export function ExhibitorForm({
         setErrors({});
         setFormError(null);
         setDirty(false);
-        onSubmit(trimmed);
+        onSubmit(trimmed, attachments);
       }}
     >
 
@@ -307,6 +311,17 @@ export function ExhibitorForm({
         })}
       </div>
 
+
+      <div className={cn("mt-6", !picked && "pointer-events-none opacity-50")}>
+        <AttachmentsField
+          value={attachments}
+          disabled={!picked}
+          onChange={(next) => {
+            setDirty(true);
+            setAttachments(next);
+          }}
+        />
+      </div>
 
       {formError ? (
         <p className="mt-4 text-sm text-destructive" role="alert">

@@ -78,6 +78,7 @@ export type Database = {
         Row: {
           actual_costs: string
           actual_revenue: string
+          attachments: Json
           booth_number: string
           city: string
           created_at: string
@@ -99,6 +100,7 @@ export type Database = {
         Insert: {
           actual_costs?: string
           actual_revenue?: string
+          attachments?: Json
           booth_number?: string
           city?: string
           created_at?: string
@@ -120,6 +122,7 @@ export type Database = {
         Update: {
           actual_costs?: string
           actual_revenue?: string
+          attachments?: Json
           booth_number?: string
           city?: string
           created_at?: string

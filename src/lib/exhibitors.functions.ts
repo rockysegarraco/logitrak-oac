@@ -20,15 +20,24 @@ const exhibitorInput = z.object({
 
 export type ExhibitorInput = z.infer<typeof exhibitorInput>;
 
+const attachmentSchema = z.object({
+  path: z.string().min(1).max(500),
+  name: z.string().min(1).max(300),
+  size: z.number().nonnegative().optional(),
+});
+export type Attachment = z.infer<typeof attachmentSchema>;
+const attachmentsField = z.array(attachmentSchema).max(20);
+
 export type Exhibitor = ExhibitorInput & {
   id: string;
+  attachments: Attachment[];
   created_by_initials: string;
   created_at: string;
   updated_at: string;
 };
 
 const COLUMNS =
-  "id, booth_number, show_name, exhibitor_name, pro_number, invoice_number, city, state, estimated_weight, shipping_date, delivery_date, actual_costs, final_invoice, actual_revenue, created_by_initials, created_at, updated_at";
+  "id, booth_number, show_name, exhibitor_name, pro_number, invoice_number, city, state, estimated_weight, shipping_date, delivery_date, actual_costs, final_invoice, actual_revenue, attachments, created_by_initials, created_at, updated_at";
 
 export const listExhibitors = createServerFn({ method: "GET" })
   .middleware([requireAppAuth])
@@ -56,7 +65,9 @@ export const getExhibitor = createServerFn({ method: "GET" })
 
 export const createExhibitor = createServerFn({ method: "POST" })
   .middleware([requireAppAuth])
-  .inputValidator((input: unknown) => exhibitorInput.parse(input))
+  .inputValidator((input: unknown) =>
+    exhibitorInput.extend({ attachments: attachmentsField.default([]) }).parse(input),
+  )
   .handler(async ({ data, context }) => {
     const { data: profile } = await context.supabase
       .from("profiles")
@@ -80,10 +91,13 @@ export const createExhibitor = createServerFn({ method: "POST" })
 export const updateExhibitor = createServerFn({ method: "POST" })
   .middleware([requireAppAuth])
   .inputValidator((input: unknown) =>
-    exhibitorInput.extend({ id: z.string().uuid() }).parse(input),
+    exhibitorInput
+      .extend({ id: z.string().uuid(), attachments: attachmentsField.optional() })
+      .parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { id, ...fields } = data;
+    const { id, attachments, ...rest } = data;
+    const fields = attachments ? { ...rest, attachments } : rest;
     const { data: row, error } = await context.supabase
       .from("exhibitors")
       .update(fields)

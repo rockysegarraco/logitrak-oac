@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { ExhibitorForm } from "@/components/ExhibitorForm";
 import { EMPTY_EXHIBITOR, makeDefaultExhibitor } from "@/lib/exhibitor-fields";
-import { createExhibitor } from "@/lib/exhibitors.functions";
+import { createExhibitor, type Attachment } from "@/lib/exhibitors.functions";
 import {
   Sheet,
   SheetContent,
@@ -26,7 +26,8 @@ export function ExhibitorCreateSheet({
   const create = useServerFn(createExhibitor);
 
   const mutation = useMutation({
-    mutationFn: (values: typeof EMPTY_EXHIBITOR) => create({ data: values }),
+    mutationFn: (payload: { values: typeof EMPTY_EXHIBITOR; attachments: Attachment[] }) =>
+      create({ data: { ...payload.values, attachments: payload.attachments } }),
     onSuccess: async () => {
       window.sessionStorage.removeItem(DRAFT_KEY);
       await queryClient.invalidateQueries({ queryKey: ["exhibitors"] });
@@ -74,7 +75,7 @@ export function ExhibitorCreateSheet({
             initialValues={makeDefaultExhibitor()}
             submitLabel="Add Exhibitor"
             pending={mutation.isPending}
-            onSubmit={(values) => mutation.mutate(values)}
+            onSubmit={(values, attachments) => mutation.mutate({ values, attachments })}
             onCancel={() => onOpenChange(false)}
           />
         </div>
