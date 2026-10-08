@@ -198,7 +198,7 @@ export const Route = createFileRoute("/_authenticated/")({
   errorComponent: ({ error }) => (
     <div className="mx-auto max-w-xl p-10 text-center" role="alert">
       <h1 className="text-lg font-semibold">Couldn't load the tracker</h1>
-      <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
+      <p className="mt-2 text-sm text-muted-foreground">{error instanceof Error ? error.message : String(error)}</p>
     </div>
   ),
   notFoundComponent: () => <div className="p-10 text-center">Nothing here.</div>,
