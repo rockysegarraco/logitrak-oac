@@ -8,6 +8,13 @@
       "when": 1790347236777,
       "tag": "0000_exhibitor_attachments",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791657354008,
+      "tag": "0001_exhibitors_owner_only",
+      "breakpoints": true
     }
   ]
 }
