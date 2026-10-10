@@ -669,7 +669,7 @@ function TrackerPage() {
                           className={cn(
                             "divide-x divide-border",
                             complete
-                              ? "bg-sheet-green/15 hover:bg-sheet-green/25"
+                              ? "bg-sheet-green/8 hover:bg-sheet-green/15"
                               : cn(rowIndex % 2 === 1 && "bg-muted/40", "hover:bg-muted/60"),
                           )}
                         >
