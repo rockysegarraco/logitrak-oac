@@ -662,13 +662,15 @@ function TrackerPage() {
                   <tbody className="divide-y divide-border bg-card">
                     {refreshing ? <SkeletonRows rows={Math.max(pageRows.length, 5)} columns={EXHIBITOR_FIELDS.length + (isAdmin ? 3 : 2)} /> : null}
                     {!refreshing && pageRows.map((row, rowIndex) => {
+                      const complete = EXHIBITOR_FIELDS.every((f) => String(row[f.key] ?? "").trim() !== "");
                       return (
                         <tr
                           key={row.id}
                           className={cn(
                             "divide-x divide-border",
-                            rowIndex % 2 === 1 && "bg-muted/40",
-                            "hover:bg-muted/60",
+                            complete
+                              ? "bg-sheet-green/15 hover:bg-sheet-green/25"
+                              : cn(rowIndex % 2 === 1 && "bg-muted/40", "hover:bg-muted/60"),
                           )}
                         >
                           {isAdmin ? (
