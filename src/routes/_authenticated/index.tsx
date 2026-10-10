@@ -593,6 +593,7 @@ function TrackerPage() {
                         </th>
                       ) : null}
                       <th scope="col" className="sticky top-0 z-10 w-10 bg-muted px-2 py-3.5 text-center text-xs font-semibold whitespace-nowrap text-foreground">#</th>
+                      <th scope="col" className="sticky top-0 z-10 w-8 bg-muted px-1 py-3.5 text-center text-xs font-semibold text-foreground"><Paperclip className="mx-auto h-3.5 w-3.5" aria-label="Attachments" /></th>
                       {EXHIBITOR_FIELDS.map((field, index) => {
 
                         const active = sort?.key === field.key;
@@ -660,7 +661,7 @@ function TrackerPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border bg-card">
-                    {refreshing ? <SkeletonRows rows={Math.max(pageRows.length, 5)} columns={EXHIBITOR_FIELDS.length + (isAdmin ? 3 : 2)} /> : null}
+                    {refreshing ? <SkeletonRows rows={Math.max(pageRows.length, 5)} columns={EXHIBITOR_FIELDS.length + (isAdmin ? 4 : 3)} /> : null}
                     {!refreshing && pageRows.map((row, rowIndex) => {
                       const complete = EXHIBITOR_FIELDS.every((f) => String(row[f.key] ?? "").trim() !== "");
                       return (
@@ -685,16 +686,7 @@ function TrackerPage() {
                               >
                                 {row.created_by_initials || "—"}
                               </span>
-                              {(row.attachments?.length ?? 0) > 0 ? (
-                                <button
-                                  type="button"
-                                  onClick={() => setViewingFiles(row)}
-                                  aria-label={`${row.attachments!.length} attachment${row.attachments!.length === 1 ? "" : "s"}`}
-                                  className="text-foreground"
-                                >
-                                  <Paperclip className="h-3.5 w-3.5" />
-                                </button>
-                              ) : null}
+                              
                               </span>
 
                             </td>
@@ -702,17 +694,20 @@ function TrackerPage() {
                           <td className="w-10 px-2 py-2 text-center text-sm whitespace-nowrap text-muted-foreground tabular-nums">
                             <span className="inline-flex items-center gap-1">
                               {rowIndex + 1}
-                              {!isAdmin ? ((row.attachments?.length ?? 0) > 0 ? (
-                                <button
-                                  type="button"
-                                  onClick={() => setViewingFiles(row)}
-                                  aria-label={`${row.attachments!.length} attachment${row.attachments!.length === 1 ? "" : "s"}`}
-                                  className="text-foreground"
-                                >
-                                  <Paperclip className="h-3.5 w-3.5" />
-                                </button>
-                              ) : null) : null}
+                              
                             </span>
+                          </td>
+                          <td className="w-8 px-1 py-2 text-center text-sm">
+                            {(row.attachments?.length ?? 0) > 0 ? (
+                              <button
+                                type="button"
+                                onClick={() => setViewingFiles(row)}
+                                aria-label={`${row.attachments.length} attachment${row.attachments.length === 1 ? "" : "s"}`}
+                                className="inline-flex text-foreground"
+                              >
+                                <Paperclip className="h-3.5 w-3.5" />
+                              </button>
+                            ) : null}
                           </td>
                           {EXHIBITOR_FIELDS.map((field, index) => (
 
@@ -781,7 +776,7 @@ function TrackerPage() {
                     {!refreshing && pageRows.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={EXHIBITOR_FIELDS.length + (isAdmin ? 3 : 2)}
+                          colSpan={EXHIBITOR_FIELDS.length + (isAdmin ? 4 : 3)}
                           className="px-6 py-16 text-center"
                         >
                           {exhibitors.length === 0 ? (
@@ -833,7 +828,7 @@ function TrackerPage() {
                   {rows.length > 0 ? (
                     <tfoot className="border-t-2 border-border bg-muted/60 font-semibold">
                       <tr className="divide-x divide-border">
-                        <td className="px-3 py-2.5 text-xs uppercase text-muted-foreground" colSpan={isAdmin ? 3 : 2}>
+                        <td className="px-3 py-2.5 text-xs uppercase text-muted-foreground" colSpan={isAdmin ? 4 : 3}>
                           Total
                         </td>
                         {EXHIBITOR_FIELDS.slice(1).map((field) => (
