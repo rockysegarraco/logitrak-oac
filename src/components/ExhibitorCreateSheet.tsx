@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { ExhibitorForm } from "@/components/ExhibitorForm";
-import { EMPTY_EXHIBITOR, makeDefaultExhibitor } from "@/lib/exhibitor-fields";
+import { EMPTY_EXHIBITOR } from "@/lib/exhibitor-fields";
 import { createExhibitor, type Attachment } from "@/lib/exhibitors.functions";
 import {
   Sheet,
@@ -80,7 +80,7 @@ export function ExhibitorCreateSheet({
         <div className="flex min-h-0 flex-1 flex-col">
           <ExhibitorForm
             draftKey={DRAFT_KEY}
-            initialValues={makeDefaultExhibitor()}
+            initialValues={EMPTY_EXHIBITOR}
             submitLabel="Add Exhibitor"
             pending={mutation.isPending}
             onSubmit={(values, attachments) => mutation.mutate({ values, attachments })}
