@@ -842,7 +842,7 @@ function TrackerPage() {
 
                       <th
                         scope="col"
-                        className="sticky top-0 z-10 w-14 min-w-14 bg-muted px-1 py-3.5 text-right text-sm font-semibold whitespace-nowrap text-foreground"
+                        className="sticky top-0 z-10 w-24 min-w-24 bg-muted px-1 py-3.5 text-right text-sm font-semibold whitespace-nowrap text-foreground"
                       >
                         <span className="sr-only">Actions</span>
                       </th>
