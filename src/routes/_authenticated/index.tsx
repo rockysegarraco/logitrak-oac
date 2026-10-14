@@ -635,7 +635,7 @@ function TrackerPage() {
         </div>
 
 
-        <div className="mt-4 sm:hidden">
+        <div className="mt-4 pb-24 sm:hidden">
           {refreshing ? (
             <div className="space-y-2">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -686,7 +686,7 @@ function TrackerPage() {
                   );
                 })}
               </ul>
-              <div className="mt-3 grid grid-cols-3 gap-2 rounded-xl border border-border bg-muted/60 p-3 text-center">
+              <div className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-3 gap-2 border-t border-border bg-card px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] text-center shadow-[0_-4px_12px_-6px_rgb(0_0_0/0.15)]">
                 {MONEY_FIELDS.map((key) => (
                   <div key={key} className="min-w-0">
                     <div className="text-[10px] uppercase text-muted-foreground">
