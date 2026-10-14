@@ -496,7 +496,7 @@ function TrackerPage() {
             </div>
           </div>
 
-          <div className="-mx-4 flex snap-x items-center gap-2 overflow-x-auto overscroll-x-contain px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:gap-3 sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden [&>*]:shrink-0 [&>*]:snap-start">
+          <div className="-mx-3 flex snap-x items-center gap-2 overflow-x-auto overscroll-x-contain px-3 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:gap-3 sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden [&>*]:shrink-0 [&>*]:snap-start">
             {hasFilters ? (
               <TwButton
                 variant="secondary"
