@@ -53,18 +53,23 @@ export function ExhibitorCreateSheet({
       <SheetContent
         id="create-exhibitor-panel"
         side="right"
-        onPointerDownCapture={(e) => {
-          const target = e.target as HTMLElement;
-          const btn = target.closest("button");
-          if (btn && btn.parentElement === e.currentTarget) allowCloseRef.current = true;
-        }}
-        onKeyDownCapture={(e) => {
-          if (e.key !== "Enter" && e.key !== " ") return;
+        onClickCapture={(e) => {
+          // The X button: route through the form's Cancel so unsaved changes prompt.
           const btn = (e.target as HTMLElement).closest("button");
-          if (btn && btn.parentElement === e.currentTarget) allowCloseRef.current = true;
+          if (btn && btn.parentElement === e.currentTarget) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.currentTarget.querySelector<HTMLButtonElement>("[data-form-cancel]")?.click();
+          }
         }}
-        onEscapeKeyDown={() => {
-          allowCloseRef.current = true;
+        onEscapeKeyDown={(e) => {
+          e.preventDefault();
+          // Don't steal Escape from an open discard dialog.
+          if (document.querySelector('[role="alertdialog"]')) return;
+          document
+            .getElementById("create-exhibitor-panel")
+            ?.querySelector<HTMLButtonElement>("[data-form-cancel]")
+            ?.click();
         }}
         onInteractOutside={(e) => e.preventDefault()}
         onPointerDownOutside={(e) => e.preventDefault()}

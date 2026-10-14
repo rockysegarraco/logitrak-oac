@@ -82,7 +82,11 @@ export function ExhibitorForm({
     try {
       const raw = window.sessionStorage.getItem(draftKey);
       if (raw) {
-        setValues((prev) => ({ ...prev, ...(JSON.parse(raw) as ExhibitorInput) }));
+        const { __attachments, ...saved } = JSON.parse(raw) as ExhibitorInput & {
+          __attachments?: Attachment[];
+        };
+        setValues((prev) => ({ ...prev, ...saved }));
+        if (Array.isArray(__attachments)) setAttachments(__attachments);
         setDirty(true);
       }
     } catch {
@@ -92,8 +96,11 @@ export function ExhibitorForm({
 
   useEffect(() => {
     if (!draftKey || !dirty) return;
-    window.sessionStorage.setItem(draftKey, JSON.stringify(values));
-  }, [draftKey, dirty, values]);
+    window.sessionStorage.setItem(
+      draftKey,
+      JSON.stringify({ ...values, __attachments: attachments }),
+    );
+  }, [draftKey, dirty, values, attachments]);
 
   useEffect(() => {
     if (!dirty) return;
@@ -334,7 +341,7 @@ export function ExhibitorForm({
         <TwButton type="submit" variant="primary" disabled={pending || !picked}>
           {pending ? "Saving..." : submitLabel}
         </TwButton>
-        <TwButton variant="ghost" onClick={requestCancel}>
+        <TwButton variant="ghost" onClick={requestCancel} data-form-cancel="">
           Cancel
         </TwButton>
         {onDelete ? (
