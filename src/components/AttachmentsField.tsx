@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ExternalLink, Loader2, Paperclip, X } from "lucide-react";
+import { Camera, ExternalLink, Loader2, Paperclip, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import type { Attachment } from "@/lib/exhibitors.functions";
@@ -30,6 +30,7 @@ export function AttachmentsField({
   readOnly?: boolean;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [urls, setUrls] = useState<Record<string, string>>({});
   const [viewing, setViewing] = useState<Attachment | null>(null);
@@ -102,15 +103,40 @@ export function AttachmentsField({
         disabled={disabled || uploading}
         onChange={(e) => upload(e.target.files)}
       />
+      <input
+        ref={cameraRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="sr-only"
+        aria-hidden="true"
+        tabIndex={-1}
+        disabled={disabled || uploading}
+        onChange={(e) => {
+          upload(e.target.files);
+          e.target.value = "";
+        }}
+      />
+      <div className="mt-2 flex flex-wrap gap-2">
       <button
         type="button"
         disabled={disabled || uploading}
         onClick={() => inputRef.current?.click()}
-        className="mt-2 inline-flex h-10 items-center gap-2 rounded-full border border-input bg-card px-4 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-muted disabled:opacity-50"
+        className="inline-flex h-10 items-center gap-2 rounded-full border border-input bg-card px-4 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-muted disabled:opacity-50"
       >
         {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Paperclip className="h-4 w-4" />}
         {uploading ? "Uploading..." : "Add attachment"}
       </button>
+      <button
+        type="button"
+        disabled={disabled || uploading}
+        onClick={() => cameraRef.current?.click()}
+        className="inline-flex h-10 items-center gap-2 rounded-full border border-input bg-card px-4 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-muted disabled:opacity-50 sm:hidden"
+      >
+        <Camera className="h-4 w-4" />
+        Take photo
+      </button>
+      </div>
       </>)}
       {readOnly && value.length === 0 ? <p className="text-sm text-muted-foreground">No attachments on this record.</p> : null}
       {value.length > 0 ? (
