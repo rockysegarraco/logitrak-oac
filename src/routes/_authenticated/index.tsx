@@ -477,7 +477,7 @@ function TrackerPage() {
                 aria-label="Search exhibitors"
               />
             </div>
-            <div className="order-1 flex items-center gap-2 sm:order-2 sm:ml-auto">
+            <div className="order-1 hidden items-center gap-2 sm:order-2 sm:ml-auto sm:flex">
               <TwButton
                 variant="secondary"
                 onClick={hardRefresh}
