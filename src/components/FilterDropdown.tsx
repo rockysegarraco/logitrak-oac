@@ -37,12 +37,12 @@ export function FilterDropdown({
       <DropdownMenuTrigger
         aria-label={ariaLabel}
         className={cn(
-          "inline-flex min-w-0 max-w-full items-center gap-2 rounded-full border border-border bg-card py-1.5 pl-4 pr-3 text-sm font-semibold text-foreground transition-colors hover:bg-muted focus:outline-2 focus:-outline-offset-2 focus:outline-primary data-[state=open]:bg-muted",
+          "inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-border bg-card py-1.5 pl-4 pr-3 text-sm font-semibold text-foreground transition-colors hover:bg-muted focus:outline-2 focus:-outline-offset-2 focus:outline-primary data-[state=open]:bg-muted",
           className,
         )}
       >
         <Icon aria-hidden className="h-4 w-4 shrink-0 text-muted-foreground" />
-        <span className="truncate">{active?.label}</span>
+        <span>{active?.label}</span>
         {open ? (
           <ChevronUp aria-hidden className="h-4 w-4 shrink-0 text-muted-foreground" />
         ) : (
