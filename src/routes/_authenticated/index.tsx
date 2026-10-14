@@ -563,17 +563,6 @@ function TrackerPage() {
                 className="h-9 min-w-0 flex-1 rounded-full text-sm"
               />
             </div>
-                  <div className="mt-2 flex gap-2">
-                    <TwButton variant="secondary" onClick={clearFilters} disabled={!hasFilters} className="flex-1 justify-center">
-                      Clear all
-                    </TwButton>
-                    <TwButton onClick={() => setAllFiltersOpen(false)} className="flex-1 justify-center">
-                      Show results
-                    </TwButton>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
             {hasFilters ? (
               <TwButton
                 variant="secondary"
@@ -585,6 +574,17 @@ function TrackerPage() {
                 Clear
               </TwButton>
             ) : null}
+                  <div className="mt-2 flex gap-2">
+                    <TwButton variant="secondary" onClick={clearFilters} disabled={!hasFilters} className="flex-1 justify-center">
+                      Clear all
+                    </TwButton>
+                    <TwButton onClick={() => setAllFiltersOpen(false)} className="flex-1 justify-center">
+                      Show results
+                    </TwButton>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
             <FilterDropdown
               icon={Store}
               ariaLabel="Filter by show"
