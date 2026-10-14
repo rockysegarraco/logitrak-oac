@@ -25,6 +25,7 @@ import {
   RefreshCw,
   MapPin,
   Search,
+  SlidersHorizontal,
 
   SearchX,
   Store,
@@ -463,7 +464,7 @@ function TrackerPage() {
   return (
     <main className="min-h-screen bg-background">
       <div className="w-full px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
-        <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-3 sm:p-4">
+        <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative order-2 min-w-0 flex-1 sm:order-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -496,7 +497,82 @@ function TrackerPage() {
             </div>
           </div>
 
-          <div className="-mx-3 flex snap-x items-center gap-2 overflow-x-auto overscroll-x-contain px-3 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:gap-3 sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden [&>*]:shrink-0 [&>*]:snap-start">
+          <div className="-mx-4 flex snap-x items-center gap-2 overflow-x-auto overscroll-x-contain px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:gap-3 sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden [&>*]:shrink-0 [&>*]:snap-start">
+            <TwButton
+              variant="secondary"
+              onClick={() => setAllFiltersOpen(true)}
+              className="shrink-0 whitespace-nowrap"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+              All filters
+            </TwButton>
+            <Sheet open={allFiltersOpen} onOpenChange={setAllFiltersOpen}>
+              <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl">
+                <SheetHeader>
+                  <SheetTitle>All filters</SheetTitle>
+                  <SheetDescription>Narrow the list by show, state, user or shipping date.</SheetDescription>
+                </SheetHeader>
+                <div className="mt-4 flex flex-col gap-3 px-4 pb-4">
+            <FilterDropdown
+              icon={Store}
+              ariaLabel="Filter by show"
+              value={exhibitorFilter}
+              onChange={setExhibitorFilter}
+              className="w-full justify-start [&>span]:flex-1 [&>span]:text-left"
+              options={[
+                { value: "all", label: "All shows" },
+                ...exhibitorOptions.map((name) => ({ value: name, label: name })),
+              ]}
+            />
+            <FilterDropdown
+              icon={MapPin}
+              ariaLabel="Filter by state"
+              value={stateFilter}
+              onChange={setStateFilter}
+              className="w-full justify-start [&>span]:flex-1 [&>span]:text-left"
+              options={[
+                { value: "all", label: "All states" },
+                ...stateOptions.map((code) => ({ value: code, label: code })),
+              ]}
+            />
+            {isAdmin ? (
+              <FilterDropdown
+                icon={Users}
+                ariaLabel="Filter by user"
+                value={userFilter}
+                onChange={setUserFilter}
+                className="w-full justify-start [&>span]:flex-1 [&>span]:text-left"
+                options={[{ value: "all", label: "All users" }, ...userOptions]}
+              />
+            ) : null}
+            <div className="flex items-center gap-2">
+              <TwInput
+                type="date"
+                value={dateFrom}
+                onChange={(event) => setDateFrom(event.target.value)}
+                aria-label="Shipping date from"
+                className="h-9 min-w-0 flex-1 rounded-full text-sm"
+              />
+              <span className="text-xs text-muted-foreground">to</span>
+              <TwInput
+                type="date"
+                value={dateTo}
+                onChange={(event) => setDateTo(event.target.value)}
+                aria-label="Shipping date to"
+                className="h-9 min-w-0 flex-1 rounded-full text-sm"
+              />
+            </div>
+                  <div className="mt-2 flex gap-2">
+                    <TwButton variant="secondary" onClick={clearFilters} disabled={!hasFilters} className="flex-1 justify-center">
+                      Clear all
+                    </TwButton>
+                    <TwButton onClick={() => setAllFiltersOpen(false)} className="flex-1 justify-center">
+                      Show results
+                    </TwButton>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
             {hasFilters ? (
               <TwButton
                 variant="secondary"
