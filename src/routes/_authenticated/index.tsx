@@ -269,6 +269,7 @@ function TrackerPage() {
 
 
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [detailRow, setDetailRow] = useState<Exhibitor | null>(null);
   const [viewingFiles, setViewingFiles] = useState<Exhibitor | null>(null);
   const [pendingDelete, setPendingDelete] = useState<Exhibitor | null>(null);
   const [draft, setDraft] = useState<ExhibitorInput | null>(null);
@@ -560,7 +561,104 @@ function TrackerPage() {
         </div>
 
 
-        <div className="mt-8 flow-root">
+        <div className="mt-6 sm:hidden">
+          {refreshing ? (
+            <div className="space-y-2">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="h-16 animate-pulse rounded-xl bg-muted" />
+              ))}
+            </div>
+          ) : rows.length === 0 ? (
+            <div className="rounded-xl border border-border bg-card px-6 py-12 text-center text-sm text-muted-foreground">
+              {exhibitors.length === 0 ? "No exhibitors yet." : "No records match your search or filters."}
+            </div>
+          ) : (
+            <>
+              <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+                {rows.map((row, i) => {
+                  const complete = EXHIBITOR_FIELDS.every((f) => String(row[f.key] ?? "").trim() !== "");
+                  return (
+                    <li key={row.id}>
+                      <button
+                        type="button"
+                        onClick={() => setDetailRow(row)}
+                        className={cn(
+                          "grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 text-left",
+                          complete ? "bg-sheet-green/8" : i % 2 === 1 && "bg-muted/40",
+                        )}
+                      >
+                        <span className="w-6 text-xs tabular-nums text-muted-foreground">{i + 1}</span>
+                        <span className="min-w-0">
+                          <span className="flex items-center gap-1.5">
+                            <span className="truncate text-sm font-semibold text-foreground uppercase">
+                              {row.exhibitor_name || row.show_name}
+                            </span>
+                            {(row.attachments?.length ?? 0) > 0 ? (
+                              <Paperclip className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-label="Has attachments" />
+                            ) : null}
+                          </span>
+                          <span className="block truncate text-xs text-muted-foreground uppercase">
+                            Booth {row.booth_number || "—"} · {row.show_name}
+                          </span>
+                        </span>
+                        <span className="shrink-0 text-right">
+                          <span className="block text-sm font-semibold tabular-nums text-foreground">
+                            {row.actual_revenue || "—"}
+                          </span>
+                          <span className="block text-[10px] uppercase text-muted-foreground">Revenue</span>
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+              <div className="mt-3 grid grid-cols-3 gap-2 rounded-xl border border-border bg-muted/60 p-3 text-center">
+                {MONEY_FIELDS.map((key) => (
+                  <div key={key} className="min-w-0">
+                    <div className="text-[10px] uppercase text-muted-foreground">
+                      {EXHIBITOR_FIELDS.find((f) => f.key === key)?.short}
+                    </div>
+                    <div className="truncate text-sm font-semibold tabular-nums">{formatMoney(totals[key] ?? 0)}</div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        <Sheet open={!!detailRow} onOpenChange={(o) => !o && setDetailRow(null)}>
+          <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl p-0">
+            <SheetHeader className="border-b border-border px-4 py-4 text-left">
+              <SheetTitle className="pr-8 uppercase">{detailRow?.exhibitor_name || detailRow?.show_name}</SheetTitle>
+              <SheetDescription className="uppercase">{detailRow?.show_name}</SheetDescription>
+            </SheetHeader>
+            {detailRow ? (
+              <>
+                <dl className="divide-y divide-border px-4">
+                  {EXHIBITOR_FIELDS.filter((f) => f.key !== "show_name" && f.key !== "exhibitor_name").map((f) => (
+                    <div key={f.key} className="flex items-center justify-between gap-4 py-2.5">
+                      <dt className="text-xs uppercase text-muted-foreground">{f.label}</dt>
+                      <dd className="text-right text-sm font-medium text-foreground uppercase">{detailRow[f.key] || "—"}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <div className="flex gap-2 border-t border-border p-4">
+                  <TwButton variant="primary" className="flex-1" onClick={() => { const r = detailRow; setDetailRow(null); startEdit(r); }}>
+                    <Pencil className="h-4 w-4" /> Edit
+                  </TwButton>
+                  <TwButton variant="secondary" className="flex-1" onClick={() => { const r = detailRow; setDetailRow(null); setViewingFiles(r); }}>
+                    <Paperclip className="h-4 w-4" /> Files ({detailRow.attachments?.length ?? 0})
+                  </TwButton>
+                  <TwButton variant="danger" onClick={() => { const r = detailRow; setDetailRow(null); setPendingDelete(r); }} aria-label="Delete">
+                    <Trash2 className="h-4 w-4" />
+                  </TwButton>
+                </div>
+              </>
+            ) : null}
+          </SheetContent>
+        </Sheet>
+
+        <div className="mt-8 hidden flow-root sm:block">
           <div className="block min-w-full align-middle">
             <div className="rounded-t-lg rounded-b-none bg-card shadow-sm ring-1 ring-border">
               <div
