@@ -675,11 +675,22 @@ function TrackerPage() {
                             Booth {row.booth_number || "—"} · {row.show_name}
                           </span>
                         </span>
-                        <span className="shrink-0 text-right">
-                          <span className="block text-sm font-semibold tabular-nums text-foreground">
-                            {row.actual_revenue || "—"}
+                        <span className="flex shrink-0 items-center gap-2.5">
+                          <span className="text-right">
+                            <span className="block text-sm font-semibold tabular-nums text-foreground">
+                              {row.actual_revenue || "—"}
+                            </span>
+                            <span className="block text-[10px] uppercase text-muted-foreground">Revenue</span>
                           </span>
-                          <span className="block text-[10px] uppercase text-muted-foreground">Revenue</span>
+                          <span
+                            className={cn(
+                              "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold",
+                              avatarTone(row.created_by_initials || "?"),
+                            )}
+                            aria-label={`Created by ${row.created_by_initials || "—"}`}
+                          >
+                            {row.created_by_initials || "—"}
+                          </span>
                         </span>
                       </button>
                     </li>
