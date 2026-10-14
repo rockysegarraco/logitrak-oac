@@ -624,6 +624,34 @@ function TrackerPage() {
                 className="h-9 w-40 rounded-full text-sm"
               />
             </div>
+            {[
+              exhibitorFilter !== "all" && { key: "show", label: exhibitorFilter, clear: () => setExhibitorFilter("all") },
+              stateFilter !== "all" && { key: "state", label: stateFilter, clear: () => setStateFilter("all") },
+              isAdmin && userFilter !== "all" && {
+                key: "user",
+                label: userOptions.find((o) => o.value === userFilter)?.label ?? userFilter,
+                clear: () => setUserFilter("all"),
+              },
+              dateFrom && { key: "from", label: `From ${dateFrom}`, clear: () => setDateFrom("") },
+              dateTo && { key: "to", label: `To ${dateTo}`, clear: () => setDateTo("") },
+            ]
+              .filter((b): b is { key: string; label: string; clear: () => void } => Boolean(b))
+              .map((b) => (
+                <span
+                  key={b.key}
+                  className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-primary/10 py-1 pl-3 pr-1 text-xs font-semibold text-foreground sm:hidden"
+                >
+                  {b.label}
+                  <button
+                    type="button"
+                    onClick={b.clear}
+                    aria-label={`Remove ${b.label} filter`}
+                    className="inline-flex h-5 w-5 items-center justify-center rounded-full hover:bg-primary/20"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </span>
+              ))}
             </div>
             {hasFilters ? (
               <TwButton
