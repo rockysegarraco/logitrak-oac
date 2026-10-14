@@ -465,7 +465,7 @@ function TrackerPage() {
   return (
     <main className="min-h-screen bg-background">
       <div className="w-full px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative order-2 min-w-0 flex-1 sm:order-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -498,7 +498,7 @@ function TrackerPage() {
             </div>
           </div>
 
-          <div className="-mx-4 flex snap-x items-center gap-2 overflow-x-auto overscroll-x-contain px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:gap-3 sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden [&>*]:shrink-0 [&>*]:snap-start">
+          <div className="-mx-4 flex snap-x scroll-px-4 items-center gap-2 overflow-x-auto overscroll-x-contain px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:gap-3 sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden [&>*]:shrink-0 [&>*]:snap-start">
             <TwButton
               variant="secondary"
               onClick={() => setAllFiltersOpen(true)}
@@ -635,7 +635,7 @@ function TrackerPage() {
         </div>
 
 
-        <div className="mt-6 sm:hidden">
+        <div className="mt-4 sm:hidden">
           {refreshing ? (
             <div className="space-y-2">
               {Array.from({ length: 5 }).map((_, i) => (
