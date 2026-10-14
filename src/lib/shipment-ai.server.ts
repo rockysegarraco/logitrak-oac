@@ -35,7 +35,7 @@ const INSTRUCTIONS = `You help trade-show freight managers. Read a free-text shi
 Only use facts in the update. Do not invent dates, people or events. Use empty arrays when nothing applies.`;
 
 export async function extractShipmentUpdate(text: string, context: string): Promise<Extraction> {
-  const apiKey = process.env.LOVABLE_API_KEY;
+  const apiKey = process.env['LOVABLE_API_KEY'];
   if (!apiKey) throw new Error("AI is not configured for this app.");
   const provider = createOpenAI({
     baseURL: GATEWAY,
