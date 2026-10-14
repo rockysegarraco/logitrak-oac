@@ -916,9 +916,17 @@ function TrackerPage() {
                               )}
                             </td>
                           ))}
-                          <td className="w-14 min-w-14 px-1 py-2 text-center text-sm whitespace-nowrap">
+                          <td className="w-24 min-w-24 px-1 py-2 text-center text-sm whitespace-nowrap">
                             {(
-                              <div className="flex justify-center">
+                              <div className="flex justify-center gap-1">
+                                <button
+                                  type="button"
+                                  onClick={() => setUpdatesFor(row)}
+                                  className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                                  aria-label={`Updates for ${row.exhibitor_name}`}
+                                >
+                                  <Sparkles className="h-4 w-4" />
+                                </button>
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
                                     <button
