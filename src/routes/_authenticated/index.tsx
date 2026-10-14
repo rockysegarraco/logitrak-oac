@@ -228,6 +228,7 @@ function TrackerPage() {
   const navigate = useNavigate();
   const { show: showParam } = Route.useSearch();
   const [search, setSearch] = useState("");
+  const [allFiltersOpen, setAllFiltersOpen] = useState(false);
   const [exhibitorFilter, setExhibitorFilter] = useState(showParam ?? "all");
 
   useEffect(() => {
