@@ -26,6 +26,7 @@ import {
   MapPin,
   Search,
   SlidersHorizontal,
+  Sparkles,
 
   SearchX,
   Store,
@@ -72,6 +73,7 @@ import { useOpenExhibitorCreate } from "@/lib/exhibitor-create-context";
 import { cn } from "@/lib/utils";
 import { ExhibitorForm } from "@/components/ExhibitorForm";
 import { AttachmentsField } from "@/components/AttachmentsField";
+import { ShipmentUpdatesDialog } from "@/components/ShipmentUpdatesDialog";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import {
   Sheet,
@@ -214,6 +216,7 @@ function toInput(row: Exhibitor): ExhibitorInput {
 function TrackerPage() {
   const { data: exhibitors } = useSuspenseQuery(exhibitorsQuery);
   const { data: me } = useQuery(meQuery);
+  const [updatesFor, setUpdatesFor] = useState<Exhibitor | null>(null);
   const isAdmin = Boolean(me?.isAdmin);
   const { data: allUsers } = useQuery({ ...usersQuery, enabled: isAdmin });
   const openCreate = useOpenExhibitorCreate();
@@ -734,6 +737,9 @@ function TrackerPage() {
                   <TwButton variant="secondary" className="flex-1" onClick={() => { const r = detailRow; setDetailRow(null); setViewingFiles(r); }}>
                     <Paperclip className="h-4 w-4" /> Files ({detailRow.attachments?.length ?? 0})
                   </TwButton>
+                  <TwButton variant="secondary" onClick={() => { const r = detailRow; setDetailRow(null); setUpdatesFor(r); }} aria-label="Updates">
+                    <Sparkles className="h-4 w-4" />
+                  </TwButton>
                   <TwButton variant="danger" onClick={() => { const r = detailRow; setDetailRow(null); setPendingDelete(r); }} aria-label="Delete">
                     <Trash2 className="h-4 w-4" />
                   </TwButton>
@@ -938,6 +944,13 @@ function TrackerPage() {
                                     >
                                       <Paperclip className="mr-2 h-4 w-4" />
                                       Files ({row.attachments?.length ?? 0})
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      className="cursor-pointer"
+                                      onSelect={() => setUpdatesFor(row)}
+                                    >
+                                      <Sparkles className="mr-2 h-4 w-4" />
+                                      Updates
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                       className="cursor-pointer text-destructive focus:text-destructive"
