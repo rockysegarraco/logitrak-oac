@@ -529,7 +529,7 @@ function TrackerPage() {
                 options={[{ value: "all", label: "All users" }, ...userOptions]}
               />
             ) : null}
-            <div className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
+            <div className="flex w-full min-w-0 basis-full items-center gap-2 sm:w-auto sm:basis-auto sm:flex-none">
               <TwInput
                 type="date"
                 value={dateFrom}
