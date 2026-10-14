@@ -176,6 +176,42 @@ export type Database = {
         }
         Relationships: []
       }
+      shipment_updates: {
+        Row: {
+          created_at: string
+          created_by: string
+          created_by_initials: string
+          current_status: string
+          exhibitor_id: string
+          follow_ups: Json
+          id: string
+          key_events: Json
+          raw_text: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string
+          created_by_initials?: string
+          current_status?: string
+          exhibitor_id: string
+          follow_ups?: Json
+          id?: string
+          key_events?: Json
+          raw_text: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          created_by_initials?: string
+          current_status?: string
+          exhibitor_id?: string
+          follow_ups?: Json
+          id?: string
+          key_events?: Json
+          raw_text?: string
+        }
+        Relationships: []
+      }
       user_credentials: {
         Row: {
           created_at: string
