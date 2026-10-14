@@ -496,8 +496,18 @@ function TrackerPage() {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            <div className="-mx-1 flex w-full items-center gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] sm:mx-0 sm:w-auto sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0 sm:gap-3 [&::-webkit-scrollbar]:hidden">
+          <div className="-mx-4 flex snap-x items-center gap-2 overflow-x-auto overscroll-x-contain px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:gap-3 sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden [&>*]:shrink-0 [&>*]:snap-start">
+            {hasFilters ? (
+              <TwButton
+                variant="secondary"
+                onClick={clearFilters}
+                aria-label="Clear filters"
+                className="shrink-0 whitespace-nowrap"
+              >
+                <X className="h-4 w-4" />
+                Clear
+              </TwButton>
+            ) : null}
             <FilterDropdown
               icon={Store}
               ariaLabel="Filter by show"
@@ -527,35 +537,23 @@ function TrackerPage() {
                 options={[{ value: "all", label: "All users" }, ...userOptions]}
               />
             ) : null}
-            </div>
-            <div className="flex w-full min-w-0 basis-full items-center gap-2 sm:w-auto sm:basis-auto sm:flex-none">
+            <div className="flex items-center gap-2">
               <TwInput
                 type="date"
                 value={dateFrom}
                 onChange={(event) => setDateFrom(event.target.value)}
                 aria-label="Shipping date from"
-                className="h-9 min-w-0 flex-1 rounded-full text-sm sm:w-40 sm:flex-none"
+                className="h-9 w-40 rounded-full text-sm"
               />
-              <span className="shrink-0 text-xs text-muted-foreground">to</span>
+              <span className="text-xs text-muted-foreground">to</span>
               <TwInput
                 type="date"
                 value={dateTo}
                 onChange={(event) => setDateTo(event.target.value)}
                 aria-label="Shipping date to"
-                className="h-9 min-w-0 flex-1 rounded-full text-sm sm:w-40 sm:flex-none"
+                className="h-9 w-40 rounded-full text-sm"
               />
             </div>
-            {hasFilters ? (
-              <TwButton
-                variant="secondary"
-                onClick={clearFilters}
-                aria-label="Clear filters"
-                className="shrink-0"
-              >
-                <X className="h-4 w-4" />
-                Clear
-              </TwButton>
-            ) : null}
           </div>
         </div>
 
