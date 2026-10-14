@@ -574,17 +574,6 @@ function TrackerPage() {
                 </div>
               </SheetContent>
             </Sheet>
-            {hasFilters ? (
-              <TwButton
-                variant="secondary"
-                onClick={clearFilters}
-                aria-label="Clear filters"
-                className="shrink-0 whitespace-nowrap"
-              >
-                <X className="h-4 w-4" />
-                Clear
-              </TwButton>
-            ) : null}
             <FilterDropdown
               icon={Store}
               ariaLabel="Filter by show"
@@ -631,6 +620,17 @@ function TrackerPage() {
                 className="h-9 w-40 rounded-full text-sm"
               />
             </div>
+            {hasFilters ? (
+              <TwButton
+                variant="secondary"
+                onClick={clearFilters}
+                aria-label="Clear filters"
+                className="shrink-0 whitespace-nowrap"
+              >
+                <X className="h-4 w-4" />
+                Clear
+              </TwButton>
+            ) : null}
           </div>
         </div>
 
