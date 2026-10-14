@@ -549,7 +549,7 @@ function TrackerPage() {
                 options={[{ value: "all", label: "All users" }, ...userOptions]}
               />
             ) : null}
-            <div className="flex items-center gap-2">
+            <div className="mt-2 flex gap-2">
                     <TwButton variant="secondary" onClick={clearFilters} disabled={!hasFilters} className="flex-1 justify-center">
                       Clear all
                     </TwButton>
