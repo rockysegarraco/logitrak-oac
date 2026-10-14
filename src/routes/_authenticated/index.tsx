@@ -658,7 +658,7 @@ function TrackerPage() {
           </SheetContent>
         </Sheet>
 
-        <div className="mt-8 hidden flow-root sm:block">
+        <div className="mt-8 hidden sm:flow-root">
           <div className="block min-w-full align-middle">
             <div className="rounded-t-lg rounded-b-none bg-card shadow-sm ring-1 ring-border">
               <div
