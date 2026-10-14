@@ -501,11 +501,11 @@ function TrackerPage() {
             </div>
           </div>
 
-          <div className="-mx-4 flex snap-x scroll-px-4 items-center gap-2 overflow-x-auto overscroll-x-contain px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:gap-3 sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden [&>*]:shrink-0 [&>*]:snap-start">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <TwButton
               variant="secondary"
               onClick={() => setAllFiltersOpen(true)}
-              className="shrink-0 whitespace-nowrap"
+              className="order-1 w-[calc(75%-0.125rem)] shrink-0 whitespace-nowrap sm:order-none sm:w-auto"
             >
               <SlidersHorizontal className="h-4 w-4" />
               All filters
@@ -624,6 +624,7 @@ function TrackerPage() {
                 className="h-9 w-40 rounded-full text-sm"
               />
             </div>
+            <div className="order-3 flex w-full flex-wrap gap-2 empty:hidden sm:hidden">
             </div>
             {[
               exhibitorFilter !== "all" && { key: "show", label: exhibitorFilter, clear: () => setExhibitorFilter("all") },
@@ -653,17 +654,17 @@ function TrackerPage() {
                   </button>
                 </span>
               ))}
-            {hasFilters ? (
-              <TwButton
-                variant="secondary"
-                onClick={clearFilters}
-                aria-label="Clear filters"
-                className="shrink-0 whitespace-nowrap"
-              >
-                <X className="h-4 w-4" />
-                Clear
-              </TwButton>
-            ) : null}
+            </div>
+            <TwButton
+              variant="secondary"
+              onClick={clearFilters}
+              disabled={!hasFilters}
+              aria-label="Clear filters"
+              className={`order-2 w-[calc(25%-0.375rem)] shrink-0 whitespace-nowrap sm:order-none sm:w-auto ${hasFilters ? "" : "sm:hidden"}`}
+            >
+              <X className="h-4 w-4" />
+              <span className="hidden sm:inline">Clear</span>
+            </TwButton>
           </div>
         </div>
 
