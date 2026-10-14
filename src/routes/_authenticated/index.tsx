@@ -563,17 +563,6 @@ function TrackerPage() {
                 className="h-9 min-w-0 flex-1 rounded-full text-sm"
               />
             </div>
-            {hasFilters ? (
-              <TwButton
-                variant="secondary"
-                onClick={clearFilters}
-                aria-label="Clear filters"
-                className="shrink-0 whitespace-nowrap"
-              >
-                <X className="h-4 w-4" />
-                Clear
-              </TwButton>
-            ) : null}
                   <div className="mt-2 flex gap-2">
                     <TwButton variant="secondary" onClick={clearFilters} disabled={!hasFilters} className="flex-1 justify-center">
                       Clear all
@@ -631,6 +620,17 @@ function TrackerPage() {
                 className="h-9 w-40 rounded-full text-sm"
               />
             </div>
+            {hasFilters ? (
+              <TwButton
+                variant="secondary"
+                onClick={clearFilters}
+                aria-label="Clear filters"
+                className="shrink-0 whitespace-nowrap"
+              >
+                <X className="h-4 w-4" />
+                Clear
+              </TwButton>
+            ) : null}
           </div>
         </div>
 
