@@ -624,8 +624,8 @@ function TrackerPage() {
                 className="h-9 w-40 rounded-full text-sm"
               />
             </div>
-            <div className="order-3 flex w-full flex-wrap gap-2 empty:hidden sm:hidden">
             </div>
+            <div className="order-3 flex w-full flex-wrap gap-2 empty:hidden sm:hidden">
             {[
               exhibitorFilter !== "all" && { key: "show", label: exhibitorFilter, clear: () => setExhibitorFilter("all") },
               stateFilter !== "all" && { key: "state", label: stateFilter, clear: () => setStateFilter("all") },
