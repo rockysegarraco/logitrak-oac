@@ -577,6 +577,7 @@ function TrackerPage() {
                 </div>
               </SheetContent>
             </Sheet>
+            <div className="hidden sm:contents">
             <FilterDropdown
               icon={Store}
               ariaLabel="Filter by show"
@@ -622,6 +623,7 @@ function TrackerPage() {
                 aria-label="Shipping date to"
                 className="h-9 w-40 rounded-full text-sm"
               />
+            </div>
             </div>
             {hasFilters ? (
               <TwButton
