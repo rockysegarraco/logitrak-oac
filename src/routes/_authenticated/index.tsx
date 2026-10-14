@@ -497,12 +497,12 @@ function TrackerPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <div className="-mx-1 flex w-full items-center gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] sm:mx-0 sm:w-auto sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0 sm:gap-3 [&::-webkit-scrollbar]:hidden">
             <FilterDropdown
               icon={Store}
               ariaLabel="Filter by show"
               value={exhibitorFilter}
               onChange={setExhibitorFilter}
-              className="min-w-0 flex-1 sm:max-w-56 sm:flex-none"
               options={[
                 { value: "all", label: "All shows" },
                 ...exhibitorOptions.map((name) => ({ value: name, label: name })),
@@ -513,7 +513,6 @@ function TrackerPage() {
               ariaLabel="Filter by state"
               value={stateFilter}
               onChange={setStateFilter}
-              className="min-w-0 flex-1 sm:max-w-44 sm:flex-none"
               options={[
                 { value: "all", label: "All states" },
                 ...stateOptions.map((code) => ({ value: code, label: code })),
@@ -525,10 +524,10 @@ function TrackerPage() {
                 ariaLabel="Filter by user"
                 value={userFilter}
                 onChange={setUserFilter}
-                className="min-w-0 flex-1 sm:max-w-52 sm:flex-none"
                 options={[{ value: "all", label: "All users" }, ...userOptions]}
               />
             ) : null}
+            </div>
             <div className="flex w-full min-w-0 basis-full items-center gap-2 sm:w-auto sm:basis-auto sm:flex-none">
               <TwInput
                 type="date"
