@@ -1074,6 +1074,7 @@ function TrackerPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <ShipmentUpdatesDialog shipment={updatesFor} onOpenChange={(o) => !o && setUpdatesFor(null)} />
       <Dialog open={!!viewingFiles} onOpenChange={(o) => !o && setViewingFiles(null)}>
         <DialogContent className="max-w-lg">
           <DialogTitle>Files · {viewingFiles?.exhibitor_name || viewingFiles?.show_name}</DialogTitle>
