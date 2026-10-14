@@ -549,24 +549,7 @@ function TrackerPage() {
                 options={[{ value: "all", label: "All users" }, ...userOptions]}
               />
             ) : null}
-            <div className="flex items-center gap-2">
-              <TwInput
-                type="date"
-                value={dateFrom}
-                onChange={(event) => setDateFrom(event.target.value)}
-                aria-label="Shipping date from"
-                className="h-9 min-w-0 flex-1 rounded-full text-sm"
-              />
-              <span className="text-xs text-muted-foreground">to</span>
-              <TwInput
-                type="date"
-                value={dateTo}
-                onChange={(event) => setDateTo(event.target.value)}
-                aria-label="Shipping date to"
-                className="h-9 min-w-0 flex-1 rounded-full text-sm"
-              />
-            </div>
-                  <div className="mt-2 flex gap-2">
+            <div className="mt-2 flex gap-2">
                     <TwButton variant="secondary" onClick={clearFilters} disabled={!hasFilters} className="flex-1 justify-center">
                       Clear all
                     </TwButton>
@@ -607,23 +590,6 @@ function TrackerPage() {
                 options={[{ value: "all", label: "All users" }, ...userOptions]}
               />
             ) : null}
-            <div className="flex items-center gap-2">
-              <TwInput
-                type="date"
-                value={dateFrom}
-                onChange={(event) => setDateFrom(event.target.value)}
-                aria-label="Shipping date from"
-                className="h-9 w-40 rounded-full text-sm"
-              />
-              <span className="text-xs text-muted-foreground">to</span>
-              <TwInput
-                type="date"
-                value={dateTo}
-                onChange={(event) => setDateTo(event.target.value)}
-                aria-label="Shipping date to"
-                className="h-9 w-40 rounded-full text-sm"
-              />
-            </div>
             </div>
             <div className="order-3 flex w-full flex-wrap gap-2 empty:hidden sm:hidden">
             {[
