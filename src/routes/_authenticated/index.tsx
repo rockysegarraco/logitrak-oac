@@ -624,6 +624,7 @@ function TrackerPage() {
                 className="h-9 w-40 rounded-full text-sm"
               />
             </div>
+            </div>
             {[
               exhibitorFilter !== "all" && { key: "show", label: exhibitorFilter, clear: () => setExhibitorFilter("all") },
               stateFilter !== "all" && { key: "state", label: stateFilter, clear: () => setStateFilter("all") },
@@ -652,7 +653,6 @@ function TrackerPage() {
                   </button>
                 </span>
               ))}
-            </div>
             {hasFilters ? (
               <TwButton
                 variant="secondary"
